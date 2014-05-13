@@ -16,10 +16,10 @@
 
 .autocomplete-list-li, .unbxd-prouct-suggest {
 	z-index: 10;
-	padding-left: 20px;
+	padding-left: 10px;
 	cursor: default;
 	color: #3F3F3F;
-	font-size: 16px;
+	font-size: 15px;
 	font-weight: normal;
 	border: none;
 	left: 577.59375px;
@@ -28,7 +28,7 @@
 	overflow: hidden;
 	list-style-type: none;
 	height: auto;
-	padding-bottom: 9px;
+	padding-bottom: 1px;
 	font-family:inherit;
 }
 .autocomplete-list-li:hover, .unbxd-prouct-suggest:hover{
@@ -112,6 +112,17 @@ body, input {
     margin-right: 31px;
     margin-top: 10px;
 }
+
+span.autocomplete-list-li{
+	font-weight: bold;
+	color: #ca6307;
+	font-family: arial, tahoma, verdana, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	padding-left: 0;
+}
+
+
 
 
 

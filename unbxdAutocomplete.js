@@ -11,8 +11,12 @@ var unbxdAutocomplete = (function () {
 		unbxdCatageryClass: "autocomplete-category",
 		
 		autoCompltHintSelectedClass : "autoComplt-hint-selected",
+
+		unbxdProductClass:"unbxd-prouct-suggest",
 		
-		maxHintNum : 100,
+		maxHintNum : 10,
+
+		catageryLength:2,
 
 		catagery:true,
 
@@ -27,8 +31,6 @@ var unbxdAutocomplete = (function () {
 		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
 
 		rows:100,
-
-		unbxdProductClass:"unbxd-prouct-suggest",
 		
 		autoCompltDelay : 1, // in ms
 		
@@ -208,7 +210,7 @@ function myAjax(openCallback) {
 				var value = hint.name,
 				    reg = new RegExp(_CONST.inputText, 'gi'),
 		
-				hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
+				hint = this.buildElem('<li id="unbxd_hint" value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
 				hint.innerHTML = hint.innerHTML.replace(reg, function(str) {
 				    	return '<em>'+str+'</em>'
 				    });
@@ -218,12 +220,9 @@ function myAjax(openCallback) {
 			return null;
 		},
 
-		//<li data-otracker="as-incategory" class="">&nbsp;&nbsp;&nbsp;&nbsp;in <span class="highlight-suggestion-vertical">Mobiles</span></li>
-		buildCategory : function(hint){
+		buildCategory : function(hint, styles, value){
 			if (hint) {
-				
-				var hint = this.buildElem('<li class="test">&nbsp;&nbsp;&nbsp;&nbsp;in' +  hint + '</li>');
-				
+				var hint = this.buildElem('<li id="cat-suggest" value="'+value+'" class="' + _CONST.autoCompltHintClass + '">&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp; <span value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint + '</span></li>');
 				return hint;
 			}
 			return null;
@@ -355,10 +354,11 @@ function myAjax(openCallback) {
 				@ NG: false
 		*/
 		_AutoCompltList.prototype.isHint = function (el) {
+	
 			if (el && typeof el == "object" && el.nodeType === 1) {
-				var cls = " " + el.className + " ";
-				var isHint = (cls.indexOf(" " + _CONST.autoCompltHintClass + " ") >= 0)  ;
-				return isHint;
+				 var cls = " " + el.className + " ";
+				 var isHint = (cls.indexOf(" " + _CONST.autoCompltHintClass + " ") >= 0)  ;
+				return true;
 			}
 			return false;
 		}
@@ -394,12 +394,16 @@ function myAjax(openCallback) {
 
 						if(_CONST.catagery === true){
 							for(var k= 0; k<_CONST.catageries.length; k++){
-								var arr = [];
-								console.log( hintObject[ _CONST.catageries[k] ] );
+								var arr = [],
+									value = hintObject.name;
+
 								if( hintObject[_CONST.catageries[k]] && hintObject[_CONST.catageries[k]].length > 0)
 									arr = hintObject[_CONST.catageries[k]];
 									for (i = 0; i < arr.length; i++) {
-										hs.push(_ui.buildCategory(arr[i], this.styles));
+										hs.push( _ui.buildCategory(arr[i], this.styles, value));
+										if (!hs[hs.length - 1]) {
+											hs.pop();
+										}
 									}
 							}
 						}
@@ -589,7 +593,7 @@ function myAjax(openCallback) {
 					}					
 				}
 			
-				if (hint !== null) {
+				if (hint !== null ) {
 					
 					this.deselect();					
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
@@ -621,7 +625,9 @@ function myAjax(openCallback) {
 
 	var publicProps = {
 				parseResponse :function(response) {
-			    	
+				   if(_CONST.inputText !== response.searchMetaData.queryParams.q)
+				   	 return;
+			    console.log( response.searchMetaData.queryParams.q );
 
 				var products = response.response.products,
 					types = ['brand', 'category', 'productname', 'title'],
@@ -644,11 +650,11 @@ function myAjax(openCallback) {
 							if(products[k].doctype === 'category'){
 								obj.brand_in = products[k].brand_in;
 								if(obj.brand_in && obj.brand_in.length > 3)
-									obj.brand_in.length = 3;
+									obj.brand_in.length = _CONST.catageryLength;
 							}else if( products[k].doctype === 'brand' ){
 								obj.category_in = products[k].category_in;
 								if(obj.category_in && obj.category_in.length > 3)
-									obj.category_in.length = 3;
+									obj.category_in.length = _CONST.catageryLength;
 							}
 							
 								
@@ -667,6 +673,7 @@ function myAjax(openCallback) {
 				    
 				}
 				
+				//console.log( JSON.stringify(result) );
 				this.openCallback(result);
 		 },
 
