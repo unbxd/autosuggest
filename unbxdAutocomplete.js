@@ -593,8 +593,7 @@ function myAjax(openCallback) {
 					}					
 				}
 			
-				if (hint !== null ) {
-					
+				if (hint !== null && hint.tagName !=='EM') {
 					this.deselect();					
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
 					// hint.style.color = this.styles.autoCompltHintSelected.color;
@@ -607,7 +606,7 @@ function myAjax(openCallback) {
 		_AutoCompltList.prototype.deselect = function () {
 			if (this.uiElem) {
 				var slct = this.getSelected();
-				if (slct) {
+				if (slct && slct.tagName !=='EM') {
 					slct.className = _CONST.autoCompltHintClass;
 					slct.style.color = this.styles.autoCompltHint.color;
 					slct.style.backgroundColor = this.styles.autoCompltHint.backgroundColor;
@@ -627,7 +626,6 @@ function myAjax(openCallback) {
 				parseResponse :function(response) {
 				   if(_CONST.inputText !== response.searchMetaData.queryParams.q)
 				   	 return;
-			    console.log( response.searchMetaData.queryParams.q );
 
 				var products = response.response.products,
 					types = ['brand', 'category', 'productname', 'title'],
@@ -955,7 +953,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-					//return;
+					return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 				}

@@ -113,7 +113,7 @@ body, input {
     margin-top: 10px;
 }
 
-span.autocomplete-list-li{
+span.autocomplete-list-li, span.autocomplete-list-li:hover{
 	font-weight: bold;
 	color: #ca6307;
 	font-family: arial, tahoma, verdana, sans-serif;
