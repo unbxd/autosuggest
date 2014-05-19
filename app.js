@@ -22,7 +22,7 @@
 
 		widgetLeft:false , // eg - 500 
 
-		widgetMaxheight:200, // maximum height allowed for widget eg 400 
+		widgetMaxheight:false, // maximum height allowed for widget eg 400 
 
 		widgetBackground:false, // eg - 'green', 'red' leave it null if you want default white
 	

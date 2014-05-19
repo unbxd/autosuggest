@@ -16,6 +16,8 @@ var unbxdAutocomplete = (function () {
 		
 		maxHintNum : 10,
 
+		callSearch:true,
+
 		catageryLength:2,
 
 		catagery:true,
@@ -358,6 +360,8 @@ function myAjax(openCallback) {
 					if (that.isHint(e.target)) {
 						that.select(e.target);
 						that.assocInput.value = that.getSelected().getAttribute("value");
+						if(_CONST.callSearch)
+							unbxdApi.getSearchResults( that.getSelected().getAttribute("value"), 'search', paintHomePage, 1, 12 );
 						that.assocInput.autoComplt.close();
 					}
 				});
@@ -982,9 +986,10 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-					return;
+					//return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
+
 				}
 				
 				input.autoComplt.enable = function () {
