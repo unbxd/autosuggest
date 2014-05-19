@@ -5,7 +5,7 @@
 		
 		maxHintNum :5, //MAX NO OF AUTO COMPLETE SUGGESTIONS, DEFAULT IS 5
 
-		rows:10,  //NO OF ROWS TO BE FETCHED FROM SERVER 
+		rows:20,  //NO OF ROWS TO BE FETCHED FROM SERVER 
 
 		catagery:true,  //CATAGORY WISE BREAKDOWN IN THE AUTOCOMPLETE, GIVE TRUE IF YOU WANT THIS
 
@@ -24,9 +24,9 @@
 
 		widgetLeft:false , // eg - 500 
 
-		widgetMaxheight:false, // maximum height allowed for widget eg 400 
+		widgetMaxheight:400, // maximum height allowed for widget eg 400 
 
-		widgetBackground:'', // eg - 'green', 'red' leave it null if you want default white
+		widgetBackground:'#FBF2EF', // eg - 'green', 'red' leave it null if you want default white
 	
 		hintHeight:false,  //height of each hint in auto suggest widget
    }
