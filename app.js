@@ -13,10 +13,12 @@
 
 		searchUrl:"//cl-sandbox-1375791452266.search.unbxdapi.com/ad93787f2f479e3e63b0161b3877ec7a/autosuggest" , // search URL for ur site ex "//cl-sandbox-1375791452266.search.unbxdapi.com/ad93787f2f479e3e63b0161b3877ec7a/autosuggest"
 
+		callSearch:false, //IF YOU ARE USING WITH UNBXD SEARCH FOR DEMO MAKE THIS TRUE
+
 		//STYLES FOR AUTOSUGGEST BOX, GIVE VALUE IN NUMBERS WITHOUT ANY PREFIX
 		//LEAVE IT 0 IF YOU WANT DEFAULT STYLES
 
-		widgetWidth:false, // eg - 500
+		widgetWidth:null, // eg - 500
 
 		widgetTop:false,   // eg -100
 
@@ -24,7 +26,7 @@
 
 		widgetMaxheight:false, // maximum height allowed for widget eg 400 
 
-		widgetBackground:false, // eg - 'green', 'red' leave it null if you want default white
+		widgetBackground:'', // eg - 'green', 'red' leave it null if you want default white
 	
 		hintHeight:false,  //height of each hint in auto suggest widget
    }

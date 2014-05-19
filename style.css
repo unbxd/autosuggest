@@ -5,7 +5,7 @@
 	font-style: normal;
 	line-height: 16px;
 	background: #efefef;
-	position: fixed;
+	position: absolute;
 	height: auto;
 	border: 1px solid rgb(170, 170, 170);
 	padding: 0px;
@@ -31,9 +31,8 @@
 	font-family:inherit;
 }
 .autocomplete-list-li:hover, .unbxd-prouct-suggest:hover{
-	background-color: #2c3747  ;
-	color: white  ;
-	cursor: pointer  ;
+	background-color: #f2f2f2;
+	cursor: pointer;
 }
 
 em{
