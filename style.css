@@ -6,7 +6,7 @@
 	line-height: 16px;
 	background: #efefef;
 	position: fixed;
-	max-height: 400px;
+	height: 400px;
 	border: 1px solid rgb(170, 170, 170);
 	padding: 0px;
 	margin: 0px;
@@ -23,7 +23,6 @@
 	font-weight: normal;
 	border: none;
 	left: 577.59375px;
-	width: 381px;
 	line-height: 1.5em;
 	overflow: hidden;
 	list-style-type: none;

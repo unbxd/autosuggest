@@ -45,6 +45,16 @@ var unbxdAutocomplete = (function () {
 			esc : 27,
 			enter : 13
 		},
+
+		widgetWidth:null,
+
+		widgetLeft:null,
+
+		widgetTop:null,
+
+		widgetHeight:400,
+
+		widgetBackground:'white',
 	
 		defaultStyles : {
 		
@@ -487,16 +497,27 @@ function myAjax(openCallback) {
 				&& hints.length // At lease one hint exists, we would open...
 			) {
 				var i,
-					buf;
+					buf,
+					top,
+					left,
+					width;
 				
 				// Position the list
 				buf = this.assocInput.getBoundingClientRect();
-				this.uiElem.style.top = (document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)
-									  + buf.bottom + "px";
-				this.uiElem.style.left = buf.left + "px";
+
+				top =_CONST.widgetTop || (document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)
+									  + buf.bottom;
+				left = _CONST.widgetLeft || buf.left;
+				height = _CONST.widgetHeight || this.uiElem.style.height;
+				
+
+				this.uiElem.style.top = top + "px";
+				this.uiElem.style.left = left + "px";
+				this.uiElem.style.height = height + "px";
+				this.uiElem.style.background = _CONST.widgetBackground;
 				
 				// Calculate the list's width
-				buf = buf.right - buf.left - parseFloat(_getComputedStyle(this.uiElem, "borderLeftWidth")) - parseFloat(_getComputedStyle(this.uiElem, "borderRightWidth"));
+				buf = _CONST.widgetWidth || buf.right - buf.left - parseFloat(_getComputedStyle(this.uiElem, "borderLeftWidth")) - parseFloat(_getComputedStyle(this.uiElem, "borderRightWidth"));
 				this.uiElem.style.width = buf + "px";
 
 				// Calculate the list's height
@@ -953,7 +974,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-					//return;
+					return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 				}
