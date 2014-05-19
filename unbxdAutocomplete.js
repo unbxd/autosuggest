@@ -52,9 +52,11 @@ var unbxdAutocomplete = (function () {
 
 		widgetTop:null,
 
-		widgetHeight:400,
+		widgetMaxheight:400,
 
 		widgetBackground:'white',
+
+		hintHeight:null,
 	
 		defaultStyles : {
 		
@@ -225,6 +227,9 @@ function myAjax(openCallback) {
 				    	return '<em>'+str+'</em>'
 				    });
 
+                if( _CONST.hintHeight )
+                	hint.style.height = _CONST.hintHeight +'px';
+
 				return hint;
 			}
 			return null;
@@ -233,6 +238,9 @@ function myAjax(openCallback) {
 		buildCategory : function(hint, styles, value){
 			if (hint) {
 				var hint = this.buildElem('<li id="cat-suggest" value="'+value+'" class="' + _CONST.autoCompltHintClass + '">&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp; <span value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint + '</span></li>');
+				
+				if( _CONST.hintHeight )
+                	hint.style.height = _CONST.hintHeight +'px';
 				return hint;
 			}
 			return null;
@@ -500,7 +508,8 @@ function myAjax(openCallback) {
 					buf,
 					top,
 					left,
-					width;
+					width,
+					maxHeight;
 				
 				// Position the list
 				buf = this.assocInput.getBoundingClientRect();
@@ -508,12 +517,11 @@ function myAjax(openCallback) {
 				top =_CONST.widgetTop || (document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)
 									  + buf.bottom;
 				left = _CONST.widgetLeft || buf.left;
-				height = _CONST.widgetHeight || this.uiElem.style.height;
-				
-
+				maxHeight =  _CONST.widgetMaxheight;
+	
 				this.uiElem.style.top = top + "px";
 				this.uiElem.style.left = left + "px";
-				this.uiElem.style.height = height + "px";
+				this.uiElem.style.maxHeight = maxHeight + "px" ;
 				this.uiElem.style.background = _CONST.widgetBackground;
 				
 				// Calculate the list's width

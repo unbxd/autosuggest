@@ -16,17 +16,17 @@
 		//STYLES FOR AUTOSUGGEST BOX, GIVE VALUE IN NUMBERS WITHOUT ANY PREFIX
 		//LEAVE IT 0 IF YOU WANT DEFAULT STYLES
 
-		widgetWidth: 0, // eg - 500
+		widgetWidth:false, // eg - 500
 
-		widgetTop:0 ,   // eg -100
+		widgetTop:false,   // eg -100
 
-		widgetLeft:0 , // eg - 500 
+		widgetLeft:false , // eg - 500 
 
-		widgetHeight:0, // eg 400
+		widgetMaxheight:200, // maximum height allowed for widget eg 400 
 
-		widgetBackground:null // eg - 'green', 'red' leave it null if you want default white
+		widgetBackground:false, // eg - 'green', 'red' leave it null if you want default white
 	
-		
+		hintHeight:false,  //height of each hint in auto suggest widget
    }
 
    unbxdAutocomplete.enable(input,  config);
