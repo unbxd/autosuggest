@@ -15,20 +15,43 @@
 
 		callSearch:false, //IF YOU ARE USING WITH UNBXD SEARCH FOR DEMO MAKE THIS TRUE
 
-		//STYLES FOR AUTOSUGGEST BOX, GIVE VALUE IN NUMBERS WITHOUT ANY PREFIX
-		//LEAVE IT 0 IF YOU WANT DEFAULT STYLES
+		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
 
-		widgetWidth:null, // eg - 500
-
-		widgetTop:false,   // eg -100
-
-		widgetLeft:false , // eg - 500 
-
-		widgetMaxheight:400, // maximum height allowed for widget eg 400 
-
-		widgetBackground:'', // eg - 'green', 'red' leave it null if you want default white
-	
-		hintHeight:false,  //height of each hint in auto suggest widget
+		defaultStyles : {
+		    //STYLES FOR WIDGET
+			autoCompltList : {
+				maxHeight : "400px",
+				border : "1px solid rgb(170, 170, 170)",
+				padding : "0",
+				margin: "0",
+				zIndex : 999,
+				overflowX : "hidden",
+				overflowY : "auto",
+				display : "none",
+				position: "absolute",
+				backgroundColor : "#FFF",
+				width:'',
+				top:'',
+				left:''
+			},
+			//STYLES FOR EACH ROW INSIDE WIDGET
+			autoCompltHint : {
+				height : "25px",
+				padding: "2px 2px 2px 5px",
+				margin: "0",
+				overflow: "auto",
+				listStyleType: "none",
+				color : "#ffff",
+				backgroundColor : "inherit",
+				cursor : "default",
+				fontSize : "16px"
+			},
+			//STYLES FOR SELECTED ROW ( MOUSE OVER )
+			autoCompltHintSelected : {
+				color : "none",
+				backgroundColor : "#f2f2f2"
+			}
+		},
    }
 
    unbxdAutocomplete.enable(input,  config);

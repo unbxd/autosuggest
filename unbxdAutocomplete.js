@@ -73,9 +73,9 @@ var unbxdAutocomplete = (function () {
 		},
 		
 		adjStyleAttrs : {
-			//autoCompltList : [ "border", "maxHeight", "backgroundColor" ],
-			//autoCompltHint : [ "height", "padding", "margin", "color", "backgroundColor", "fontSize" ],
-			//autoCompltHintSelected : [ "color", "backgroundColor" ]
+			autoCompltList : [ "border", "maxHeight", "backgroundColor" ],
+			autoCompltHint : [ "height", "padding", "margin", "color", "backgroundColor", "fontSize" ],
+			autoCompltHintSelected : [ "color", "backgroundColor" ]
 		}
 };
 
@@ -133,19 +133,20 @@ function myAjax(openCallback) {
 	
 	
 	var _normalizeEvt = function (e) {					
-		e = e || window.event;
-		e.target = e.target || e.srcElement;
-		e.stopBubble = function () {
-			this.cancelBubble = true;
-			if (this.stopPropoagation) {
-			 this.stopPropoagation(); 
-			}
-		}
-		e.stopDefault = function () {
-			if (this.preventDefault) { this.preventDefault(); }
-			this.returnValue = false;
-			return false;
-		}
+		// e = e || window.event;
+		// e.target = e.target || e.srcElement;
+		// e.stopBubble = function () {
+		// 	this.cancelBubble = true;
+		// 	if (this.stopPropoagation) {
+		// 	 this.stopPropoagation(); 
+		// 	}
+		// }
+		// e.stopDefault = function () {
+		// 	if (this.preventDefault) { 
+		// 		this.preventDefault(); }
+		// 	this.returnValue = false;
+		// 	return false;
+		// }
 		return e;
 	}
 	
@@ -196,7 +197,7 @@ function myAjax(openCallback) {
 			if ( rsLeft ) {
 				elem.runtimeStyle.left = elem.currentStyle.left;
 			}
-			style.left = name === "fontSize" ? "1em" : v;
+			//style.left = name === "fontSize" ? "1em" : v;
 			v = style.pixelLeft + "px";
 
 			// Revert the changed values
@@ -232,6 +233,16 @@ function myAjax(openCallback) {
                 if( _CONST.hintHeight )
                 	hint.style.height = _CONST.hintHeight +'px';
 
+                hint.style.height = hint.style.lineHeight = styles.autoCompltHint.height; // line-height shall always be equal to the height
+				hint.style.padding = styles.autoCompltHint.padding;
+				hint.style.margin = styles.autoCompltHint.margin;
+				hint.style.overflow = styles.autoCompltHint.overflow;
+				hint.style.listStyleType = styles.autoCompltHint.listStyleType;
+				hint.style.color = styles.autoCompltHint.color;
+				hint.style.backgroundColor = styles.autoCompltHint.backgroundColor;
+				hint.style.cursor = styles.autoCompltHint.cursor;
+				hint.style.fontSize = styles.autoCompltHint.fontSize;
+
 				return hint;
 			}
 			return null;
@@ -243,6 +254,17 @@ function myAjax(openCallback) {
 				
 				if( _CONST.hintHeight )
                 	hint.style.height = _CONST.hintHeight +'px';
+
+                hint.style.height = hint.style.lineHeight = styles.autoCompltHint.height; // line-height shall always be equal to the height
+				hint.style.padding = styles.autoCompltHint.padding;
+				hint.style.margin = styles.autoCompltHint.margin;
+				hint.style.overflow = styles.autoCompltHint.overflow;
+				hint.style.listStyleType = styles.autoCompltHint.listStyleType;
+				hint.style.color = styles.autoCompltHint.color;
+				hint.style.backgroundColor = styles.autoCompltHint.backgroundColor;
+				hint.style.cursor = styles.autoCompltHint.cursor;
+				hint.style.fontSize = styles.autoCompltHint.fontSize;
+
 				return hint;
 			}
 			return null;
@@ -296,6 +318,17 @@ function myAjax(openCallback) {
 		*/
 		buildList : function (styles) {
 			var list = this.buildElem('<ul class="' + _CONST.autoCompltListClass + '"></ul>');
+
+			list.style.maxHeight = styles.autoCompltList.maxHeight;
+			list.style.border = styles.autoCompltList.border;	
+			list.style.padding = styles.autoCompltList.padding;
+			list.style.margin = styles.autoCompltList.margin;
+			list.style.zIndex = styles.autoCompltList.zIndex;
+			list.style.overflowX = styles.autoCompltList.overflowX;
+			list.style.overflowY= styles.autoCompltList.overflowY;
+			list.style.display = styles.autoCompltList.display;
+			list.style.position = styles.autoCompltList.position;
+			list.style.backgroundColor = styles.autoCompltList.backgroundColor;
 
 			return list;
 		}
@@ -513,23 +546,30 @@ function myAjax(openCallback) {
 					top,
 					left,
 					width,
-					maxHeight;
+					maxHeight,
+					widgetWidth,
+					widgetTop,
+					widgetLeft;
+
 				
 				// Position the list
 				buf = this.assocInput.getBoundingClientRect();
 
+				widgetWidth = 	this.styles.autoCompltList.width? this.styles.autoCompltList.width.replace("px", ''):null;
+				widgetTop 	=	this.styles.autoCompltList.top? this.styles.autoCompltList.top.replace("px", ''):null;
+				widgetLeft =    this.styles.autoCompltList.left? this.styles.autoCompltList.left.replace("px", ''):null;
+
 				top =_CONST.widgetTop || (document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)
 									  + buf.bottom;
 				left = _CONST.widgetLeft || buf.left;
-				maxHeight =  _CONST.widgetMaxheight;
 	
 				this.uiElem.style.top = top + "px";
 				this.uiElem.style.left = left + "px";
-				this.uiElem.style.maxHeight = maxHeight + "px" ;
-				this.uiElem.style.background = _CONST.widgetBackground;
+				this.uiElem.style.maxHeight = this.styles.autoCompltList.maxHeight;
+				this.uiElem.style.background = this.styles.autoCompltList.backgroundColor;
 				
 				// Calculate the list's width
-				buf = _CONST.widgetWidth || buf.right - buf.left - parseFloat(_getComputedStyle(this.uiElem, "borderLeftWidth")) - parseFloat(_getComputedStyle(this.uiElem, "borderRightWidth"));
+				buf = widgetWidth || buf.right - buf.left - parseFloat(_getComputedStyle(this.uiElem, "borderLeftWidth")) - parseFloat(_getComputedStyle(this.uiElem, "borderRightWidth"));
 				this.uiElem.style.width = buf + "px";
 
 				// Calculate the list's height
@@ -626,11 +666,14 @@ function myAjax(openCallback) {
 					}					
 				}
 			
-				if (hint !== null && hint.tagName !=='EM') {
+				if (hint !== null && hint.tagName !=='EM' && hint.tagName !=='UL') {
 					this.deselect();					
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
-					// hint.style.color = this.styles.autoCompltHintSelected.color;
-					// hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;					
+					if(hint.tagName ==="LI" ){
+						hint.style.color = this.styles.autoCompltHintSelected.color;
+						hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;						
+					}
+					
 				}
 			}
 		}
@@ -641,8 +684,10 @@ function myAjax(openCallback) {
 				var slct = this.getSelected();
 				if (slct && slct.tagName !=='EM') {
 					slct.className = _CONST.autoCompltHintClass;
-					slct.style.color = this.styles.autoCompltHint.color;
-					slct.style.backgroundColor = this.styles.autoCompltHint.backgroundColor;
+					if(slct.tagName ==="LI" ){
+						slct.style.color = this.styles.autoCompltHint.color;
+						slct.style.backgroundColor = this.styles.autoCompltHint.backgroundColor;
+					}	
 				}
 			}
 		}
@@ -651,7 +696,8 @@ function myAjax(openCallback) {
 				@ NG: null
 		*/
 		_AutoCompltList.prototype.getSelected = function () {
-			return !this.uiElem ? null : this.uiElem.querySelector("." + _CONST.autoCompltHintSelectedClass) || null;
+			var ret =  !this.uiElem ? null : this.uiElem.querySelector("." + _CONST.autoCompltHintSelectedClass) || null;
+			return ret;
 		}
 	}
 
