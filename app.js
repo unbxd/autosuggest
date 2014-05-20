@@ -26,7 +26,7 @@
 
 		widgetMaxheight:400, // maximum height allowed for widget eg 400 
 
-		widgetBackground:'#FBF2EF', // eg - 'green', 'red' leave it null if you want default white
+		widgetBackground:'', // eg - 'green', 'red' leave it null if you want default white
 	
 		hintHeight:false,  //height of each hint in auto suggest widget
    }

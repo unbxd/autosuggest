@@ -1,8 +1,10 @@
 .autocomplete-list-ul{
 	overflow-x: hidden;
-	font-family: 'Helvetica Neue', Arial, sans-serif;
-	font-size: 14px;
+	font-family: arial, tahoma, verdana, sans-serif;
+	font-size: 13px;
 	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
 	line-height: 16px;
 	background: #efefef;
 	position: absolute;
@@ -10,7 +12,7 @@
 	border: 1px solid rgb(170, 170, 170);
 	padding: 0px;
 	margin: 0px;
-	z-index: 99;
+	z-index: 999;
 	background-color: #fff;
 }
 
