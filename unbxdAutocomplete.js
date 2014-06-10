@@ -293,8 +293,8 @@ function myAjax(openCallback) {
 				var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +'">'
 				
 				
-			    +'<div>'
-			         + '<img class="product-img" src="'+hint.imgUrl+'">'
+			    +'<div value="'+value+'" >'
+			         + '<img value="'+value+'" src="'+hint.imgUrl+'">'
 			         +'<div class="product-price text-muted">'
 			        	+hint.price
 			         + '</div>'
@@ -440,29 +440,30 @@ function myAjax(openCallback) {
 				// }
 
 				for (objectName in  hints) {
-
-						hs.push( _ui.buildHint(hints[objectName], this.styles) );
-						if (!hs[hs.length - 1]) {
-							hs.pop();
-						}
-						var hintObject = hints[objectName];
-			
-						if(_CONST.catagery === true){
-							for(var k= 0; k<_CONST.catageries.length; k++){
-								var arr = [],
-									value = hintObject.name;
-
-								if( hintObject[_CONST.catageries[k]] && hintObject[_CONST.catageries[k]].length > 0)
-									arr = hintObject[_CONST.catageries[k]];
-									for (i = 0; i < arr.length; i++) {
-										hs.push( _ui.buildCategory(arr[i], this.styles, value));
-										if (!hs[hs.length - 1]) {
-											hs.pop();
-										}
-									}
+					var hintObject = hints[objectName];
+						if( !hintObject.isProduct ){
+							hs.push( _ui.buildHint(hints[objectName], this.styles) );
+							if (!hs[hs.length - 1]) {
+								hs.pop();
 							}
-						}
-						if(_CONST.productDetails === true && hintObject.isProduct === true){
+							
+				
+							if(_CONST.catagery === true){
+								for(var k= 0; k<_CONST.catageries.length; k++){
+									var arr = [],
+										value = hintObject.name;
+
+									if( hintObject[_CONST.catageries[k]] && hintObject[_CONST.catageries[k]].length > 0)
+										arr = hintObject[_CONST.catageries[k]];
+										for (i = 0; i < arr.length; i++) {
+											hs.push( _ui.buildCategory(arr[i], this.styles, value));
+											if (!hs[hs.length - 1]) {
+												hs.pop();
+											}
+										}
+								}
+							}
+						}else if(_CONST.productDetails === true && hintObject.isProduct === true){
 							hs.push( _ui.buildProduct(hints[objectName], this.styles) );
 							if (!hs[hs.length - 1]) {
 								hs.pop();
@@ -675,7 +676,7 @@ function myAjax(openCallback) {
 				if (hint !== null && hint.tagName !=='EM' && hint.tagName !=='UL') {
 					this.deselect();					
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
-					if(hint.tagName ==="LI" ){
+					if(hint.tagName ==="LI" || hint.tagName ==="DIV"){
 						hint.style.color = this.styles.autoCompltHintSelected.color;
 						hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;						
 					}
@@ -690,7 +691,7 @@ function myAjax(openCallback) {
 				var slct = this.getSelected();
 				if (slct && slct.tagName !=='EM') {
 					slct.className = _CONST.autoCompltHintClass;
-					if(slct.tagName ==="LI" ){
+					if(slct.tagName ==="LI" || slct.tagName ==="DIV" ){
 						slct.style.color = this.styles.autoCompltHint.color;
 						slct.style.backgroundColor = this.styles.autoCompltHint.backgroundColor;
 					}	
