@@ -446,7 +446,7 @@ function myAjax(openCallback) {
 							hs.pop();
 						}
 						var hintObject = hints[objectName];
-
+			
 						if(_CONST.catagery === true){
 							for(var k= 0; k<_CONST.catageries.length; k++){
 								var arr = [],
@@ -460,6 +460,12 @@ function myAjax(openCallback) {
 											hs.pop();
 										}
 									}
+							}
+						}
+						if(_CONST.productDetails === true && hintObject.isProduct === true){
+							hs.push( _ui.buildProduct(hints[objectName], this.styles) );
+							if (!hs[hs.length - 1]) {
+								hs.pop();
 							}
 						}
 
@@ -719,9 +725,11 @@ function myAjax(openCallback) {
 							    obj.heading = types[j];
 
 
-							if(types[j] == 'productname'  ){
-								obj.imgUrl = "http://d3pkevt87ob17v.cloudfront.net/ecommerce/pictures/633272-1.jpg%3Falgolia";
-								obj.price = '$200';
+							if(types[j] == _CONST.type  ){
+								obj.imgUrl = products[k].image_url;
+								obj.price = products[k].price;
+								obj.uniqueId =  products[k].uniqueId;
+								obj.isProduct = true;
 							}
 
 							if(products[k].doctype === 'category'){
