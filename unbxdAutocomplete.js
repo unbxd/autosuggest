@@ -295,13 +295,13 @@ function myAjax(openCallback) {
 				
 			    +'<div value="'+value+'" >'
 			         + '<img value="'+value+'" src="'+hint.imgUrl+'">'
-			         +'<div class="product-price text-muted">'
+			         +'<div value="'+value+'" class="product-price text-muted">'
 			        	+hint.price
 			         + '</div>'
-			         +'<div class="product-name">'
+			         +'<div value="'+value+'" class="product-name">'
 			             +hint.name
 			         + '</div>'
-			         +'<div class="clearfix"></div>'
+			         +'<div value="'+value+'" class="clearfix"></div>'
 			    +'</div>'
 			    + '</li>');
 			
@@ -1041,7 +1041,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    //return;
+				    return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
