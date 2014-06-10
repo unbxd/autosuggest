@@ -1,123 +1,166 @@
 .autocomplete-list-ul{
-	font-family: arial, tahoma, verdana, sans-serif;
-	font-style: normal;
-	font-variant: normal;
-	font-weight: normal;
-	position: absolute;
-	height: auto;
+        overflow-x: hidden;
+        font-family:'tahoma',Geneva,Arial,Helvetica,sans-serif;
+        font-size: 13px;
+        font-style: normal;
+        font-variant: normal;
+        font-weight: normal;
+        line-height: 16px;
+        background: #efefef;
+        position: absolute;
+        height: auto;
+        border: 1px solid rgb(170, 170, 170);
+        padding: 0px;
+        margin: 0px;
+        z-index: 999;
+        background-color: #fff;
+        border-radius: 4px;
 }
 
-.autocomplete-list-li, .unbxd-prouct-suggest {
-	z-index: 10;
-	padding-left: 10px;
-	cursor: default;
-	color: #3F3F3F;
-	font-size: 15px;
-	font-weight: normal;
-	border: none;
-	left: 577.59375px;
-	line-height: 1.5em;
-	overflow: hidden;
-	list-style-type: none;
-	height: auto;
-	padding-bottom: 1px;
-	font-family:inherit;
+
+li.autocomplete-list-li, .unbxd-prouct-suggest {
+        z-index: 10;
+        padding-left: 10px;
+        cursor: default;
+        color: #000000;
+        font-size: 13px;
+        font-weight: normal;
+        border: none;
+        left: 577.59375px;
+        line-height: 1.5em;
+        overflow: hidden;
+        list-style-type: none;
+        height: auto;
+        padding-bottom: 1px;
+        font-family:inherit;
+        /*border-bottom: 1px solid #e2e2e2;*/
 }
 
 .autocomplete-list-li:hover, .unbxd-prouct-suggest:hover, .autoComplt-hint-selected{
-	cursor: pointer !important;
+        background-color: #808080;
+        color: #000;
+        cursor: pointer !important;
 }
 
 em{
-	font-weight: bolder;
-	font-style: normal;
+        font-weight: bolder;
+        font-style: normal;
 }
 
  .autocomplete-category {
-	text-transform: uppercase;
-	font-weight: 500;
-	font-size: 14px;
-	padding: 10px 10px 10px 10px;
-	font-family: "Helvetica Neue",Arial,sans-serif  ;
-	font-size: 14px;
-	line-height: 16px;
-	background-color:#EFEFEF
+        text-transform: uppercase;
+        font-weight: 500;
+        font-size: 14px;
+        padding: 10px 10px 10px 10px;
+        font-family: "Helvetica Neue",Arial,sans-serif  ;
+        font-size: 14px;
+        line-height: 16px;
+        background-color:#33CCFF;
 }
-
 .unbxd-prouct-suggest{
-	height: auto;
-	padding-left: 11px;
-}	
+        height: auto;
+        padding-left: 11px;
+}
 .product-autosuggest{
-	
+
 }
 .image{
-	height: 0;
-	padding-top: 4px;
-	margin-top: 2px;
-	margin-bottom: 2px;
+        height: 0;
+        padding-top: 4px;
+        margin-top: 2px;
+        margin-bottom: 2px;
 }
 .title{
-	float: right;
-	text-align: -webkit-auto;
-	padding-right: 6px;
-	font-size: 15px;
-	font-style: italic;
+        float: right;
+        text-align: -webkit-auto;
+        padding-right: 6px;
+        font-size: 15px;
+        font-style: italic;
 }
 .autoCompltHintSelected : {
-	color : #fff;
-	background-color : red  ;
+        color : #fff;
+        background-color : red  ;
 }
 
 
 
 body, input {
-			font-size: 14px;
+                        font-size: 14px;
 }
 .autoCmplt-input {
-	height: 25px;
-	padding: 2px;
-	width: 376px;	 
-	margin-left: 40%;
-	margin-top: 2%;
-}
-.autoCmplt-input.input-1 {
-	width: 180px;
-}
-.autoCmplt-input.input-2 {
-	width: 300px;
+        height: 25px;
+        padding: 2px;
+        width: 376px;
+        margin-left: 40%;
+        margin-top: 2%;
 }
 
-.product-name{
-	font-size: 14px;
+.autoCmplt-input.input-1 {
+        width: 180px;
+}
+.autoCmplt-input.input-2 {
+        width: 300px;
+}
+
+/*.product-name{
+        font-size: 14px;
 }
 .product-img{
-	float: left;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	margin-top: 9px;
+        float: left;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        margin-top: 9px;
 }
 .product-price{
-	float: right;
+        float: right;
     font-size: 13px;
     margin-right: 31px;
     margin-top: 10px;
+}*/
+
+img.autocomplete-list-li{
+        width:40px;
+        height:40px;
 }
 
-span.autocomplete-list-li, span.autocomplete-list-li{
-	font-weight: bold;
-	color: #ca6307;
-	font-family: arial, tahoma, verdana, sans-serif;
-	font-size: 13px;
-	font-style: normal;
-	padding-left: 0;
+.product-detailsas{
+        height: 40px;
 }
 
 
+.product-imageas{
+        float: left;
+        width: 40px;
+        height: 40px;
+}
 
+.product-priceas{
+        float: left;
+}
+.product-nameas{
+        width: auto;
+        height: 40px;
+        float:left;
 
+}
 
+div.autocomplete-list-li{
+        height: 40px;
+}
 
+li#unbxd_hint.autocomplete-list-li{
+       border-top: 1px solid #e2e2e2;
+}
 
+li.autocomplete-list-li > div {
+        border-top: 1px solid #e2e2e2;
+ }
 
-
+span.autocomplete-list-li, span.autocomplete-list-li:hover{
+        font-weight: bold;
+        color:#d2322d;
+        font-family: arial, tahoma, verdana, sans-serif;
+        font-size: 13px;
+        font-style: normal;
+        padding-left: 0;
+}

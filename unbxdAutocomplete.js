@@ -59,6 +59,10 @@ var unbxdAutocomplete = (function () {
 		widgetBackground:'white',
 
 		hintHeight:null,
+
+		imgClass :'product-imageas',
+
+		prodName:'product-nameas',
 	
 		defaultStyles : {
 		
@@ -294,11 +298,8 @@ function myAjax(openCallback) {
 				
 				
 			    +'<div value="'+value+'" >'
-			         + '<img value="'+value+'" src="'+hint.imgUrl+'">'
-			         +'<div value="'+value+'" class="product-price text-muted">'
-			        	+hint.price
-			         + '</div>'
-			         +'<div value="'+value+'" class="product-name">'
+			         + '<img class="'+_CONST.imgClass+'" value="'+value+'" src="'+hint.imgUrl+'">'
+			         +'<div value="'+value+'" class="'+_CONST.prodName+'" >'
 			             +hint.name
 			         + '</div>'
 			         +'<div value="'+value+'" class="clearfix"></div>'
@@ -673,7 +674,7 @@ function myAjax(openCallback) {
 					}					
 				}
 			
-				if (hint !== null && hint.tagName !=='EM' && hint.tagName !=='UL') {
+				if (hint !== null && hint.tagName !=='EM' && hint.tagName !=='UL' && hint.tagName !=='IMG') {
 					this.deselect();					
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
 					if(hint.tagName ==="LI" || hint.tagName ==="DIV"){
