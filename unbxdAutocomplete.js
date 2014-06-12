@@ -423,91 +423,58 @@ function myAjax(openCallback) {
 			Return:
 				<NUM> the number of hints put
 		*/
-		_AutoCompltList.prototype.putHints = function (hints) {
+		_AutoCompltList.prototype.putHints = function ( result ) {
 			var count = 0;
-			if (hints instanceof Object) {				
+			if (result instanceof Object) {				
 				var i,
 					j,
 					k,
 					len,
-					hs = [];
+					hs = [],
+					hints = [],
+					hintObject = {},
+					product = {};
 				
-				// j = Math.min(hints.length, this.maxHintNum);				
-				// for (i = 0; i < j; i++) {
-				// 	hs.push(_ui.buildHint(hints[i], this.styles));
-				// 	if (!hs[hs.length - 1]) {
-				// 		hs.pop();
-				// 	}
-				// }
+			  //build hints
+			  if(result.hints.length > 0){
+			  	 hints = result.hints
+			  	for(var k=0; k<hints.length;k++ ){
+			  		hintObject = hints[k];
 
-				for (objectName in  hints) {
-					var hintObject = hints[objectName];
-						if( !hintObject.isProduct ){
-							hs.push( _ui.buildHint(hints[objectName], this.styles) );
+			  		hs.push( _ui.buildHint(hintObject, this.styles) );
 							if (!hs[hs.length - 1]) {
 								hs.pop();
 							}
-							
-				
-							if(_CONST.catagery === true){
-								for(var k= 0; k<_CONST.catageries.length; k++){
-									var arr = [],
-										value = hintObject.name;
-
-									if( hintObject[_CONST.catageries[k]] && hintObject[_CONST.catageries[k]].length > 0)
-										arr = hintObject[_CONST.catageries[k]];
-										for (i = 0; i < arr.length; i++) {
-											hs.push( _ui.buildCategory(arr[i], this.styles, value));
-											if (!hs[hs.length - 1]) {
-												hs.pop();
-											}
-										}
-								}
-							}
-						}else if(_CONST.productDetails === true && hintObject.isProduct === true){
-							hs.push( _ui.buildProduct(hints[objectName], this.styles) );
-							if (!hs[hs.length - 1]) {
-								hs.pop();
-							}
-						}
-
-				}
-
-				// if(_CONST.catagery === false){
-						
 					
-				
-				// }else if( _CONST.catagery === true ){
+					if(_CONST.catagery === true){
+						for(var j= 0; j<_CONST.catageries.length; j++){
+							var arr = [],
+								value = hintObject.name;
 
-				// 	for(k=0; k<hints.length; k++){
+							if( hintObject[_CONST.catageries[j]] && hintObject[_CONST.catageries[j]].length > 0)
+								arr = hintObject[_CONST.catageries[j]];
+								for (i = 0; i < arr.length; i++) {
+									hs.push( _ui.buildCategory(arr[i], this.styles, value));
+									if (!hs[hs.length - 1]) {
+										hs.pop();
+									}
+								}
+						}
+					}
 
-				// 			for(var key in hints[k] ){
-								
-				// 				if( hints[k][key].length > 0 )
-				// 					hs.push(_ui.buildCategory(key, this.styles));
-
-				// 				var arr = hints[k][key];
-
-				// 				if(key === _CONST.type && _CONST.productDetails === true ){
-				// 					for (i = 0; i < arr.length; i++) {
-				// 						hs.push(_ui.buildProduct(arr[i], this.styles));
-				// 						if (!hs[hs.length - 1]) {
-				// 							hs.pop();
-				// 						}
-				// 					}
-				// 				}else{
-				// 					for (i = 0; i < arr.length; i++) {
-				// 						hs.push(_ui.buildHint(arr[i], this.styles));
-				// 						if (!hs[hs.length - 1]) {
-				// 							hs.pop();
-				// 						}
-				// 					}
-				// 				}
-								
-								
-				// 			}
-				// 	}
-				// }
+			  	}
+			  }
+			  //build products with thunmbnails
+			  if(result.prods.length > 0 && _CONST.productDetails === true){
+			  	  prods = result.prods;
+			  	  for(var k=0; k < prods.length; k++){
+			  	  	product = prods[k];
+			  	  	hs.push( _ui.buildProduct(product, this.styles) );
+							if (!hs[hs.length - 1]) {
+								hs.pop();
+							}
+			  	  }
+			  }
 				
 				if (hs.length > 0) {
 					var buf = document.createDocumentFragment();
@@ -710,30 +677,22 @@ function myAjax(openCallback) {
 	}
 
 	var publicProps = {
-				parseResponse :function(response) {
+		parseResponse :function(response) {
+			       console.log(this.openCallback);
 				   if(_CONST.inputText !== response.searchMetaData.queryParams.q)
 				   	 return;
 
 				var products = response.response.products,
 					types = ['brand', 'category', 'productname', 'title'],
 					categories = ['category_in', 'brand_in'],
-					result = {};
+					result = {}, hints = [], prods = [];
 
+			
 				for(var k=0; k<products.length; k++){
 		            var obj = {};
-					for(var j=0; j<types.length; j++){
-						if(products[k].doctype === types[j] ){
-							var obj = { "name":products[k].autosuggest };
-							    obj.heading = types[j];
-
-
-							if(types[j] == _CONST.type  ){
-								obj.imgUrl = products[k].image_url;
-								obj.price = products[k].price;
-								obj.uniqueId =  products[k].uniqueId;
-								obj.isProduct = true;
-							}
-
+					    obj = { "name":products[k].autosuggest };
+						if(products[k].doctype === 'brand' || products[k].doctype === 'category'||  products[k].doctype === 'title' ){
+							
 							if(products[k].doctype === 'category'){
 								obj.brand_in = products[k].brand_in;
 								if(obj.brand_in && obj.brand_in.length > 3)
@@ -744,23 +703,22 @@ function myAjax(openCallback) {
 									obj.category_in.length = _CONST.catageryLength;
 							}
 							
-								
-							if( result[products[k].autosuggest] ){
-								for(var property in obj ){
-								  if( !result[products[k].autosuggest][property] ) 
-								    result[products[k].autosuggest][property] = obj[property];
-								};
-							}else{
-								result[products[k].autosuggest] =  obj;
-							}
-								
-						}
-					}
-
-				    
+							hints.push(obj);
+						}else if(products[k].doctype ===  _CONST.type ){
+							obj.imgUrl 		= 	products[k].image_url;
+							obj.price 		= 	products[k].price;
+							obj.uniqueId 	=  	products[k].uniqueId;
+							obj.isProduct 	= 	true;
+							prods.push(obj);
+					    }			
 				}
+
+				if(hints.length > 0)
+					result.hints = hints;
+				if(prods.length > 0)
+					result.prods = prods;
 				
-				//console.log( JSON.stringify(result) );
+				console.log( JSON.stringify(result) );
 				this.openCallback(result);
 		 },
 
