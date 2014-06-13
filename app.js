@@ -11,8 +11,12 @@
 
 		productDetails:true,  //PRODUCT DETAILS LIKE IMAGE AND  PRICE , GIVE TRUE IF YOU WANT THIS
 
-		searchUrl:"//cl-sandbox-1375791452266.search.unbxdapi.com/ad93787f2f479e3e63b0161b3877ec7a/autosuggest" , // search URL for ur site ex "//cl-sandbox-1375791452266.search.unbxdapi.com/ad93787f2f479e3e63b0161b3877ec7a/autosuggest"
-
+		//searchUrl:"//cl-sandbox-1375791452266.search.unbxdapi.com/ad93787f2f479e3e63b0161b3877ec7a/autosuggest" , // search URL for ur site ex "//cl-sandbox-1375791452266.search.unbxdapi.com/ad93787f2f479e3e63b0161b3877ec7a/autosuggest"
+         
+        searchUrl:"//demo-u1393483043451.search.unbxdapi.com/ae30782589df23780a9d98502388555f/autosuggest",
+		
+		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse&filter=-doctype:"title"',
+		
 		callSearch:false, //IF YOU ARE USING WITH UNBXD SEARCH FOR DEMO MAKE THIS TRUE
 
 		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
@@ -36,7 +40,7 @@
 			},
 			//STYLES FOR EACH ROW INSIDE WIDGET
 			autoCompltHint : {
-				height : "25px",
+				height : "22px",
 				padding: "2px 2px 2px 5px",
 				margin: "0",
 				overflow: "auto",
@@ -44,7 +48,7 @@
 				color : "#ffff",
 				backgroundColor : "inherit",
 				cursor : "default",
-				fontSize : "16px"
+				fontSize : "14px"
 			},
 			//STYLES FOR SELECTED ROW ( MOUSE OVER )
 			autoCompltHintSelected : {

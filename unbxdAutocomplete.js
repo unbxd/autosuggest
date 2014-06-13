@@ -274,16 +274,6 @@ function myAjax(openCallback) {
 			return null;
 		},	
 
-		// buildCategory : function(hint){
-		// 	if (hint) {
-				
-		// 		var hint = this.buildElem('<li class="' + _CONST.unbxdCatageryClass + '">' + hint + '</li>');
-				
-		// 		return hint;
-		// 	}
-		// 	return null;
-		// },	
-
 		buildProduct : function(hint){
 			if (hint) {
 				var value = hint.name,
@@ -310,7 +300,17 @@ function myAjax(openCallback) {
 				return hint;
 			}
 			return null;
-		},				
+		},	
+		//to give header like popular prducts, top queries
+		buildHeader:function( headerValue ){
+
+				var header = "";
+		
+				hint = this.buildElem('<li class="header" ><span class="text">'+headerValue+'</span></li>');
+		
+				return hint;
+			
+		},			
 		/*	Arg:
 				<OBJ> styles = the obk holding the styles to set. Refer to _CONST.defaultStyles.autoCompltList for the required styles
 			Return:
@@ -466,6 +466,7 @@ function myAjax(openCallback) {
 			  }
 			  //build products with thunmbnails
 			  if(result.prods.length > 0 && _CONST.productDetails === true){
+			  	  hs.push( _ui.buildHeader(' Popular Products ') );
 			  	  prods = result.prods;
 			  	  for(var k=0; k < prods.length; k++){
 			  	  	product = prods[k];
@@ -640,8 +641,14 @@ function myAjax(openCallback) {
 						hint = hints[hint];
 					}					
 				}
+				
 			
-				if (hint !== null && hint.tagName !=='EM' && hint.tagName !=='UL' && hint.tagName !=='IMG') {
+				if (   hint !== null 
+					&& hint.tagName !=='EM' 
+					&& hint.tagName !=='UL' 
+					&& hint.tagName !=='IMG'
+					&& hint.className === _CONST.autoCompltHintClass ) {
+					
 					this.deselect();					
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
 					if(hint.tagName ==="LI" || hint.tagName ==="DIV"){

@@ -43,7 +43,7 @@ li.autocomplete-list-li, .unbxd-prouct-suggest {
 }
 
 em{
-        font-weight: bolder;
+        font-weight: 900;
         font-style: normal;
 }
 
@@ -102,7 +102,7 @@ body, input {
         width: 300px;
 }
 
-/*.product-name{
+.product-name{
         font-size: 14px;
 }
 .product-img{
@@ -112,15 +112,16 @@ body, input {
         margin-top: 9px;
 }
 .product-price{
-        float: right;
+    float: right;
     font-size: 13px;
     margin-right: 31px;
     margin-top: 10px;
-}*/
+}
 
 img.autocomplete-list-li{
         width:40px;
         height:40px;
+        padding-right: 4px;
 }
 
 .product-detailsas{
@@ -132,6 +133,7 @@ img.autocomplete-list-li{
         float: left;
         width: 40px;
         height: 40px;
+        padding-right: 6px;
 }
 
 .product-priceas{
@@ -153,7 +155,7 @@ li#unbxd_hint.autocomplete-list-li{
 }
 
 li.autocomplete-list-li > div {
-        border-top: 1px solid #e2e2e2;
+        /*border-top: 1px solid #e2e2e2;*/
  }
 
 span.autocomplete-list-li, span.autocomplete-list-li:hover{
@@ -163,4 +165,60 @@ span.autocomplete-list-li, span.autocomplete-list-li:hover{
         font-size: 13px;
         font-style: normal;
         padding-left: 0;
+}
+.header {
+    padding-bottom: 8px;
+    border-bottom-color: rgb(51, 51, 51);
+    border-bottom-style: none;
+    border-bottom-width: 0px;
+    border-collapse: collapse;
+    border-image-outset: 0px;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(51, 51, 51);
+    border-left-style: none;
+    border-left-width: 0px;
+    border-right-color: rgb(51, 51, 51);
+    border-right-style: none;
+    border-right-width: 0px;
+    border-top-color: rgb(204, 204, 204);
+    border-top-style: solid;
+    border-top-width: 1px;
+    color: rgb(51, 51, 51);
+    cursor: default;
+    display: block;
+    font-family: arial, tahoma, verdana, sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    height: 5px;
+    line-height: 18px;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 6px;
+    overflow-x: visible;
+    overflow-y: visible;
+    padding-left: 10px;
+    padding-right: 5px;
+    padding-top: 2px;
+    text-align: left;
+    vertical-align: baseline;
+    width: 485px;
+}
+
+.header .text {
+    top: -11px;
+    display: inline-block;
+    position: relative;
+    background: #fff;
+    padding: 0 5px;
+    font-size: 13px;
+    color: #6d6d6d;
 }
