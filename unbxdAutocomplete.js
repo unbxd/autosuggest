@@ -284,12 +284,12 @@ function myAjax(openCallback) {
 				    	return '<em>'+str+'</em>'
 				    });
 				
-				var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +'">'
+				var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 				
 				
 			    +'<div value="'+value+'" >'
-			         + '<img class="'+_CONST.imgClass+'" value="'+value+'" src="'+hint.imgUrl+'">'
-			         +'<div value="'+value+'" class="'+_CONST.prodName+'" >'
+			         + '<img class="hint '+_CONST.imgClass+'" value="'+value+'" src="'+hint.imgUrl+'">'
+			         +'<div value="'+value+'" class="hint '+_CONST.prodName+'" >'
 			             +hint.name
 			         + '</div>'
 			         +'<div value="'+value+'" class="clearfix"></div>'
@@ -410,7 +410,6 @@ function myAjax(openCallback) {
 				@ NG: false
 		*/
 		_AutoCompltList.prototype.isHint = function (el) {
-	
 			if (el && typeof el == "object" && el.nodeType === 1) {
 				 var cls = " " + el.className + " ";
 				 var isHint = (cls.indexOf(" " + _CONST.autoCompltHintClass + " ") >= 0)  ;
@@ -642,12 +641,13 @@ function myAjax(openCallback) {
 					}					
 				}
 				
-			
+			    var cls = hint.className ,
+				    isHint = (cls.indexOf( _CONST.autoCompltHintClass) >= 0) ||  (cls.indexOf("hint") >= 0) ;
+
 				if (   hint !== null 
 					&& hint.tagName !=='EM' 
 					&& hint.tagName !=='UL' 
-					&& hint.tagName !=='IMG'
-					&& hint.className === _CONST.autoCompltHintClass ) {
+					&& isHint ) {
 					
 					this.deselect();					
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
@@ -665,7 +665,8 @@ function myAjax(openCallback) {
 			if (this.uiElem) {
 				var slct = this.getSelected();
 				if (slct && slct.tagName !=='EM') {
-					slct.className = _CONST.autoCompltHintClass;
+					slct.className = slct.className.replace(_CONST.autoCompltHintSelectedClass, "").replace("hint", "").replace(_CONST.autoCompltHintClass, "");
+					slct.className = slct.className + _CONST.autoCompltHintClass;
 					if(slct.tagName ==="LI" || slct.tagName ==="DIV" ){
 						slct.style.color = this.styles.autoCompltHint.color;
 						slct.style.backgroundColor = this.styles.autoCompltHint.backgroundColor;
@@ -685,7 +686,6 @@ function myAjax(openCallback) {
 
 	var publicProps = {
 		parseResponse :function(response) {
-			       console.log(this.openCallback);
 				   if(_CONST.inputText !== response.searchMetaData.queryParams.q)
 				   	 return;
 
@@ -725,7 +725,7 @@ function myAjax(openCallback) {
 				if(prods.length > 0)
 					result.prods = prods;
 				
-				console.log( JSON.stringify(result) );
+				//console.log( JSON.stringify(result) );
 				this.openCallback(result);
 		 },
 
@@ -1007,7 +1007,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    return;
+				    //return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 

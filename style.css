@@ -35,9 +35,13 @@ li.autocomplete-list-li, .unbxd-prouct-suggest {
         font-family:inherit;
         /*border-bottom: 1px solid #e2e2e2;*/
 }
+.unbxd-prouct-suggest{
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
 
 .autocomplete-list-li:hover, .unbxd-prouct-suggest:hover, .autoComplt-hint-selected{
-        background-color: #808080;
+        background-color: rgb(242, 242, 242);
         color: #000;
         cursor: pointer !important;
 }
