@@ -9,6 +9,32 @@
 
 		catageryLength:3,  
 
+		inCatageryLength:2,
+
+		catSuggestions:{//
+			numSuggestions: 3,
+			inBrandCount: 3
+
+		},
+
+		brandSuggestions:{//
+			numSuggestions: 3,
+			inCategoriesCount: 3
+		},
+
+		topQuerySuggestions:{//
+			numSuggestions: 3
+		},
+
+		popularProducts:{//
+			numSuggestions: 3,
+			imageUrl: <IMAGEURL_FIELDNAME>,
+			productName: title, //<PRODUCT_NAME_FIELDNAME>
+			productCategory: <PRODUCT_CATEGORY_FIELDNAME>,
+			productPrice: <PRODUCT_PRICE_FIELDNAME>
+
+		}
+
 		productDetails:true,  //PRODUCT DETAILS LIKE IMAGE AND  PRICE , GIVE TRUE IF YOU WANT THIS
 
 		unbxdShowProductImg:true,
@@ -16,6 +42,10 @@
 		unbxdShowProductName:true,
 
 		unbxdShowProductPrice:true,
+
+		siteKey: demo-u1393483043451,..
+
+		apiKey: ae30782589df23780a9d98502388555f,//
 
         searchUrl:"//demo-u1393483043451.search.unbxdapi.com/ae30782589df23780a9d98502388555f/autosuggest",
 		
@@ -33,6 +63,7 @@
 				border : "1px solid rgb(170, 170, 170)",
 				padding : "0",
 				margin: "0",
+				zIndex : 999,
 				overflowX : "hidden",
 				overflowY : "auto",
 				display : "none",

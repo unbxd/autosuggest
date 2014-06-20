@@ -1,24 +1,24 @@
-.autocomplete-list-ul{
-        overflow-x: hidden;
-        font-family:'tahoma',Geneva,Arial,Helvetica,sans-serif;
-        font-size: 13px;
+input {
+    font-size: 14px;
+}
+.unbxd-autocomplete-list-ul{
+        font-family: arial, tahoma, verdana, sans-serif;
+        font-size: 11px;
         font-style: normal;
         font-variant: normal;
         font-weight: normal;
         line-height: 16px;
-        background: #efefef;
-        position: absolute;
         height: auto;
-        border: 1px solid rgb(170, 170, 170);
         padding: 0px;
         margin: 0px;
-        z-index: 999;
+        z-index: 99999;
         background-color: #fff;
         border-radius: 4px;
+        padding-top: 4px !important;
 }
 
 
-li.autocomplete-list-li, .unbxd-prouct-suggest {
+li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
         z-index: 10;
         padding-left: 10px;
         cursor: default;
@@ -31,19 +31,33 @@ li.autocomplete-list-li, .unbxd-prouct-suggest {
         overflow: hidden;
         list-style-type: none;
         height: auto;
-        padding-bottom: 1px;
         font-family:inherit;
         /*border-bottom: 1px solid #e2e2e2;*/
 }
+
 .unbxd-prouct-suggest{
     padding-top: 3px;
     padding-bottom: 3px;
 }
 
-.autocomplete-list-li:hover, .unbxd-prouct-suggest:hover, .autoComplt-hint-selected{
-        background-color: rgb(242, 242, 242);
+li.unbxd-autocomplete-list-li:hover {
+    background-color: #f2f2f2;
+    color: #000;
+    cursor: pointer !important;
+    }
+li.unbxd-autocomplete-list-li span:hover {
+    background-color: #f2f2f2;
+    cursor: pointer !important;
+}
+li.unbxd-autocomplete-list-li img:hover {
+    background-color: #f2f2f2;
+    color: #000;
+    cursor: pointer !important;
+}
+
+li#unbxd_hint:hover, li.autoComplt-hint-selected{
         color: #000;
-        cursor: pointer !important;
+        cursor: pointer ;
 }
 
 em{
@@ -55,7 +69,7 @@ em{
         text-transform: uppercase;
         font-weight: 500;
         font-size: 14px;
-        padding: 10px 10px 10px 10px;
+        padding: 0 10px 10px 10px;
         font-family: "Helvetica Neue",Arial,sans-serif  ;
         font-size: 14px;
         line-height: 16px;
@@ -86,11 +100,6 @@ em{
         background-color : red  ;
 }
 
-
-
-body, input {
-                        font-size: 14px;
-}
 .autoCmplt-input {
         height: 25px;
         padding: 2px;
@@ -109,26 +118,111 @@ body, input {
 .product-name{
         font-size: 14px;
 }
-.product-img{
-        float: left;
-        margin-right: 5px;
-        margin-bottom: 5px;
-        margin-top: 9px;
-}
-.product-price{
-    float: right;
+.unbxd-product-img{
+    background-color: rgb(255, 255, 255);
+    border-bottom-color: rgb(51, 51, 51);
+    border-bottom-style: none;
+    border-bottom-width: 0px;
+    border-collapse: collapse;
+    border-image-outset: 0px;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(51, 51, 51);
+    border-left-style: none;
+    border-left-width: 0px;
+    border-right-color: rgb(51, 51, 51);
+    border-right-style: none;
+    border-right-width: 0px;
+    border-top-color: rgb(51, 51, 51);
+    border-top-style: none;
+    border-top-width: 0px;
+    color: rgb(51, 51, 51);
+    cursor: default;
+    display: block;
+    float: left;
+    font-family: arial, tahoma, verdana, sans-serif;
     font-size: 13px;
-    margin-right: 31px;
-    margin-top: 10px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    height: 45px;
+    line-height: 18px;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    margin-bottom: 2px;
+    margin-left: 0px;
+    margin-right: 5px;
+    margin-top: 2px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 4px;
+    text-align: center;
+    vertical-align: baseline;
+    width: 47px;
+}
+.unbxd-product-img > img {
+    border-bottom-color: rgb(51, 51, 51);
+    border-bottom-style: none;
+    border-bottom-width: 0px;
+    border-collapse: collapse;
+    border-image-outset: 0px;
+    border-image-repeat: stretch;
+    border-image-slice: 100%;
+    border-image-source: none;
+    border-image-width: 1;
+    border-left-color: rgb(51, 51, 51);
+    border-left-style: none;
+    border-left-width: 0px;
+    border-right-color: rgb(51, 51, 51);
+    border-right-style: none;
+    border-right-width: 0px;
+    border-top-color: rgb(51, 51, 51);
+    border-top-style: none;
+    border-top-width: 0px;
+    color: rgb(51, 51, 51);
+    cursor: default;
+    display: inline;
+    font-family: arial, tahoma, verdana, sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    height: 40px;
+    line-height: 18px;
+    list-style-image: none;
+    list-style-position: outside;
+    list-style-type: none;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    max-height: 40px;
+    max-width: 40px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    text-align: center;
+    vertical-align: baseline;
+    width: 22px;
+}
+.unbxd-product-price:before{
+    content: 'Price: ';
+}
+.unbxd-product-price{
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    color: #d2322d;
+    font-family: arial, tahoma, verdana, sans-serif;
 }
 
-img.autocomplete-list-li{
-        width:40px;
-        height:40px;
-        padding-right: 4px;
-}
 
-.product-detailsas{
+.unbxd-product-suggest{
         height: 40px;
 }
 
@@ -150,19 +244,12 @@ img.autocomplete-list-li{
 
 }
 
-div.autocomplete-list-li{
-        height: 40px;
-}
 
-li#unbxd_hint.autocomplete-list-li{
-       border-top: 1px solid #e2e2e2;
-}
-
-li.autocomplete-list-li > div {
+li.unbxd-autocomplete-list-li > div {
         /*border-top: 1px solid #e2e2e2;*/
  }
 
-span.autocomplete-list-li, span.autocomplete-list-li:hover{
+span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
         font-weight: bold;
         color:#d2322d;
         font-family: arial, tahoma, verdana, sans-serif;
@@ -226,3 +313,11 @@ span.autocomplete-list-li, span.autocomplete-list-li:hover{
     font-size: 13px;
     color: #6d6d6d;
 }
+
+._unbxd-hide{
+    display: none;
+}
+
+
+
+

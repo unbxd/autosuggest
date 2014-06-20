@@ -4,21 +4,27 @@ var unbxdAutocomplete = (function () {
 
 	var _CONST = {
 		
-		autoCompltListClass : "autocomplete-list-ul",
+		autoCompltListClass : "unbxd-autocomplete-list-ul",
 		
-		autoCompltHintClass : "autocomplete-list-li",
+		autoCompltHintClass : "unbxd-autocomplete-list-li",
 
-		unbxdCatageryClass: "autocomplete-category",
+		unbxdCatageryClass: "unbxd-autocomplete-category",
 		
-		autoCompltHintSelectedClass : "autoComplt-hint-selected",
+		autoCompltHintSelectedClass : "unbxd-autoComplt-hint-selected",
 
 		unbxdProductClass:"unbxd-prouct-suggest",
-		
-		maxHintNum : 10,
+
+		unbxdShowProductImg:true,
+
+		unbxdShowProductName:true,
+
+		unbxdShowProductPrice:true,
+
+		unbxdSelectorClass:'_unbxd-hint',
 
 		callSearch:true,
 
-		catageryLength:2,
+		catageryLength:3,
 
 		catagery:true,
 
@@ -32,9 +38,9 @@ var unbxdAutocomplete = (function () {
 
 		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
 
-		rows:100,
+		rows:20,
 		
-		autoCompltDelay : 1, // in ms
+		autoCompltDelay : 0.1, // in ms
 		
 		listStatus : {
 			attr : "data-listStatus",
@@ -279,7 +285,8 @@ function myAjax(openCallback) {
 				var value = hint.name,
 				    reg = new RegExp(_CONST.inputText, 'gi');
 		
-				
+				console.log(_CONST.unbxdShowProductImg);
+
 				hint.name = hint.name.replace(reg, function(str) {
 				    	return '<em>'+str+'</em>'
 				    });
@@ -287,10 +294,15 @@ function myAjax(openCallback) {
 				var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 				
 				
-			    +'<div value="'+value+'" >'
-			         + '<img class="hint '+_CONST.imgClass+'" value="'+value+'" src="'+hint.imgUrl+'">'
-			         +'<div value="'+value+'" class="hint '+_CONST.prodName+'" >'
+			    +'<div class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
+			         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
+			         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
+			         +'</div>'
+			         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
 			             +hint.name
+			         + '</div>'
+			          +'<div value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
+			             +hint.price
 			         + '</div>'
 			         +'<div value="'+value+'" class="clearfix"></div>'
 			    +'</div>'
@@ -324,7 +336,6 @@ function myAjax(openCallback) {
 			list.style.border = styles.autoCompltList.border;	
 			list.style.padding = styles.autoCompltList.padding;
 			list.style.margin = styles.autoCompltList.margin;
-			list.style.zIndex = styles.autoCompltList.zIndex;
 			list.style.overflowX = styles.autoCompltList.overflowX;
 			list.style.overflowY= styles.autoCompltList.overflowY;
 			list.style.display = styles.autoCompltList.display;
@@ -435,7 +446,7 @@ function myAjax(openCallback) {
 					product = {};
 				
 			  //build hints
-			  if(result.hints.length > 0){
+			  if(result && result.hints && result.hints.length > 0){
 			  	 hints = result.hints
 			  	for(var k=0; k<hints.length;k++ ){
 			  		hintObject = hints[k];
@@ -464,7 +475,7 @@ function myAjax(openCallback) {
 			  	}
 			  }
 			  //build products with thunmbnails
-			  if(result.prods.length > 0 && _CONST.productDetails === true){
+			  if(result.prods && result.prods.length > 0 && _CONST.productDetails === true){
 			  	  hs.push( _ui.buildHeader(' Popular Products ') );
 			  	  prods = result.prods;
 			  	  for(var k=0; k < prods.length; k++){
@@ -642,18 +653,19 @@ function myAjax(openCallback) {
 				}
 				
 			    var cls = hint.className ,
-				    isHint = (cls.indexOf( _CONST.autoCompltHintClass) >= 0) ||  (cls.indexOf("hint") >= 0) ;
+				    isHint = (cls.indexOf( _CONST.autoCompltHintClass) >= 0) ||  (cls.indexOf( _CONST.unbxdSelectorClass ) >= 0) ;
 
 				if (   hint !== null 
 					&& hint.tagName !=='EM' 
 					&& hint.tagName !=='UL' 
 					&& isHint ) {
 					
-					this.deselect();					
+					this.deselect();	
+					hint.className = hint.className.trim();				
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
 					if(hint.tagName ==="LI" || hint.tagName ==="DIV"){
 						hint.style.color = this.styles.autoCompltHintSelected.color;
-						hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;						
+						// hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;						
 					}
 					
 				}
@@ -665,7 +677,7 @@ function myAjax(openCallback) {
 			if (this.uiElem) {
 				var slct = this.getSelected();
 				if (slct && slct.tagName !=='EM') {
-					slct.className = slct.className.replace(_CONST.autoCompltHintSelectedClass, "").replace("hint", "").replace(_CONST.autoCompltHintClass, "");
+					slct.className = slct.className.replace(_CONST.autoCompltHintSelectedClass, "").replace(_CONST.autoCompltHintClass, "");
 					slct.className = slct.className + _CONST.autoCompltHintClass;
 					if(slct.tagName ==="LI" || slct.tagName ==="DIV" ){
 						slct.style.color = this.styles.autoCompltHint.color;
@@ -679,7 +691,7 @@ function myAjax(openCallback) {
 				@ NG: null
 		*/
 		_AutoCompltList.prototype.getSelected = function () {
-			var ret =  !this.uiElem ? null : this.uiElem.querySelector("." + _CONST.autoCompltHintSelectedClass) || null;
+			var ret =  !this.uiElem ? null : this.uiElem.querySelector("." + _CONST.autoCompltHintSelectedClass) ||   null;
 			return ret;
 		}
 	}
@@ -690,7 +702,7 @@ function myAjax(openCallback) {
 				   	 return;
 
 				var products = response.response.products,
-					types = ['brand', 'category', 'productname', 'title'],
+					types = ['name', 'brand', 'category', 'productname', 'title'],
 					categories = ['category_in', 'brand_in'],
 					result = {}, hints = [], prods = [];
 
@@ -698,7 +710,7 @@ function myAjax(openCallback) {
 				for(var k=0; k<products.length; k++){
 		            var obj = {};
 					    obj = { "name":products[k].autosuggest };
-						if(products[k].doctype === 'brand' || products[k].doctype === 'category'||  products[k].doctype === 'title' ){
+						if(products[k].doctype === 'brand' || products[k].doctype === 'category'||  products[k].doctype === 'title' || products[k].doctype === 'name' ){
 							
 							if(products[k].doctype === 'category'){
 								obj.brand_in = products[k].brand_in;
@@ -759,6 +771,10 @@ function myAjax(openCallback) {
 				  if( config[k] || config[k] === false )
 				    _CONST[k] = config[k];
 				};
+
+				_CONST.unbxdShowProductImg === false ? _CONST.unbxdShowProductImg = '_unbxd-hide' : _CONST.unbxdShowProductImg = ' ';
+				_CONST.unbxdShowProductName === false ? _CONST.unbxdShowProductName = '_unbxd-hide' : _CONST.unbxdShowProductName = ' ';
+				_CONST.unbxdShowProductPrice === false ? _CONST.unbxdShowProductPrice = '_unbxd-hide' : _CONST.unbxdShowProductPrice = ' ';
 
 				_CONST.searchUrl = _CONST.searchUrl + _CONST.jsonpCallback + "&rows="+ _CONST.rows;
 				var params = {					
@@ -1007,7 +1023,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    //return;
+				    return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
