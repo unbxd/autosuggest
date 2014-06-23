@@ -717,9 +717,9 @@ function myAjax(openCallback) {
 								if(obj.brand_in && obj.brand_in.length > 3)
 									obj.brand_in.length = _CONST.catageryLength;
 							}else if( products[k].doctype === 'brand' ){
-								// obj.category_in = products[k].category_in;
-								// if(obj.category_in && obj.category_in.length > 3)
-								// 	obj.category_in.length = _CONST.catageryLength;
+								obj.category_in = products[k].category_in;
+								if(obj.category_in && obj.category_in.length > 3)
+									obj.category_in.length = _CONST.catageryLength;
 							}
 							
 							hints.push(obj);
@@ -1029,7 +1029,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    return;
+				   // return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
