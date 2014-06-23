@@ -3,7 +3,7 @@
 
    config = {
 
-		rows:10,  //NO OF ROWS TO BE FETCHED FROM SERVER 
+		rows:20,  //NO OF ROWS TO BE FETCHED FROM SERVER 
 
 		catagery:true,  //CATAGORY WISE BREAKDOWN IN THE AUTOCOMPLETE, GIVE TRUE IF YOU WANT THIS
 
@@ -15,13 +15,17 @@
 
 		unbxdShowProductName:true,
 
-		unbxdShowProductPrice:true,
+		unbxdShowProductPrice:false,
 
-        searchUrl:"//demo-u1393483043451.search.unbxdapi.com/ae30782589df23780a9d98502388555f/autosuggest",
+		searchUrl:"//demo-u1393483043451.search.unbxdapi.com/ae30782589df23780a9d98502388555f/autosuggest",
+        
+       // searchUrl:"//tix4cause-u1403176244496.search.unbxdapi.com/7b0e6e36282b6db1bfd69a2af86b4674/autosuggest",
 		
-		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse&filter=-doctype:"title"',
+		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
 		
-		callSearch:false, //IF YOU ARE USING WITH UNBXD SEARCH FOR DEMO MAKE THIS TRUE
+		callSearch: true, //IF YOU ARE USING WITH UNBXD SEARCH FOR DEMO MAKE THIS TRUE
+
+		formSubmit : false,
 
 
 		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
@@ -55,8 +59,8 @@
 			},
 			//STYLES FOR SELECTED ROW ( MOUSE OVER )
 			autoCompltHintSelected : {
-				color : "none",
-				backgroundColor : "#f2f2f2"
+				// color : "none",
+				// backgroundColor : "#f2f2f2"
 			}
 		},
    }

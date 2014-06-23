@@ -22,7 +22,9 @@ var unbxdAutocomplete = (function () {
 
 		unbxdSelectorClass:'_unbxd-hint',
 
-		callSearch:true,
+		callSearch: true,
+
+		formSubmit : false,
 
 		catageryLength:3,
 
@@ -285,7 +287,6 @@ function myAjax(openCallback) {
 				var value = hint.name,
 				    reg = new RegExp(_CONST.inputText, 'gi');
 		
-				console.log(_CONST.unbxdShowProductImg);
 
 				hint.name = hint.name.replace(reg, function(str) {
 				    	return '<em>'+str+'</em>'
@@ -318,7 +319,7 @@ function myAjax(openCallback) {
 
 				var header = "";
 		
-				hint = this.buildElem('<li class="header" ><span class="text">'+headerValue+'</span></li>');
+				hint = this.buildElem('<li class="unbxd-header" ><span class="text">'+headerValue+'</span></li>');
 		
 				return hint;
 			
@@ -405,9 +406,8 @@ function myAjax(openCallback) {
 					if (that.isHint(e.target)) {
 						that.select(e.target);
 						that.assocInput.value = that.getSelected().getAttribute("value");
-						if(_CONST.callSearch)
-							unbxdApi.getSearchResults( that.getSelected().getAttribute("value"), 'search', paintHomePage, 1, 12 );
 						that.assocInput.autoComplt.close();
+						that.assocInput.autoComplt.unbxdSearch();
 					}
 				});
 				
@@ -632,7 +632,7 @@ function myAjax(openCallback) {
 									  2) the index of the hint in the list. Passing in -1 would select the last hint. Passing in 0 would select the 1st hint.
 		*/
 		_AutoCompltList.prototype.select = function (candidate) {
-		
+
 			if (this.uiElem) {
 			
 				var hint = null;
@@ -717,9 +717,9 @@ function myAjax(openCallback) {
 								if(obj.brand_in && obj.brand_in.length > 3)
 									obj.brand_in.length = _CONST.catageryLength;
 							}else if( products[k].doctype === 'brand' ){
-								obj.category_in = products[k].category_in;
-								if(obj.category_in && obj.category_in.length > 3)
-									obj.category_in.length = _CONST.catageryLength;
+								// obj.category_in = products[k].category_in;
+								// if(obj.category_in && obj.category_in.length > 3)
+								// 	obj.category_in.length = _CONST.catageryLength;
 							}
 							
 							hints.push(obj);
@@ -872,7 +872,10 @@ function myAjax(openCallback) {
 									if (!hint) {
 									// If none is selected, then select the last hint
 										input_autoComplt_list.select(-1);												
-									} else if (hint.previousSibling) {
+									} else if (hint.previousSibling.className==='unbxd-header') {
+									// If some hint is selected and the next hint exists, then select the next hint
+										input_autoComplt_list.select(hint.previousSibling.previousSibling);
+									}else if (hint.previousSibling) {
 									// If some hint is selected and the previous hint exists, then select the previous hint
 										input_autoComplt_list.select(hint.previousSibling);
 									} else {
@@ -881,14 +884,16 @@ function myAjax(openCallback) {
 									}
 									
 								} else if (e.keyCode === _CONST.keyCode.down) {
-								
 									if (!hint) {
 									// If none is selected, then select the first hint
 										input_autoComplt_list.select(0);												
-									} else if (hint.nextSibling) {
+									} else if (hint.nextSibling.className==='unbxd-header') {
+									// If some hint is selected and the next hint exists, then select the next hint
+										input_autoComplt_list.select(hint.nextSibling.nextSibling);
+									}else if (hint.nextSibling) {
 									// If some hint is selected and the next hint exists, then select the next hint
 										input_autoComplt_list.select(hint.nextSibling);
-									} else {
+									}  else {
 									// If some hint is selected but the next hint doesn't exists, then deselect all
 										input_autoComplt_list.deselect();
 									}
@@ -926,6 +931,7 @@ function myAjax(openCallback) {
 											// When pressing the enter key, let's try autocomplete
 											input_autoComplt_compltInput.call(input);
 											input.autoComplt.close();
+											input.autoComplt.unbxdSearch();
 										}
 									break;
 									
@@ -1027,6 +1033,14 @@ function myAjax(openCallback) {
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
+				}
+
+				//fire search api
+				input.autoComplt.unbxdSearch = function () {
+					if( _CONST.formSubmit )
+						input.form.submit();
+					if( _CONST.callSearch )
+						unbxdApi.getSearchResults( this.getSelected().getAttribute("value"), 'search', paintHomePage, 1, 12 );						
 				}
 				
 				input.autoComplt.enable = function () {

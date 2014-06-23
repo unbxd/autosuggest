@@ -32,7 +32,9 @@ li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
         list-style-type: none;
         height: auto;
         font-family:inherit;
-        /*border-bottom: 1px solid #e2e2e2;*/
+        white-space: nowrap;
+        overflow: hidden !important;
+        text-overflow: ellipsis;
 }
 
 .unbxd-prouct-suggest{
@@ -40,16 +42,26 @@ li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
     padding-bottom: 3px;
 }
 
-li.unbxd-autocomplete-list-li:hover {
-    background-color: #f2f2f2;
-    color: #000;
+li.unbxd-autocomplete-list-li:hover,  li.unbxd-autoComplt-hint-selected {
+    background-color: #f2f2f2 !important;
+    color: #000 !important;
     cursor: pointer !important;
     }
 li.unbxd-autocomplete-list-li span:hover {
     background-color: #f2f2f2;
     cursor: pointer !important;
 }
+li.unbxd-autoComplt-hint-selected span:hover {
+    background-color: #f2f2f2;
+    cursor: pointer !important;
+}
+
 li.unbxd-autocomplete-list-li img:hover {
+    background-color: #f2f2f2;
+    color: #000;
+    cursor: pointer !important;
+}
+li.unbxd-autoComplt-hint-selected img:hover {
     background-color: #f2f2f2;
     color: #000;
     cursor: pointer !important;
@@ -257,7 +269,7 @@ span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
         font-style: normal;
         padding-left: 0;
 }
-.header {
+.unbxd-header {
     padding-bottom: 8px;
     border-bottom-color: rgb(51, 51, 51);
     border-bottom-style: none;
@@ -304,7 +316,7 @@ span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
     width: 485px;
 }
 
-.header .text {
+.unbxd-header .text {
     top: -11px;
     display: inline-block;
     position: relative;
@@ -317,7 +329,6 @@ span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
 ._unbxd-hide{
     display: none;
 }
-
 
 
 
