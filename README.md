@@ -1,7 +1,7 @@
 ## unbxdAutocomplete.js
 #####no jquery auto complete library for unbxd search
 
-Need to include **unbxdAutocomplete.js** and **style.css**.
+Need to include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 
 
 ### Example usage - default
