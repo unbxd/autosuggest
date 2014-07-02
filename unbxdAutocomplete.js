@@ -3,6 +3,30 @@
 var unbxdAutocomplete = (function () {
 
 	var _CONST = {
+
+		suggestions:{
+			numSuggestions: 3,
+			inBrandCount: 3,
+			inCategoriesCount: 3
+		},
+
+		topQuerySuggestions:{
+			numSuggestions: 3
+		},
+
+		unbxdSuggestions:{
+			numSuggestions: 3
+		},
+
+		popularProducts:{
+			numSuggestions: 3,
+			title:true,
+			price:true,
+			image:true,
+			imageUrl:null
+		},
+
+		inFields:['brand_in', 'category_in'],
 		
 		autoCompltListClass : "unbxd-autocomplete-list-ul",
 		
@@ -22,7 +46,7 @@ var unbxdAutocomplete = (function () {
 
 		unbxdSelectorClass:'_unbxd-hint',
 
-		callSearch: true,
+		callSearch: false,
 
 		formSubmit : false,
 
@@ -72,15 +96,38 @@ var unbxdAutocomplete = (function () {
 
 		prodName:'product-nameas',
 	
-		defaultStyles : {
 		
+		defaultStyles : {
+		    //STYLES FOR WIDGET
 			autoCompltList : {
+				maxHeight : "400px",
+				border : "1px solid rgb(170, 170, 170)",
+				padding : "0",
+				margin: "0",
+				overflowX : "hidden",
+				overflowY : "auto",
+				display : "none",
+				position: "absolute",
+				backgroundColor : "#FFF",
+				width:'',
+				top:'',
+				left:''
 			},
-			
+			//STYLES FOR EACH ROW INSIDE WIDGET
 			autoCompltHint : {
+				height : "22px",
+				padding: "0 2px 0 5px",
+				margin: "0",
+				overflow: "auto",
+				listStyleType: "none",
+				color : "#ffff",
+				cursor : "default",
+				fontSize : "14px"
 			},
-			
+			//STYLES FOR SELECTED ROW ( MOUSE OVER )
 			autoCompltHintSelected : {
+				// color : "none",
+				// backgroundColor : "#f2f2f2"
 			}
 		},
 		
@@ -405,7 +452,7 @@ function myAjax(openCallback) {
 					e = _normalizeEvt(e);
 					if (that.isHint(e.target)) {
 						that.select(e.target);
-						that.assocInput.value = that.getSelected().getAttribute("value");
+						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.toElement.parentNode.getAttribute("value");
 						that.assocInput.autoComplt.close();
 						that.assocInput.autoComplt.unbxdSearch();
 					}
@@ -446,8 +493,8 @@ function myAjax(openCallback) {
 					product = {};
 				
 			  //build hints
-			  if(result && result.hints && result.hints.length > 0){
-			  	 hints = result.hints
+			  if(result && result.inFields && result.inFields.length > 0){
+			  	 hints = result.inFields
 			  	for(var k=0; k<hints.length;k++ ){
 			  		hintObject = hints[k];
 
@@ -457,12 +504,12 @@ function myAjax(openCallback) {
 							}
 					
 					if(_CONST.catagery === true){
-						for(var j= 0; j<_CONST.catageries.length; j++){
+						for(var j= 0; j<_CONST.inFields.length; j++){
 							var arr = [],
 								value = hintObject.name;
 
-							if( hintObject[_CONST.catageries[j]] && hintObject[_CONST.catageries[j]].length > 0)
-								arr = hintObject[_CONST.catageries[j]];
+							if( hintObject[_CONST.inFields[j]] && hintObject[_CONST.inFields[j]].length > 0)
+								arr = hintObject[_CONST.inFields[j]];
 								for (i = 0; i < arr.length; i++) {
 									hs.push( _ui.buildCategory(arr[i], this.styles, value));
 									if (!hs[hs.length - 1]) {
@@ -473,6 +520,30 @@ function myAjax(openCallback) {
 					}
 
 			  	}
+			  }
+
+			  if(result.queries && result.queries.length > 0){
+			  	   	queries = result.queries
+				  	for(var k=0; k<queries.length;k++ ){
+				  		querie = queries[k];
+
+				  		hs.push( _ui.buildHint(querie, this.styles) );
+								if (!hs[hs.length - 1]) {
+									hs.pop();
+								}
+				  	}
+			  }
+
+			  if(result.suggestions && result.suggestions.length > 0){
+			  	   	suggestions = result.suggestions
+				  	for(var k=0; k<suggestions.length;k++ ){
+				  		suggestion = suggestions[k];
+
+				  		hs.push( _ui.buildHint(suggestion, this.styles) );
+								if (!hs[hs.length - 1]) {
+									hs.pop();
+								}
+				  	}
 			  }
 			  //build products with thunmbnails
 			  if(result.prods && result.prods.length > 0 && _CONST.productDetails === true){
@@ -486,6 +557,8 @@ function myAjax(openCallback) {
 							}
 			  	  }
 			  }
+
+			 
 				
 				if (hs.length > 0) {
 					var buf = document.createDocumentFragment();
@@ -702,42 +775,63 @@ function myAjax(openCallback) {
 				   	 return;
 
 				var products = response.response.products,
-					types = ['name', 'brand', 'category', 'productname', 'title'],
+					types = ["IN_FIELD", "POPULAR_PRODUCTS", "TOP_SEARCH_QUERIES", "UNBXD_SUGGESTION"],
 					categories = ['category_in', 'brand_in'],
-					result = {}, hints = [], prods = [];
+					result = {}, hints = [],inFields=[], prods = [], queries = [], suggestions=[];
 
 			
 				for(var k=0; k<products.length; k++){
 		            var obj = {};
 					    obj = { "name":products[k].autosuggest };
-						if(products[k].doctype === 'brand' || products[k].doctype === 'category'||  products[k].doctype === 'title' || products[k].doctype === 'name' ){
+
+						if(products[k].doctype === 'IN_FIELD'  ){
 							
-							if(products[k].doctype === 'category'){
-								obj.brand_in = products[k].brand_in;
-								if(obj.brand_in && obj.brand_in.length > 3)
-									obj.brand_in.length = _CONST.catageryLength;
-							}else if( products[k].doctype === 'brand' ){
-								obj.category_in = products[k].category_in;
-								if(obj.category_in && obj.category_in.length > 3)
-									obj.category_in.length = _CONST.catageryLength;
-							}
-							
-							hints.push(obj);
-						}else if(products[k].doctype ===  _CONST.type ){
+					    	obj.brand_in = products[k].brand_in;
+					    	if(obj.brand_in && obj.brand_in.length > _CONST.suggestions.inBrandCount)
+									obj.brand_in.length = _CONST.suggestions.inBrandCount;
+
+							obj.category_in = products[k].category_in;
+								if(obj.category_in && obj.category_in.length > _CONST.suggestions.inCategoriesCount)
+									obj.category_in.length = _CONST.suggestions.inCategoriesCount;
+
+							inFields.push(obj);
+						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
 							obj.imgUrl 		= 	products[k].image_url;
 							obj.price 		= 	products[k].price;
 							obj.uniqueId 	=  	products[k].uniqueId;
 							obj.isProduct 	= 	true;
 							prods.push(obj);
-					    }			
+					    }else if( products[k].doctype ===  "TOP_SEARCH_QUERIES" ){
+					    	queries.push( obj );
+					    }else if( products[k].doctype ===  "UNBXD_SUGGESTION" ){
+					    	suggestions.push( obj );
+					    }
 				}
 
-				if(hints.length > 0)
-					result.hints = hints;
-				if(prods.length > 0)
-					result.prods = prods;
-				
-				//console.log( JSON.stringify(result) );
+				if(inFields.length > _CONST.suggestions.numSuggestions){
+					inFields.length = _CONST.suggestions.numSuggestions;
+					
+				}
+					
+				if(prods.length > _CONST.popularProducts.numSuggestions){
+					prods.length = _CONST.popularProducts.numSuggestions;
+					
+				}
+
+				if(queries.length > _CONST.topQuerySuggestions.numSuggestions){
+					queries.length = _CONST.topQuerySuggestions.numSuggestions;
+					
+				}
+
+				if(suggestions.length > _CONST.unbxdSuggestions.numSuggestions){
+					suggestions.length = _CONST.unbxdSuggestions.numSuggestions;
+					
+				}
+				result.inFields = inFields;
+				result.prods = prods;
+				result.queries = queries;
+				result.suggestions = suggestions;
+				console.log( result );
 				this.openCallback(result);
 		 },
 
@@ -751,6 +845,19 @@ function myAjax(openCallback) {
 			var script = document.createElement('script');
 			script.src = _CONST.searchUrl+"&q="+input;
 			document.body.appendChild(script);
+		},
+
+		setConfigValues:function(_CONST, config){
+
+			for(var k in _CONST ){
+				  if( typeof _CONST[k] === 'object' &&   config[k] ){
+                      unbxdAutocomplete.setConfigValues( _CONST[k], config[k] );
+				  }else if( config[k] || config[k] === false ){
+				  	 _CONST[k] = config[k];
+				  }
+			}
+				    
+		   return;
 		},
 
 		enable : function (input, config) {
@@ -767,14 +874,15 @@ function myAjax(openCallback) {
 				input.autoComplt = {};
 			    //read config file
 			    config = config || {};
-				for(var k in _CONST ){
-				  if( config[k] || config[k] === false )
-				    _CONST[k] = config[k];
-				};
+			    unbxdAutocomplete.setConfigValues(_CONST, config);
+				// for(var k in _CONST ){
+				//   if( config[k] || config[k] === false )
+				//     _CONST[k] = config[k];
+				// };
 
-				_CONST.unbxdShowProductImg === false ? _CONST.unbxdShowProductImg = '_unbxd-hide' : _CONST.unbxdShowProductImg = ' ';
-				_CONST.unbxdShowProductName === false ? _CONST.unbxdShowProductName = '_unbxd-hide' : _CONST.unbxdShowProductName = ' ';
-				_CONST.unbxdShowProductPrice === false ? _CONST.unbxdShowProductPrice = '_unbxd-hide' : _CONST.unbxdShowProductPrice = ' ';
+				_CONST.popularProducts.image === false ? _CONST.unbxdShowProductImg = '_unbxd-hide' : _CONST.unbxdShowProductImg = ' ';
+				_CONST.popularProducts.title === false ? _CONST.unbxdShowProductName = '_unbxd-hide' : _CONST.unbxdShowProductName = ' ';
+				_CONST.popularProducts.price === false ? _CONST.unbxdShowProductPrice = '_unbxd-hide' : _CONST.unbxdShowProductPrice = ' ';
 
 				_CONST.searchUrl = _CONST.searchUrl + _CONST.jsonpCallback + "&rows="+ _CONST.rows;
 				var params = {					
@@ -1029,7 +1137,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				   // return;
+				    return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 

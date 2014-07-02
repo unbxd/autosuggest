@@ -7,26 +7,37 @@
 
 		catagery:true,  //CATAGORY WISE BREAKDOWN IN THE AUTOCOMPLETE, GIVE TRUE IF YOU WANT THIS
 
-		catageryLength:3,  
-
-		productDetails:true,  //PRODUCT DETAILS LIKE IMAGE AND  PRICE , GIVE TRUE IF YOU WANT THIS
-
-		unbxdShowProductImg:true,
-
-		unbxdShowProductName:true,
-
-		unbxdShowProductPrice:false,
-
-		searchUrl:"//demo-u1393483043451.search.unbxdapi.com/ae30782589df23780a9d98502388555f/autosuggest",
-        
-       // searchUrl:"//tix4cause-u1403176244496.search.unbxdapi.com/7b0e6e36282b6db1bfd69a2af86b4674/autosuggest",
+		//http://plazawatches-u1403767348149.search.unbxdapi.com/e754b9ef9da2d315d4a97aa57457b81e/autosuggest
+		// searchUrl:"//tix4cause-u1403176244496.search.unbxdapi.com/7b0e6e36282b6db1bfd69a2af86b4674/autosuggest",
+		searchUrl:"//144.76.115.176:8086/unbxd-search/shivam1-u1394705575346/autosuggest",
 		
 		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
-		
-		callSearch: true, //IF YOU ARE USING WITH UNBXD SEARCH FOR DEMO MAKE THIS TRUE
 
 		formSubmit : false,
 
+		suggestions:{
+			numSuggestions: 2,
+			inBrandCount: 2,
+			inCategoriesCount: 2
+		},
+
+		topQuerySuggestions:{
+			numSuggestions: 1
+		},
+
+		unbxdSuggestions:{
+			numSuggestions: 1
+		},
+
+		productDetails:true,
+
+		popularProducts:{
+			numSuggestions: 2,
+			title:true,
+			price:true,
+			image:true,
+			imageUrl:null
+		},
 
 		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
 
@@ -56,11 +67,6 @@
 				color : "#ffff",
 				cursor : "default",
 				fontSize : "14px"
-			},
-			//STYLES FOR SELECTED ROW ( MOUSE OVER )
-			autoCompltHintSelected : {
-				// color : "none",
-				// backgroundColor : "#f2f2f2"
 			}
 		},
    }

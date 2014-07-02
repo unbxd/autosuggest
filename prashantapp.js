@@ -1,4 +1,4 @@
-
+	
   var input = document.querySelector("#input"), //YOUR INPUT ELEMENT
 
    config = {
@@ -7,18 +7,9 @@
 
 		catagery:true,  //CATAGORY WISE BREAKDOWN IN THE AUTOCOMPLETE, GIVE TRUE IF YOU WANT THIS
 
-		catageryLength:3,  
-
-		inCatageryLength:2,
-
-		catSuggestions:{//
-			numSuggestions: 3,
-			inBrandCount: 3
-
-		},
-
-		brandSuggestions:{//
-			numSuggestions: 3,
+		suggestions:{//
+			numSuggestions: 6,
+			inBrandCount: 3,
 			inCategoriesCount: 3
 		},
 
@@ -26,14 +17,17 @@
 			numSuggestions: 3
 		},
 
+		unbxdSuggestions:{
+			numSuggestions: 3
+		},
+
 		popularProducts:{//
 			numSuggestions: 3,
-			imageUrl: <IMAGEURL_FIELDNAME>,
-			productName: title, //<PRODUCT_NAME_FIELDNAME>
-			productCategory: <PRODUCT_CATEGORY_FIELDNAME>,
-			productPrice: <PRODUCT_PRICE_FIELDNAME>
-
-		}
+			title:true,
+			price:true,
+			image:true,
+			imageUrl:null
+		},
 
 		productDetails:true,  //PRODUCT DETAILS LIKE IMAGE AND  PRICE , GIVE TRUE IF YOU WANT THIS
 
@@ -43,7 +37,7 @@
 
 		unbxdShowProductPrice:true,
 
-		siteKey: demo-u1393483043451,..
+		siteKey: demo-u1393483043451,
 
 		apiKey: ae30782589df23780a9d98502388555f,//
 
