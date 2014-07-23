@@ -9,35 +9,39 @@
 
 		//http://plazawatches-u1403767348149.search.unbxdapi.com/e754b9ef9da2d315d4a97aa57457b81e/autosuggest
 		// searchUrl:"//tix4cause-u1403176244496.search.unbxdapi.com/7b0e6e36282b6db1bfd69a2af86b4674/autosuggest",
-		searchUrl:"//144.76.115.176:8086/unbxd-search/shivam1-u1394705575346/autosuggest",
-		
-		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
+		//searchUrl:"//144.76.115.176:8086/unbxd-search/shivam1-u1394705575346/autosuggest",
+		searchUrl:"http://partstown-u1406107381491.search.unbxdapi.com/1038fb78dbd387a388a718d91d2c0f11/autosuggest",
 
 		formSubmit : false,
 
-		suggestions:{
-			numSuggestions: 2,
-			inBrandCount: 2,
-			inCategoriesCount: 2
+		inFields:{
+			count: 5,
+			inBrandCount: 3,
+			inCategoriesCount: 3
 		},
 
-		topQuerySuggestions:{
-			numSuggestions: 1
+		topQueries:{
+			count: 5
 		},
 
-		unbxdSuggestions:{
-			numSuggestions: 1
+		keywordSuggestions:{
+			count: 5
 		},
 
 		productDetails:true,
 
 		popularProducts:{
-			numSuggestions: 2,
+			count: 5,
 			title:true,
 			price:true,
 			image:true,
 			imageUrl:null
 		},
+
+		callbackfunction:function( selectedValue, filterName, filterValue){
+			console.log("value "+selectedValue +" "+ filterName + " "+ filterValue);
+		},
+		
 
 		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
 

@@ -4,27 +4,29 @@ var unbxdAutocomplete = (function () {
 
 	var _CONST = {
 
-		suggestions:{
-			numSuggestions: 3,
+		inFields:{
+			count: 3,
 			inBrandCount: 3,
 			inCategoriesCount: 3
 		},
 
-		topQuerySuggestions:{
-			numSuggestions: 3
+		topQueries:{
+			count: 3
 		},
 
-		unbxdSuggestions:{
-			numSuggestions: 3
+		keywordSuggestions:{
+			count: 3
 		},
 
 		popularProducts:{
-			numSuggestions: 3,
+			count: 3,
 			title:true,
 			price:true,
 			image:true,
 			imageUrl:null
 		},
+
+		callbackfunction:function(){}, //will be called on select
 
 		inFields:['brand_in', 'category_in'],
 		
@@ -284,7 +286,7 @@ function myAjax(openCallback) {
 				var value = hint.name,
 				    reg = new RegExp(_CONST.inputText, 'gi'),
 		
-				hint = this.buildElem('<li id="unbxd_hint" value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
+				hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
 				hint.innerHTML = hint.innerHTML.replace(reg, function(str) {
 				    	return '<em>'+str+'</em>'
 				    });
@@ -307,9 +309,11 @@ function myAjax(openCallback) {
 			return null;
 		},
 
-		buildCategory : function(hint, styles, value){
+		buildCategory : function(hint, styles, value, key){
 			if (hint) {
-				var hint = this.buildElem('<li id="cat-suggest" value="'+value+'" class="' + _CONST.autoCompltHintClass + '">&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp; <span value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint + '</span></li>');
+				var filter 	= hint,
+					key 	= key,
+				    hint 	= this.buildElem('<li value="'+value+'" filter="'+filter+'"  key="'+key+'" class="' + _CONST.autoCompltHintClass + '">&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp; <span value="'+value+'" filter="'+filter+'"  key="'+key+'" class="' + _CONST.autoCompltHintClass + '">' + hint + '</span></li>');
 				
 				if( _CONST.hintHeight )
                 	hint.style.height = _CONST.hintHeight +'px';
@@ -449,10 +453,13 @@ function myAjax(openCallback) {
 				
 				// Select hint by clicking
 				_addEvt(this.uiElem, "mouseup", function (e) {
+					window.e = e;
+					console.log(e);
 					e = _normalizeEvt(e);
 					if (that.isHint(e.target)) {
 						that.select(e.target);
 						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.toElement.parentNode.getAttribute("value");
+						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key") }; 
 						that.assocInput.autoComplt.close();
 						that.assocInput.autoComplt.unbxdSearch();
 					}
@@ -511,7 +518,7 @@ function myAjax(openCallback) {
 							if( hintObject[_CONST.inFields[j]] && hintObject[_CONST.inFields[j]].length > 0)
 								arr = hintObject[_CONST.inFields[j]];
 								for (i = 0; i < arr.length; i++) {
-									hs.push( _ui.buildCategory(arr[i], this.styles, value));
+									hs.push( _ui.buildCategory(arr[i], this.styles, value, _CONST.inFields[j]));
 									if (!hs[hs.length - 1]) {
 										hs.pop();
 									}
@@ -775,7 +782,7 @@ function myAjax(openCallback) {
 				   	 return;
 
 				var products = response.response.products,
-					types = ["IN_FIELD", "POPULAR_PRODUCTS", "TOP_SEARCH_QUERIES", "UNBXD_SUGGESTION"],
+					types = ["IN_FIELD", "POPULAR_PRODUCTS", "TOP_SEARCH_QUERIES", "KEYWORD_SUGGESTION"],
 					categories = ['category_in', 'brand_in'],
 					result = {}, hints = [],inFields=[], prods = [], queries = [], suggestions=[];
 
@@ -787,12 +794,12 @@ function myAjax(openCallback) {
 						if(products[k].doctype === 'IN_FIELD'  ){
 							
 					    	obj.brand_in = products[k].brand_in;
-					    	if(obj.brand_in && obj.brand_in.length > _CONST.suggestions.inBrandCount)
-									obj.brand_in.length = _CONST.suggestions.inBrandCount;
+					    	if(obj.brand_in && obj.brand_in.length > _CONST.inFields.inBrandCount)
+									obj.brand_in.length = _CONST.inFields.inBrandCount;
 
 							obj.category_in = products[k].category_in;
-								if(obj.category_in && obj.category_in.length > _CONST.suggestions.inCategoriesCount)
-									obj.category_in.length = _CONST.suggestions.inCategoriesCount;
+								if(obj.category_in && obj.category_in.length > _CONST.inFields.inCategoriesCount)
+									obj.category_in.length = _CONST.inFields.inCategoriesCount;
 
 							inFields.push(obj);
 						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
@@ -803,35 +810,34 @@ function myAjax(openCallback) {
 							prods.push(obj);
 					    }else if( products[k].doctype ===  "TOP_SEARCH_QUERIES" ){
 					    	queries.push( obj );
-					    }else if( products[k].doctype ===  "UNBXD_SUGGESTION" ){
-					    	suggestions.push( obj );
+					    }else if( products[k].doctype ===  "KEYWORD_SUGGESTION" ){
+					    	inFields.push( obj );
 					    }
 				}
 
-				if(inFields.length > _CONST.suggestions.numSuggestions){
-					inFields.length = _CONST.suggestions.numSuggestions;
+				if(inFields.length > _CONST.inFields.count){
+					inFields.length = _CONST.inFields.count;
 					
 				}
 					
-				if(prods.length > _CONST.popularProducts.numSuggestions){
-					prods.length = _CONST.popularProducts.numSuggestions;
-					
-				}
-
-				if(queries.length > _CONST.topQuerySuggestions.numSuggestions){
-					queries.length = _CONST.topQuerySuggestions.numSuggestions;
+				if(prods.length > _CONST.popularProducts.count){
+					prods.length = _CONST.popularProducts.count;
 					
 				}
 
-				if(suggestions.length > _CONST.unbxdSuggestions.numSuggestions){
-					suggestions.length = _CONST.unbxdSuggestions.numSuggestions;
+				if(queries.length > _CONST.topQueries.numSuggestions){
+					queries.length = _CONST.topQueries.numSuggestions;
 					
+				}
+
+				if(suggestions.length > _CONST.keywordSuggestions.count){
+					suggestions.length = _CONST.keywordSuggestions.count;		
 				}
 				result.inFields = inFields;
 				result.prods = prods;
 				result.queries = queries;
 				result.suggestions = suggestions;
-				console.log( result );
+				console.log(  JSON.stringify(result) );
 				this.openCallback(result);
 		 },
 
@@ -850,14 +856,26 @@ function myAjax(openCallback) {
 		setConfigValues:function(_CONST, config){
 
 			for(var k in _CONST ){
-				  if( typeof _CONST[k] === 'object' &&   config[k] ){
+				  if( typeof _CONST[k] === 'object'  &&   config[k] ){
                       unbxdAutocomplete.setConfigValues( _CONST[k], config[k] );
 				  }else if( config[k] || config[k] === false ){
 				  	 _CONST[k] = config[k];
 				  }
 			}
-				    
+
 		   return;
+		},
+
+		formUrl:function(){
+			_CONST.searchUrl = _CONST.searchUrl + _CONST.jsonpCallback;
+
+			_CONST.searchUrl = _CONST.searchUrl 
+							+ '&buckets.count=' + _CONST.inFields.count
+		   					+ '&topQueries.count=' + _CONST.topQueries.count
+		   					+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
+		   					+ '&popularProducts.count=' + _CONST.popularProducts.count;
+ 	
+ 	       console.log("_CONST.searchUrl >"+ _CONST.searchUrl);
 		},
 
 		enable : function (input, config) {
@@ -875,6 +893,8 @@ function myAjax(openCallback) {
 			    //read config file
 			    config = config || {};
 			    unbxdAutocomplete.setConfigValues(_CONST, config);
+			    console.log( _CONST );
+			    unbxdAutocomplete.formUrl(_CONST);
 				// for(var k in _CONST ){
 				//   if( config[k] || config[k] === false )
 				//     _CONST[k] = config[k];
@@ -884,7 +904,7 @@ function myAjax(openCallback) {
 				_CONST.popularProducts.title === false ? _CONST.unbxdShowProductName = '_unbxd-hide' : _CONST.unbxdShowProductName = ' ';
 				_CONST.popularProducts.price === false ? _CONST.unbxdShowProductPrice = '_unbxd-hide' : _CONST.unbxdShowProductPrice = ' ';
 
-				_CONST.searchUrl = _CONST.searchUrl + _CONST.jsonpCallback + "&rows="+ _CONST.rows;
+				
 				var params = {					
 						hintsFetcher : function (v, openCallback) {
 				  			unbxdAutocomplete.myJsonpAjax(v, openCallback);
@@ -945,6 +965,8 @@ function myAjax(openCallback) {
 							// If no hint is selected, just use the original user input to autocomplete
 								this.value = input_autoComplt_currentTarget;
 							}
+
+							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key")}
 						}
 					},
 					/*
@@ -972,7 +994,7 @@ function myAjax(openCallback) {
 							) {
 							// At the case that the hint list is open ans user is walkin thru the hints.
 							// Let's try to autocomplete the input by the selected input.
-								
+		
 								var hint = input_autoComplt_list.getSelected();
 								
 								if (e.keyCode === _CONST.keyCode.up) {
@@ -1137,7 +1159,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    return;
+				   return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
@@ -1145,6 +1167,10 @@ function myAjax(openCallback) {
 
 				//fire search api
 				input.autoComplt.unbxdSearch = function () {
+
+					_CONST.callbackfunction(unbxdSelected.val, unbxdSelected.filterName, unbxdSelected.filterValue );
+					unbxdSelected = null;
+
 					if( _CONST.formSubmit )
 						input.form.submit();
 					if( _CONST.callSearch )
