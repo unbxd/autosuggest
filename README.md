@@ -45,7 +45,8 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 			image:true,
 			imageUrl:null
 		},
-
+		
+		//this will be called on selecting a item from autosuggest, can be used to call search query
 		callbackfunction:function( selectedValue, filterName, filterValue){
 			console.log("value "+selectedValue +" "+ filterName + " "+ filterValue);
 		},
@@ -91,6 +92,8 @@ With default config you should get autosuggest like below
 
 
 ![autosuggest with category](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/category.png "autosuggest with category")
+
+On selection on autosuggest function assigned to callbackfunction will be called with selected value and the filter if any
 
 
 ###### PS - if you want more css changes than given in config file, please override classes in styles.css
