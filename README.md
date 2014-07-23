@@ -11,16 +11,9 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 
    config = {
 
-		rows:20,  //NO OF ROWS TO BE FETCHED FROM SERVER 
-
-		catagery:true,  //CATAGORY WISE BREAKDOWN IN THE AUTOCOMPLETE, GIVE TRUE IF YOU WANT THIS
-
-		//http://plazawatches-u1403767348149.search.unbxdapi.com/e754b9ef9da2d315d4a97aa57457b81e/autosuggest
-		// searchUrl:"//tix4cause-u1403176244496.search.unbxdapi.com/7b0e6e36282b6db1bfd69a2af86b4674/autosuggest",
-		//searchUrl:"//144.76.115.176:8086/unbxd-search/shivam1-u1394705575346/autosuggest",
 		searchUrl:"http://partstown-u1406107381491.search.unbxdapi.com/1038fb78dbd387a388a718d91d2c0f11/autosuggest",
 
-		formSubmit : false,
+		formSubmit : false, //if input box is a form and you want to submit it on selection from autosuggest make this true
 
 		inFields:{
 			count: 5,

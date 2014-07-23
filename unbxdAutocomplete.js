@@ -52,10 +52,6 @@ var unbxdAutocomplete = (function () {
 
 		formSubmit : false,
 
-		catageryLength:3,
-
-		catagery:true,
-
 		catageries:['brand_in', 'category_in'],
 
 		type:"productname",
@@ -453,8 +449,6 @@ function myAjax(openCallback) {
 				
 				// Select hint by clicking
 				_addEvt(this.uiElem, "mouseup", function (e) {
-					window.e = e;
-					console.log(e);
 					e = _normalizeEvt(e);
 					if (that.isHint(e.target)) {
 						that.select(e.target);
@@ -510,7 +504,7 @@ function myAjax(openCallback) {
 								hs.pop();
 							}
 					
-					if(_CONST.catagery === true){
+	
 						for(var j= 0; j<_CONST.inFields.length; j++){
 							var arr = [],
 								value = hintObject.name;
@@ -524,7 +518,6 @@ function myAjax(openCallback) {
 									}
 								}
 						}
-					}
 
 			  	}
 			  }
@@ -837,7 +830,7 @@ function myAjax(openCallback) {
 				result.prods = prods;
 				result.queries = queries;
 				result.suggestions = suggestions;
-				console.log(  JSON.stringify(result) );
+				console.log(  result );
 				this.openCallback(result);
 		 },
 
@@ -874,8 +867,6 @@ function myAjax(openCallback) {
 		   					+ '&topQueries.count=' + _CONST.topQueries.count
 		   					+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
 		   					+ '&popularProducts.count=' + _CONST.popularProducts.count;
- 	
- 	       console.log("_CONST.searchUrl >"+ _CONST.searchUrl);
 		},
 
 		enable : function (input, config) {
@@ -893,7 +884,6 @@ function myAjax(openCallback) {
 			    //read config file
 			    config = config || {};
 			    unbxdAutocomplete.setConfigValues(_CONST, config);
-			    console.log( _CONST );
 			    unbxdAutocomplete.formUrl(_CONST);
 				// for(var k in _CONST ){
 				//   if( config[k] || config[k] === false )
@@ -1159,7 +1149,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				   return;
+				    //return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
