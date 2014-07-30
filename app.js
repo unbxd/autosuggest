@@ -3,33 +3,33 @@
 
    config = {
 
-		//http://plazawatches-u1403767348149.search.unbxdapi.com/e754b9ef9da2d315d4a97aa57457b81e/autosuggest
+		//searchUrl:"//plazawatches-u1403767348149.search.unbxdapi.com/e754b9ef9da2d315d4a97aa57457b81e/autosuggest",
 		// searchUrl:"//tix4cause-u1403176244496.search.unbxdapi.com/7b0e6e36282b6db1bfd69a2af86b4674/autosuggest",
-		searchUrl:"//144.76.115.176:8086/unbxd-search/shivam1-u1394705575346/autosuggest",
-		//searchUrl:"http://partstown-u1406107381491.search.unbxdapi.com/1038fb78dbd387a388a718d91d2c0f11/autosuggest",
+		//searchUrl:"//144.76.115.176:8086/unbxd-search/shivam1-u1394705575346/autosuggest",
+		searchUrl:"//getit_auto32-u1406102721153.search.unbxdapi.com/7e4f5215216ccde1b101a09909f34ee1/autosuggest",
 
 		formSubmit : false,
 
 		inFields:{
-			count: 5,
+			count: 2,
 			inBrandCount: 3,
 			inCategoriesCount: 3
 		},
 
 		topQueries:{
-			count: 5
+			count: 2
 		},
 
 		keywordSuggestions:{
-			count: 5
+			count: 2
 		},
 
 		productDetails:true,
 
 		popularProducts:{
-			count: 5,
+			count: 2,
 			title:true,
-			price:true,
+			price:false,
 			image:true,
 			imageUrl:null
 		},
