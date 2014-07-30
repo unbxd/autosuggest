@@ -776,7 +776,7 @@ function myAjax(openCallback) {
 
 				var products = response.response.products,
 					types = ["IN_FIELD", "POPULAR_PRODUCTS", "TOP_SEARCH_QUERIES", "KEYWORD_SUGGESTION"],
-					categories = ['category_in', 'brand_in'],
+					//categories = ['category_in', 'brand_in'],
 					result = {}, 
 					hints = [],
 					inFields=[], 
@@ -790,14 +790,19 @@ function myAjax(openCallback) {
 					    obj = { "name":products[k].autosuggest };
 
 						if(products[k].doctype === 'IN_FIELD'  ){
-							
-					    	obj.brand_in = products[k].brand_in;
-					    	if(obj.brand_in && obj.brand_in.length > _CONST.inFields.inBrandCount)
+						
+							if(products[k].unbxdAutosuggestSrc !== 'brand'){
+								obj.brand_in = products[k].brand_in;
+					    		if(obj.brand_in && obj.brand_in.length > _CONST.inFields.inBrandCount)
 									obj.brand_in.length = _CONST.inFields.inBrandCount;
-
-							obj.category_in = products[k].category_in;
+							}
+					    	
+							if(products[k].unbxdAutosuggestSrc !== 'category'){
+								obj.category_in = products[k].category_in;
 								if(obj.category_in && obj.category_in.length > _CONST.inFields.inCategoriesCount)
 									obj.category_in.length = _CONST.inFields.inCategoriesCount;
+							}
+							
 
 							inFields.push(obj);
 						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
@@ -809,7 +814,7 @@ function myAjax(openCallback) {
 					    }else if( products[k].doctype ===  "TOP_SEARCH_QUERIES" ){
 					    	queries.push( obj );
 					    }else if( products[k].doctype ===  "KEYWORD_SUGGESTION" ){
-					    	inFields.push( obj );
+					    	suggestions.push( obj );
 					    }
 				}
 
