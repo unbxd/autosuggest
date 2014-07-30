@@ -5,7 +5,7 @@ var unbxdAutocomplete = (function () {
 	var _CONST = {
 
 		inFields:{
-			count: 3,
+			count: 1,
 			inBrandCount: 3,
 			inCategoriesCount: 3
 		},
@@ -28,7 +28,7 @@ var unbxdAutocomplete = (function () {
 
 		callbackfunction:function(){}, //will be called on select
 
-		inFields:['brand_in', 'category_in'],
+		inCat:['brand_in', 'category_in'],
 		
 		autoCompltListClass : "unbxd-autocomplete-list-ul",
 		
@@ -505,14 +505,14 @@ function myAjax(openCallback) {
 							}
 					
 	
-						for(var j= 0; j<_CONST.inFields.length; j++){
+						for(var j= 0; j<_CONST.inCat.length; j++){
 							var arr = [],
 								value = hintObject.name;
 
-							if( hintObject[_CONST.inFields[j]] && hintObject[_CONST.inFields[j]].length > 0)
-								arr = hintObject[_CONST.inFields[j]];
+							if( hintObject[_CONST.inCat[j]] && hintObject[_CONST.inCat[j]].length > 0)
+								arr = hintObject[_CONST.inCat[j]];
 								for (i = 0; i < arr.length; i++) {
-									hs.push( _ui.buildCategory(arr[i], this.styles, value, _CONST.inFields[j]));
+									hs.push( _ui.buildCategory(arr[i], this.styles, value, _CONST.inCat[j]));
 									if (!hs[hs.length - 1]) {
 										hs.pop();
 									}
@@ -777,7 +777,12 @@ function myAjax(openCallback) {
 				var products = response.response.products,
 					types = ["IN_FIELD", "POPULAR_PRODUCTS", "TOP_SEARCH_QUERIES", "KEYWORD_SUGGESTION"],
 					categories = ['category_in', 'brand_in'],
-					result = {}, hints = [],inFields=[], prods = [], queries = [], suggestions=[];
+					result = {}, 
+					hints = [],
+					inFields=[], 
+					prods = [], 
+					queries = [], 
+					suggestions=[];
 
 			
 				for(var k=0; k<products.length; k++){
@@ -863,7 +868,7 @@ function myAjax(openCallback) {
 			_CONST.searchUrl = _CONST.searchUrl + _CONST.jsonpCallback;
 
 			_CONST.searchUrl = _CONST.searchUrl 
-							+ '&buckets.count=' + _CONST.inFields.count
+							+ '&inFields.count=' + _CONST.inFields.count
 		   					+ '&topQueries.count=' + _CONST.topQueries.count
 		   					+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
 		   					+ '&popularProducts.count=' + _CONST.popularProducts.count;
@@ -884,6 +889,7 @@ function myAjax(openCallback) {
 			    //read config file
 			    config = config || {};
 			    unbxdAutocomplete.setConfigValues(_CONST, config);
+			    console.log(_CONST);
 			    unbxdAutocomplete.formUrl(_CONST);
 				// for(var k in _CONST ){
 				//   if( config[k] || config[k] === false )
@@ -1149,7 +1155,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    //return;
+				    return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
