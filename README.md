@@ -11,7 +11,7 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 
    config = {
 
-		searchUrl:"http://partstown-u1406107381491.search.unbxdapi.com/1038fb78dbd387a388a718d91d2c0f11/autosuggest",
+		searchUrl:"http://<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest”,
 
 		formSubmit : false, //if input box is a form and you want to submit it on selection from autosuggest make this true
 

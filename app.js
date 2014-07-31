@@ -3,10 +3,7 @@
 
    config = {
 
-		//searchUrl:"//plazawatches-u1403767348149.search.unbxdapi.com/e754b9ef9da2d315d4a97aa57457b81e/autosuggest",
-		// searchUrl:"//tix4cause-u1403176244496.search.unbxdapi.com/7b0e6e36282b6db1bfd69a2af86b4674/autosuggest",
-		//searchUrl:"//144.76.115.176:8086/unbxd-search/shivam1-u1394705575346/autosuggest",
-		searchUrl:"//getit_auto32-u1406102721153.search.unbxdapi.com/7e4f5215216ccde1b101a09909f34ee1/autosuggest",
+		searchUrl:"http://<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest",
 
 		formSubmit : false,
 
@@ -17,7 +14,7 @@
 		},
 
 		topQueries:{
-			count: 2
+			count: 3
 		},
 
 		keywordSuggestions:{
@@ -27,7 +24,7 @@
 		productDetails:true,
 
 		popularProducts:{
-			count: 2,
+			count: 4,
 			title:true,
 			price:false,
 			image:true,
