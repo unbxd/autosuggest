@@ -17,12 +17,12 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 
 		inFields:{
 			count: 2,
-			inBrandCount: 3,
-			inCategoriesCount: 3
+			inBrandCount: 2,
+			inCategoriesCount: 2
 		},
 
 		topQueries:{
-			count: 3
+			count: 2
 		},
 
 		keywordSuggestions:{
@@ -32,7 +32,7 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 		productDetails:true,
 
 		popularProducts:{
-			count: 4,
+			count: 3,
 			title:true,
 			price:false,
 			image:true,
