@@ -34,7 +34,7 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 		popularProducts:{
 			count: 3,
 			title:true,
-			price:false,
+			price:true,
 			image:true,
 			imageUrl:null
 		},
