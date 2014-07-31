@@ -11,30 +11,30 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 
    config = {
 
-		searchUrl:"http://<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest”,
+		searchUrl:"http://<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest",
 
 		formSubmit : false, //if input box is a form and you want to submit it on selection from autosuggest make this true
 
 		inFields:{
-			count: 5,
+			count: 2,
 			inBrandCount: 3,
 			inCategoriesCount: 3
 		},
 
 		topQueries:{
-			count: 5
+			count: 3
 		},
 
 		keywordSuggestions:{
-			count: 5
+			count: 2
 		},
 
 		productDetails:true,
 
 		popularProducts:{
-			count: 5,
+			count: 4,
 			title:true,
-			price:true,
+			price:false,
 			image:true,
 			imageUrl:null
 		},
@@ -84,7 +84,7 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 With default config you should get autosuggest like below
 
 
-![autosuggest with category](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/category.png "autosuggest with category")
+![autosuggest with category](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/default.png "autosuggest with category")
 
 On selection on autosuggest function assigned to callbackfunction will be called with selected value and the filter if any
 
