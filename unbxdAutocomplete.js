@@ -23,7 +23,7 @@ var unbxdAutocomplete = (function () {
 			title:true,
 			price:true,
 			image:true,
-			imageUrl:null
+			imageUrl:'imageUrl'
 		},
 
 		callbackfunction:function(){}, //will be called on select
@@ -806,7 +806,8 @@ function myAjax(openCallback) {
 
 							inFields.push(obj);
 						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
-							obj.imgUrl 		= 	products[k].image_url ? products[k].image_url : products[k].imageUrl;
+							var imageUrl = _CONST.popularProducts.imageUrl;  
+							obj.imgUrl 		= 	products[k][ imageUrl ] ? products[k][ imageUrl ] : products[k].image_url;
 							obj.price 		= 	products[k].price;
 							obj.uniqueId 	=  	products[k].uniqueId;
 							obj.isProduct 	= 	true;
@@ -877,6 +878,7 @@ function myAjax(openCallback) {
 		   					+ '&topQueries.count=' + _CONST.topQueries.count
 		   					+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
 		   					+ '&popularProducts.count=' + _CONST.popularProducts.count;
+		   					+ '&indent=off'
 		},
 
 		enable : function (input, config) {
@@ -1160,7 +1162,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    //return;
+				    return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 

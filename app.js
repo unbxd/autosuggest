@@ -28,7 +28,7 @@
 			title:true,
 			price:false,
 			image:true,
-			imageUrl:null
+			imageUrl:'small_image' //the property for image url to be picked
 		},
 
 		callbackfunction:function( selectedValue, filterName, filterValue){
