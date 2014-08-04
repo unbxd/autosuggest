@@ -349,20 +349,20 @@ function myAjax(openCallback) {
 				    });
 				
 				if( hint.productUrl ){
-					var hint = this.buildElem('<a href="'+hint.productUrl+'" ><li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+					var hint = this.buildElem('<a isProduct="'+hint.productUrl+'" href="'+hint.productUrl+'" ><li isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 				
 				
-				    +'<div class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
-				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
-				         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
+				    +'<div isProduct="'+hint.productUrl+'" class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
+				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
+				         	+ '<img isProduct="'+hint.productUrl+'" class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
 				         +'</div>'
-				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
+				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
 				             +hint.name
 				         + '</div>'
-				          +'<div value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
+				          +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
 				             +hint.price
 				         + '</div>'
-				         +'<div value="'+value+'" class="clearfix"></div>'
+				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="clearfix"></div>'
 				    +'</div>'
 				    + '</li></a>');
 				}else{
@@ -477,7 +477,7 @@ function myAjax(openCallback) {
 					if (that.isHint(e.target)) {
 						that.select(e.target);
 						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.toElement.parentNode.getAttribute("value");
-						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key") }; 
+						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key"), isProduct:e.toElement.getAttribute("isProduct") }; 
 						that.assocInput.autoComplt.close();
 						that.assocInput.autoComplt.unbxdSearch();
 					}
@@ -489,7 +489,7 @@ function myAjax(openCallback) {
 					if (that.isHint(e.target)) {
 						that.select(e.target);
 						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.toElement.parentNode.getAttribute("value");
-						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key") }; 
+						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key"),  isProduct:e.toElement.getAttribute("isProduct") }; 
 						that.assocInput.autoComplt.close();
 						that.assocInput.autoComplt.unbxdSearch();
 					}
@@ -1028,7 +1028,7 @@ function myAjax(openCallback) {
 								this.value = input_autoComplt_currentTarget;
 							}
 
-							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key")}
+							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key"),  isProduct:e.toElement.getAttribute("isProduct")}
 						}
 					},
 					/*
@@ -1222,7 +1222,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				   //return;
+				  // return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
@@ -1230,7 +1230,10 @@ function myAjax(openCallback) {
 
 				//fire search api
 				input.autoComplt.unbxdSearch = function () {
-					_CONST.callbackfunction(unbxdSelected.val, unbxdSelected.filterName, unbxdSelected.filterValue );
+					 if(unbxdSelected.isProduct)
+					 	 document.location = unbxdSelected.isProduct;
+					 	
+					_CONST.callbackfunction(unbxdSelected.val, unbxdSelected.filterName, unbxdSelected.filterValue, unbxdSelected.isProduct );
 					unbxdSelected = null;
 
 					if( _CONST.formSubmit )
