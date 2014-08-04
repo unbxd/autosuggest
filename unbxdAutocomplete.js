@@ -476,8 +476,8 @@ function myAjax(openCallback) {
 					}, 50);
 					if (that.isHint(e.target)) {
 						that.select(e.target);
-						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.toElement.parentNode.getAttribute("value");
-						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key"), isProduct:e.toElement.getAttribute("isProduct") }; 
+						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.target.parentNode.getAttribute("value");
+						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.target.getAttribute("filter"), filterName:e.target.getAttribute("key"), isProduct:e.target.getAttribute("isProduct") }; 
 						that.assocInput.autoComplt.close();
 						that.assocInput.autoComplt.unbxdSearch();
 					}
@@ -488,8 +488,8 @@ function myAjax(openCallback) {
 					e = _normalizeEvt(e);
 					if (that.isHint(e.target)) {
 						that.select(e.target);
-						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.toElement.parentNode.getAttribute("value");
-						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key"),  isProduct:e.toElement.getAttribute("isProduct") }; 
+						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.target.parentNode.getAttribute("value");
+						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.target.getAttribute("filter"), filterName:e.target.getAttribute("key"),  isProduct:e.target.getAttribute("isProduct") }; 
 						that.assocInput.autoComplt.close();
 						that.assocInput.autoComplt.unbxdSearch();
 					}
@@ -1028,7 +1028,7 @@ function myAjax(openCallback) {
 								this.value = input_autoComplt_currentTarget;
 							}
 
-							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key"),  isProduct:e.toElement.getAttribute("isProduct")}
+							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key"),  isProduct:e.target.getAttribute("isProduct")}
 						}
 					},
 					/*
