@@ -41,7 +41,7 @@
 			price:false,
 			image:true,
 			imageUrl:'image' ,//the property for image url to be picked
-			productUrl:'url_path'
+			productUrl:'url_path' // url to navigate to product page
 		},
 
 		callbackfunction:function( selectedValue, filterName, filterValue){
