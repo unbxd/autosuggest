@@ -3,6 +3,8 @@ input {
 }
 a{
     text-decoration: none;
+    height: 100%;
+    width: 100%;
 }
 .unbxd-autocomplete-list-ul{
         font-family: arial, tahoma, verdana, sans-serif;
