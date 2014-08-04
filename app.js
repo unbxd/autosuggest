@@ -3,14 +3,26 @@
 
    config = {
 
-		searchUrl:"http://<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest",
+		searchUrl:"//<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest",
 
 		formSubmit : false,
 
 		inFields:{
-			count: 2,
-			inBrandCount: 3,
-			inCategoriesCount: 3
+			count: 1,
+			fields:[
+				{
+					name:'brand',
+					count:3
+				},
+				{
+					name:'category',
+					count:3
+				},
+				{
+					name:'color',
+					count:3
+				}
+			]
 		},
 
 		topQueries:{
@@ -28,7 +40,8 @@
 			title:true,
 			price:false,
 			image:true,
-			imageUrl:'small_image' //the property for image url to be picked
+			imageUrl:'image' ,//the property for image url to be picked
+			productUrl:'url_path'
 		},
 
 		callbackfunction:function( selectedValue, filterName, filterValue){

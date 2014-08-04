@@ -6,8 +6,16 @@ var unbxdAutocomplete = (function () {
 
 		inFields:{
 			count: 1,
-			inBrandCount: 3,
-			inCategoriesCount: 3
+			fields:[
+				{
+					name:'brand',
+					count:3
+				},
+				{
+					name:'category',
+					count:3
+				}
+			]
 		},
 
 		topQueries:{
@@ -23,7 +31,8 @@ var unbxdAutocomplete = (function () {
 			title:true,
 			price:true,
 			image:true,
-			imageUrl:'imageUrl'
+			imageUrl:'imageUrl',
+			productUrl:'productUrl'
 		},
 
 		callbackfunction:function(){}, //will be called on select
@@ -339,22 +348,42 @@ function myAjax(openCallback) {
 				    	return '<em>'+str+'</em>'
 				    });
 				
-				var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+				if( hint.productUrl ){
+					var hint = this.buildElem('<a href="'+hint.productUrl+'" ><li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 				
 				
-			    +'<div class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
-			         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
-			         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
-			         +'</div>'
-			         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
-			             +hint.name
-			         + '</div>'
-			          +'<div value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
-			             +hint.price
-			         + '</div>'
-			         +'<div value="'+value+'" class="clearfix"></div>'
-			    +'</div>'
-			    + '</li>');
+				    +'<div class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
+				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
+				         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
+				         +'</div>'
+				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
+				             +hint.name
+				         + '</div>'
+				          +'<div value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
+				             +hint.price
+				         + '</div>'
+				         +'<div value="'+value+'" class="clearfix"></div>'
+				    +'</div>'
+				    + '</li></a>');
+				}else{
+					var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+				
+				
+				    +'<div class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
+				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
+				         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
+				         +'</div>'
+				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
+				             +hint.name
+				         + '</div>'
+				          +'<div value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
+				             +hint.price
+				         + '</div>'
+				         +'<div value="'+value+'" class="clearfix"></div>'
+				    +'</div>'
+				    + '</li>');
+				}
+				
 			
 
 				return hint;
@@ -445,6 +474,13 @@ function myAjax(openCallback) {
 					setTimeout(function () {
 						that.assocInput.focus();
 					}, 50);
+					if (that.isHint(e.target)) {
+						that.select(e.target);
+						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.toElement.parentNode.getAttribute("value");
+						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.toElement.getAttribute("filter"), filterName:e.toElement.getAttribute("key") }; 
+						that.assocInput.autoComplt.close();
+						that.assocInput.autoComplt.unbxdSearch();
+					}
 				});				
 				
 				// Select hint by clicking
@@ -505,14 +541,17 @@ function myAjax(openCallback) {
 							}
 					
 	
-						for(var j= 0; j<_CONST.inCat.length; j++){
+						for(var j= 0; j < _CONST.inFields.fields.length; j++){
 							var arr = [],
-								value = hintObject.name;
+								value = hintObject.name,
+								field = _CONST.inFields.fields[j],
+								propertyName = field.name+'_in';
 
-							if( hintObject[_CONST.inCat[j]] && hintObject[_CONST.inCat[j]].length > 0)
-								arr = hintObject[_CONST.inCat[j]];
+							if( hintObject[ propertyName ] && hintObject[ propertyName ].length > 0)
+								arr = hintObject[ propertyName ];
+
 								for (i = 0; i < arr.length; i++) {
-									hs.push( _ui.buildCategory(arr[i], this.styles, value, _CONST.inCat[j]));
+									hs.push( _ui.buildCategory( arr[i], this.styles, value, propertyName ));
 									if (!hs[hs.length - 1]) {
 										hs.pop();
 									}
@@ -790,18 +829,35 @@ function myAjax(openCallback) {
 					    obj = { "name":products[k].autosuggest };
 
 						if(products[k].doctype === 'IN_FIELD'  ){
-						
-							if(products[k].unbxdAutosuggestSrc !== 'brand'){
-								obj.brand_in = products[k].brand_in;
-					    		if(obj.brand_in && obj.brand_in.length > _CONST.inFields.inBrandCount)
-									obj.brand_in.length = _CONST.inFields.inBrandCount;
+
+							var product = products[k],
+								fields = _CONST.inFields.fields;
+
+							for(var j=0; j<fields.length; j++){
+
+								var propertyName = fields[j].name + '_in',
+									field = fields[j];
+
+
+								if(product[propertyName] && product[propertyName].length > 0 && product.unbxdAutosuggestSrc !== field.name ){
+									obj[propertyName] = product[propertyName];
+						    		if(obj[propertyName] && obj[propertyName].length > field.count)
+										obj[propertyName].length = field.count;
+								}
+
 							}
+	
+							// if(products[k].unbxdAutosuggestSrc !== 'brand'){
+							// 	obj.brand_in = products[k].brand_in;
+					  //   		if(obj.brand_in && obj.brand_in.length > _CONST.inFields.inBrandCount)
+							// 		obj.brand_in.length = _CONST.inFields.inBrandCount;
+							// }
 					    	
-							if(products[k].unbxdAutosuggestSrc !== 'category'){
-								obj.category_in = products[k].category_in;
-								if(obj.category_in && obj.category_in.length > _CONST.inFields.inCategoriesCount)
-									obj.category_in.length = _CONST.inFields.inCategoriesCount;
-							}
+							// if(products[k].unbxdAutosuggestSrc !== 'category'){
+							// 	obj.category_in = products[k].category_in;
+							// 	if(obj.category_in && obj.category_in.length > _CONST.inFields.inCategoriesCount)
+							// 		obj.category_in.length = _CONST.inFields.inCategoriesCount;
+							// }
 							
 
 							inFields.push(obj);
@@ -811,6 +867,7 @@ function myAjax(openCallback) {
 							obj.price 		= 	products[k].price;
 							obj.uniqueId 	=  	products[k].uniqueId;
 							obj.isProduct 	= 	true;
+							obj.productUrl	=   products[k][_CONST.popularProducts.productUrl]
 							prods.push(obj);
 					    }else if( products[k].doctype ===  "TOP_SEARCH_QUERIES" ){
 					    	queries.push( obj );
@@ -841,7 +898,7 @@ function myAjax(openCallback) {
 				result.prods = prods;
 				result.queries = queries;
 				result.suggestions = suggestions;
-				console.log(  result );
+				//console.log(  result );
 				this.openCallback(result);
 		 },
 
@@ -860,7 +917,10 @@ function myAjax(openCallback) {
 		setConfigValues:function(_CONST, config){
 
 			for(var k in _CONST ){
-				  if( typeof _CONST[k] === 'object'  &&   config[k] ){
+
+				  if( Object.prototype.toString.call( _CONST[k] )  === '[object Array]' ){
+				  	 _CONST[k] = config[k];
+				  }if( typeof _CONST[k] === 'object'  &&   config[k] ){
                       unbxdAutocomplete.setConfigValues( _CONST[k], config[k] );
 				  }else if( config[k] || config[k] === false ){
 				  	 _CONST[k] = config[k];
@@ -896,7 +956,6 @@ function myAjax(openCallback) {
 			    //read config file
 			    config = config || {};
 			    unbxdAutocomplete.setConfigValues(_CONST, config);
-			    console.log(_CONST);
 			    unbxdAutocomplete.formUrl(_CONST);
 				// for(var k in _CONST ){
 				//   if( config[k] || config[k] === false )
@@ -975,15 +1034,16 @@ function myAjax(openCallback) {
 					/*
 					*/
 					input_autoComplt_blurEvtHandle = function (e) {
-						e = _normalizeEvt(e);
-						if (input_autoComplt_list.mouseOnList) {
-						// If the mouse is on the autocomplete list, do not close the list
-						// and still need to focus on the input.
-							input.focus();
-							input_autoComplt_list.mouseOnList = false; // Assign false for the next detection
-						} else {
-							input.autoComplt.close();
-						}
+						input.autoComplt.close();
+						// e = _normalizeEvt(e);
+						// if (input_autoComplt_list.mouseOnList) {
+						// // If the mouse is on the autocomplete list, do not close the list
+						// // and still need to focus on the input.
+						// 	input.focus();
+						// 	input_autoComplt_list.mouseOnList = false; // Assign false for the next detection
+						// } else {
+						// 	input.autoComplt.close();
+						// }
 					},
 					/*
 					*/
@@ -1162,7 +1222,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				    return;
+				   //return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
@@ -1170,7 +1230,6 @@ function myAjax(openCallback) {
 
 				//fire search api
 				input.autoComplt.unbxdSearch = function () {
-
 					_CONST.callbackfunction(unbxdSelected.val, unbxdSelected.filterName, unbxdSelected.filterValue );
 					unbxdSelected = null;
 

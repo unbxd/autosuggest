@@ -1,6 +1,9 @@
 input {
     font-size: 14px;
 }
+a{
+    text-decoration: none;
+}
 .unbxd-autocomplete-list-ul{
         font-family: arial, tahoma, verdana, sans-serif;
         font-size: 11px;
