@@ -30,6 +30,7 @@ var unbxdAutocomplete = (function () {
 			count: 3,
 			title:true,
 			price:true,
+			currency:'$',
 			image:true,
 			imageUrl:'imageUrl',
 			productUrl:'productUrl'
@@ -864,7 +865,7 @@ function myAjax(openCallback) {
 						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
 							var imageUrl = _CONST.popularProducts.imageUrl;  
 							obj.imgUrl 		= 	products[k][ imageUrl ] ? products[k][ imageUrl ] : products[k].image_url;
-							obj.price 		= 	products[k].price;
+							obj.price 		= 	_CONST.popularProducts.currency+products[k].price;
 							obj.uniqueId 	=  	products[k].uniqueId;
 							obj.isProduct 	= 	true;
 							obj.productUrl	=   products[k][_CONST.popularProducts.productUrl]
@@ -1222,7 +1223,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				  // return;
+				   return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
@@ -1232,8 +1233,9 @@ function myAjax(openCallback) {
 				input.autoComplt.unbxdSearch = function () {
 					 if(unbxdSelected.isProduct)
 					 	 document.location = unbxdSelected.isProduct;
-					 	
-					_CONST.callbackfunction(unbxdSelected.val, unbxdSelected.filterName, unbxdSelected.filterValue, unbxdSelected.isProduct );
+					 else
+					 	_CONST.callbackfunction(unbxdSelected.val, unbxdSelected.filterName, unbxdSelected.filterValue, unbxdSelected.isProduct );
+					
 					unbxdSelected = null;
 
 					if( _CONST.formSubmit )
