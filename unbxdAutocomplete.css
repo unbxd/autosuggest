@@ -3,8 +3,6 @@ input {
 }
 a{
     text-decoration: none;
-    height: 100%;
-    width: 100%;
 }
 .unbxd-autocomplete-list-ul{
         font-family: arial, tahoma, verdana, sans-serif;
@@ -38,7 +36,6 @@ li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
         list-style-type: none;
         height: auto;
         font-family:inherit;
-        white-space: nowrap;
         overflow: hidden !important;
         text-overflow: ellipsis;
 }
@@ -135,6 +132,9 @@ em{
 
 .product-name{
         font-size: 14px;
+}
+.unbxd-product-name{
+    word-wrap: break-word !important;
 }
 .unbxd-product-img{
     background-color: rgb(255, 255, 255);
