@@ -863,9 +863,9 @@ function myAjax(openCallback) {
 
 							inFields.push(obj);
 						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
-							var imageUrl = _CONST.popularProducts.imageUrl;  
+							var imageUrl 	= _CONST.popularProducts.imageUrl;  
 							obj.imgUrl 		= 	products[k][ imageUrl ] ? products[k][ imageUrl ] : products[k].image_url;
-							obj.price 		= 	_CONST.popularProducts.currency+products[k].price;
+							obj.price 		= 	_CONST.popularProducts.currency+products[k].price.toFixed(2);
 							obj.uniqueId 	=  	products[k].uniqueId;
 							obj.isProduct 	= 	true;
 							obj.productUrl	=   products[k][_CONST.popularProducts.productUrl]
