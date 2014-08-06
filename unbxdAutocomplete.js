@@ -30,6 +30,7 @@ var unbxdAutocomplete = (function () {
 			count: 3,
 			title:true,
 			price:true,
+			priceFunction:false,
 			currency:'$',
 			image:true,
 			imageUrl:'imageUrl',
@@ -778,9 +779,6 @@ function myAjax(openCallback) {
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
 					if(hint.tagName ==="LI" || hint.tagName ==="DIV" ){
 						hint.style.color = this.styles.autoCompltHintSelected.color;
-						// hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;						
-					}else if(hint.tagName ==="A"){
-						console.log(hint);
 					}
 					
 				}
@@ -855,10 +853,15 @@ function myAjax(openCallback) {
 						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
 							var imageUrl 	= _CONST.popularProducts.imageUrl;  
 							obj.imgUrl 		= 	products[k][ imageUrl ] ? products[k][ imageUrl ] : products[k].image_url;
-							obj.price 		= 	products[k].price ? _CONST.popularProducts.currency+products[k].price.toFixed(2) : "";
+							if(_CONST.popularProducts.priceFunction){
+								 obj.price  = _CONST.popularProducts.priceFunction(products[k]);
+							}else{
+								obj.price 	= 	products[k].price ? products[k].price.toFixed(2) : "";
+							}
 							obj.uniqueId 	=  	products[k].uniqueId;
 							obj.isProduct 	= 	true;
 							obj.productUrl	=   products[k][_CONST.popularProducts.productUrl];
+							obj.price ? obj.price = _CONST.popularProducts.currency+obj.price:false ;
 							prods.push(obj);
 					    }else if( products[k].doctype ===  "TOP_SEARCH_QUERIES" ){
 					    	queries.push( obj );
