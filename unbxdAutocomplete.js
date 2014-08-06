@@ -350,7 +350,7 @@ function myAjax(openCallback) {
 				    });
 				
 				if( hint.productUrl ){
-					var hint = this.buildElem('<a isProduct="'+hint.productUrl+'" href="'+hint.productUrl+'" ><li isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+					var hint = this.buildElem('<li isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 				
 				
 				    +'<div isProduct="'+hint.productUrl+'" class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
@@ -365,7 +365,7 @@ function myAjax(openCallback) {
 				         + '</div>'
 				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="clearfix"></div>'
 				    +'</div>'
-				    + '</li></a>');
+				    + '</li>');
 				}else{
 					var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 				
@@ -776,9 +776,11 @@ function myAjax(openCallback) {
 					this.deselect();	
 					hint.className = hint.className.trim();				
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
-					if(hint.tagName ==="LI" || hint.tagName ==="DIV"){
+					if(hint.tagName ==="LI" || hint.tagName ==="DIV" ){
 						hint.style.color = this.styles.autoCompltHintSelected.color;
 						// hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;						
+					}else if(hint.tagName ==="A"){
+						console.log(hint);
 					}
 					
 				}
@@ -868,7 +870,7 @@ function myAjax(openCallback) {
 							obj.price 		= 	products[k].price ? _CONST.popularProducts.currency+products[k].price.toFixed(2) : "";
 							obj.uniqueId 	=  	products[k].uniqueId;
 							obj.isProduct 	= 	true;
-							obj.productUrl	=   products[k][_CONST.popularProducts.productUrl]
+							obj.productUrl	=   products[k][_CONST.popularProducts.productUrl];
 							prods.push(obj);
 					    }else if( products[k].doctype ===  "TOP_SEARCH_QUERIES" ){
 					    	queries.push( obj );
@@ -1028,8 +1030,8 @@ function myAjax(openCallback) {
 							// If no hint is selected, just use the original user input to autocomplete
 								this.value = input_autoComplt_currentTarget;
 							}
-
-							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key"),  isProduct:e.target.getAttribute("isProduct")}
+							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key"),  isProduct:hint.getAttribute("isProduct")}
+							//input.autoComplt.unbxdSearch();
 						}
 					},
 					/*
@@ -1083,7 +1085,7 @@ function myAjax(openCallback) {
 										input_autoComplt_list.select(0);												
 									} else if (hint.nextSibling.className==='unbxd-header') {
 									// If some hint is selected and the next hint exists, then select the next hint
-										input_autoComplt_list.select(hint.nextSibling.nextSibling);
+										input_autoComplt_list.select(hint.nextSibling.nextSibling);	
 									}else if (hint.nextSibling) {
 									// If some hint is selected and the next hint exists, then select the next hint
 										input_autoComplt_list.select(hint.nextSibling);
@@ -1125,7 +1127,7 @@ function myAjax(openCallback) {
 											// When pressing the enter key, let's try autocomplete
 											input_autoComplt_compltInput.call(input);
 											input.autoComplt.close();
-											input.autoComplt.unbxdSearch();
+											 input.autoComplt.unbxdSearch();
 										}
 									break;
 									
@@ -1223,7 +1225,7 @@ function myAjax(openCallback) {
 				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				   return;
+				  //return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
@@ -1231,6 +1233,7 @@ function myAjax(openCallback) {
 
 				//fire search api
 				input.autoComplt.unbxdSearch = function () {
+
 					 if(unbxdSelected.isProduct)
 					 	 document.location = unbxdSelected.isProduct;
 					 else

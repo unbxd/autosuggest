@@ -135,6 +135,7 @@ em{
 }
 .unbxd-product-name{
     word-wrap: break-word !important;
+    padding-left: 20%;
 }
 .unbxd-product-img{
     background-color: rgb(255, 255, 255);
@@ -165,7 +166,7 @@ em{
     font-style: normal;
     font-variant: normal;
     font-weight: normal;
-    height: 45px;
+    /*height: 45px;*/
     line-height: 18px;
     list-style-image: none;
     list-style-position: outside;
@@ -228,20 +229,19 @@ em{
     vertical-align: baseline;
     width: 22px;
 }
-.unbxd-product-price:before{
-    content: 'Price: ';
-}
+
 .unbxd-product-price{
-    float: left;
     font-size: 13px;
     font-weight: bold;
     color: #d2322d;
     font-family: arial, tahoma, verdana, sans-serif;
+    padding-left: 20%;
 }
 
 
 .unbxd-product-suggest{
-        height: 40px;
+        min-height: 40px;
+        height: auto;
 }
 
 
