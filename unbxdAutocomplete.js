@@ -849,18 +849,6 @@ function myAjax(openCallback) {
 								}
 
 							}
-	
-							// if(products[k].unbxdAutosuggestSrc !== 'brand'){
-							// 	obj.brand_in = products[k].brand_in;
-					  //   		if(obj.brand_in && obj.brand_in.length > _CONST.inFields.inBrandCount)
-							// 		obj.brand_in.length = _CONST.inFields.inBrandCount;
-							// }
-					    	
-							// if(products[k].unbxdAutosuggestSrc !== 'category'){
-							// 	obj.category_in = products[k].category_in;
-							// 	if(obj.category_in && obj.category_in.length > _CONST.inFields.inCategoriesCount)
-							// 		obj.category_in.length = _CONST.inFields.inCategoriesCount;
-							// }
 							
 
 							inFields.push(obj);
