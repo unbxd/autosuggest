@@ -1021,7 +1021,8 @@ function myAjax(openCallback) {
 							// If no hint is selected, just use the original user input to autocomplete
 								this.value = input_autoComplt_currentTarget;
 							}
-							window.unbxdSelected = {val:this.value, filterValue:hint.getAttribute("filter"), filterName:hint.getAttribute("key"),  isProduct:hint.getAttribute("isProduct")}
+
+							window.unbxdSelected = {val:this.value, filterValue:hint ? hint.getAttribute("filter"):null, filterName:hint ? hint.getAttribute("key"):null,  isProduct:hint ? hint.getAttribute("isProduct"):null}
 							//input.autoComplt.unbxdSearch();
 						}
 					},
