@@ -933,6 +933,16 @@ function myAjax(openCallback) {
 		   					+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
 		   					+ '&popularProducts.count=' + _CONST.popularProducts.count;
 		   					+ '&indent=off'
+
+		   	_CONST.originalSearchUrl = _CONST.searchUrl;
+		},
+
+		setFilter:function( obj ){
+			    if( _CONST.searchUrl.indexOf('&'+obj['name']) ){
+			    	_CONST.searchUrl  = _CONST.originalSearchUrl+'&'+obj['name']+'='+obj['value'];
+			    }else{
+			    	_CONST.searchUrl  = _CONST.searchUrl+'&'+obj['name']+'='+obj['value'];
+			    } 		 
 		},
 
 		enable : function (input, config) {
