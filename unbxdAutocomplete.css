@@ -180,9 +180,6 @@ em{
     text-align: center;
     vertical-align: baseline;
 }
-unbxd-product-img:hover, img:hover{
-    background-color: #f2f2f2 !important;
-}
 
 .unbxd-product-price{
     font-size: 13px;

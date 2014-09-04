@@ -16,12 +16,8 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 		formSubmit : false, //if input box is a form and you want to submit it on selection from autosuggest make this true
 
 		inFields:{
-			count: 1,
-			fields:[
-				{
-					name:'manufacturer',
-					count:3
-				},
+			count: 1, //count of infield items you need
+			fields:[ //specify the array of categories you get with infields along with count
 				{
 					name:'category',
 					count:3
@@ -33,25 +29,25 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 			]
 		},
 
+		//count of top queries in the auto suggest
 		topQueries:{
 			count: 3
 		},
-
+		
+		//count of keyword suggestions in auto suggest
 		keywordSuggestions:{
 			count: 2
 		},
-
-		productDetails:true,
-
+		//popular products with image and other details
 		popularProducts:{
-			count: 4,
-			title:true,
-			price:true,
+			count: 4, 		//count of products
+			title:true,		//display title, true or false
+			price:true,		//display price true or false
 			priceFunction:false, // you can give a calback function returning the price, product object wil be passed to this function while calling
-			image:true,
-			currency:'$',
+			image:true,  //if false product image will not be displayed
+			currency:'$', //currency to be displayed with price
 			imageUrl:'image' ,//the property for image url to be picked
-			productUrl:'url_path' // url to navigate to product page
+			productUrl:'url_path' // url to navigate on click of product
 		},
 		
 		//this will be called on selecting a item from autosuggest, can be used to call search query
