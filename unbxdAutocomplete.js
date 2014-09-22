@@ -364,7 +364,7 @@ function myAjax(openCallback) {
 				          +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
 				             +hint.price
 				         + '</div>'
-				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="clearfix"></div>'
+				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="_unbxd-autosuggest-clearfix"></div>'
 				    +'</div>'
 				    + '</li>');
 				}else{
@@ -381,7 +381,7 @@ function myAjax(openCallback) {
 				          +'<div value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
 				             +hint.price
 				         + '</div>'
-				         +'<div value="'+value+'" class="clearfix"></div>'
+				         +'<div value="'+value+'" class="_unbxd-autosuggest-clearfix"></div>'
 				    +'</div>'
 				    + '</li>');
 				}
