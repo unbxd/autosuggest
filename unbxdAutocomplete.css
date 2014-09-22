@@ -1,9 +1,4 @@
-input {
-    font-size: 14px;
-}
-a{
-    text-decoration: none;
-}
+
 .unbxd-autocomplete-list-ul{
         font-family: arial, tahoma, verdana, sans-serif;
         font-size: 11px;
@@ -20,8 +15,6 @@ a{
         padding-top: 4px !important;
         text-align: left;
 }
-
-
 li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
         z-index: 10;
         padding-left: 10px;
@@ -45,7 +38,6 @@ li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
     padding-top: 3px;
     padding-bottom: 3px;
 }
-
 li.unbxd-autocomplete-list-li:hover,  li.unbxd-autoComplt-hint-selected {
     background-color: #f2f2f2 !important;
     color: #000 !important;
@@ -59,7 +51,6 @@ li.unbxd-autoComplt-hint-selected span:hover {
     background-color: #f2f2f2;
     cursor: pointer !important;
 }
-
 li.unbxd-autocomplete-list-li img:hover {
     background-color: #f2f2f2;
     color: #000;
@@ -70,18 +61,15 @@ li.unbxd-autoComplt-hint-selected img:hover {
     color: #000;
     cursor: pointer !important;
 }
-
 li#unbxd_hint:hover, li.autoComplt-hint-selected{
         color: #000;
         cursor: pointer ;
 }
-
-em{
+.unbxd-autocomplete-list-ul em{
         font-weight: 900;
         font-style: normal;
 }
-
- .autocomplete-category {
+.autocomplete-category {
         text-transform: uppercase;
         font-weight: 500;
         font-size: 14px;
@@ -98,24 +86,10 @@ em{
 .product-autosuggest{
 
 }
-.image{
-        height: 0;
-        padding-top: 4px;
-        margin-top: 2px;
-        margin-bottom: 2px;
-}
-.title{
-        float: right;
-        text-align: -webkit-auto;
-        padding-right: 6px;
-        font-size: 15px;
-        font-style: italic;
-}
 .autoCompltHintSelected : {
         color : #fff;
         background-color : red  ;
 }
-
 .autoCmplt-input {
         height: 25px;
         padding: 2px;
@@ -123,16 +97,11 @@ em{
         margin-left: 40%;
         margin-top: 2%;
 }
-
 .autoCmplt-input.input-1 {
         width: 180px;
 }
 .autoCmplt-input.input-2 {
         width: 300px;
-}
-
-.product-name{
-        font-size: 14px;
 }
 .unbxd-product-name{
     word-wrap: break-word !important;
@@ -180,7 +149,6 @@ em{
     text-align: center;
     vertical-align: baseline;
 }
-
 .unbxd-product-price{
     font-size: 13px;
     font-weight: bold;
@@ -188,36 +156,13 @@ em{
     font-family: arial, tahoma, verdana, sans-serif;
     padding-left: 25%;
 }
-
-
 .unbxd-product-suggest{
         min-height: 40px;
         height: auto;
 }
-
-
-.product-imageas{
-        float: left;
-        width: 40px;
-        height: 40px;
-        padding-right: 6px;
-}
-
-.product-priceas{
-        float: left;
-}
-.product-nameas{
-        width: auto;
-        height: 40px;
-        float:left;
-
-}
-
-
 li.unbxd-autocomplete-list-li > div {
         /*border-top: 1px solid #e2e2e2;*/
  }
-
 span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
         font-weight: bold;
         color:#d2322d;
@@ -272,7 +217,6 @@ span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
     vertical-align: baseline;
     width: 485px;
 }
-
 .unbxd-header .text {
     top: -11px;
     display: inline-block;
@@ -282,10 +226,6 @@ span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
     font-size: 13px;
     color: #6d6d6d;
 }
-
 ._unbxd-hide{
     display: none;
 }
-
-
-
