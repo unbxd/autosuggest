@@ -912,7 +912,7 @@ function myAjax(openCallback) {
 				  	 _CONST[k] = config[k];
 				  }if( typeof _CONST[k] === 'object'  &&   config[k] ){
                       unbxdAutocomplete.setConfigValues( _CONST[k], config[k] );
-				  }else if( config[k] || config[k] === false ){
+				  }else if( config[k] || config[k] === false || config[k] === 0 ){
 				  	 _CONST[k] = config[k];
 				  }
 			}
