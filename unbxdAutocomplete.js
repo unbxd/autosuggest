@@ -100,12 +100,7 @@ var unbxdAutocomplete = (function () {
 		widgetBackground:'white',
 
 		hintHeight:null,
-
-		imgClass :'product-imageas',
-
-		prodName:'product-nameas',
 	
-		
 		defaultStyles : {
 		    //STYLES FOR WIDGET
 			autoCompltList : {
@@ -697,9 +692,10 @@ function myAjax(openCallback) {
 		*/
 		_AutoCompltList.prototype.close = function () {
 			if (this.uiElem && !_DBG) {
-				this.mouseOnList = false;
-				this.uiElem.parentNode.removeChild(this.uiElem);
-				this.uiElem = null;
+				this.uiElem.style.display = "none";
+				// this.mouseOnList = false;
+				// this.uiElem.parentNode.removeChild(this.uiElem);
+				// this.uiElem = null;
 			}
 		}
 		/*
