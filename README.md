@@ -11,7 +11,9 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 
    config = {
 
-		searchUrl:"http://<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest",
+		UnbxdSiteName:'',
+		
+		UnbxdApiKey:'',
 
 		formSubmit : false, //if input box is a form and you want to submit it on selection from autosuggest make this true
 
@@ -57,35 +59,28 @@ Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css**.
 		
 
 		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
-
 		defaultStyles : {
 		    //STYLES FOR WIDGET
 			autoCompltList : {
-				maxHeight : "400px",
-				border : "1px solid rgb(170, 170, 170)",
-				padding : "0",
-				margin: "0",
-				overflowX : "hidden",
-				overflowY : "auto",
-				display : "none",
-				position: "absolute",
-				backgroundColor : "#FFF",
-				width:'',
-				top:'',
-				left:''
+				maxHeight 	: "400px",
+				border 		: "1px solid black",
+				backgroundColor : "white",
+				width:'default',
+				top:'default',
+				left:'default',
+				padding: "4px 0px 0px 0px",
+				margin:"0px 0px 0px 0px"
 			},
 			//STYLES FOR EACH ROW INSIDE WIDGET
 			autoCompltHint : {
-				height : "22px",
-				padding: "0 2px 0 5px",
-				margin: "0",
-				overflow: "auto",
-				listStyleType: "none",
-				color : "#ffff",
-				cursor : "default",
+				height : "23px",
+				padding: "0px 0px 0px 5px",
+				margin: "0px 0px 0px 0px",
+				color : "black",
+				backgroundColor:'white',
 				fontSize : "14px"
 			}
-		},
+		}
    }
 
   
