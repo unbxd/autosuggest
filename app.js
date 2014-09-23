@@ -3,15 +3,18 @@
 
    config = {
 
-		searchUrl:"//<unbxd_site_ key>.search.unbxdapi.com/<unbxd_api_key>/autosuggest",
+		
+		UnbxdSiteName:'',
+		
+		UnbxdApiKey:'',
 
 		formSubmit : false,
 
 		inFields:{
-			count: 1,
+			count: 4,
 			fields:[
 				{
-					name:'brand',
+					name:'catlevel3Name',
 					count:3
 				},
 				{
@@ -30,7 +33,7 @@
 		},
 
 		keywordSuggestions:{
-			count: 2
+			count: 3
 		},
 
 		productDetails:true,
@@ -38,47 +41,42 @@
 		popularProducts:{
 			count: 4,
 			title:true,
-			price:false,
+			price:true,
 			image:true,
+			currency:'$',
 			imageUrl:'image' ,//the property for image url to be picked
 			productUrl:'url_path' // url to navigate to product page
 		},
 
-		callbackfunction:function( selectedValue, filterName, filterValue){
+		callbackfunction:function( selectedValue, filterName, filterValue, data){
 			console.log("value "+selectedValue +" "+ filterName + " "+ filterValue);
+			console.log(data);
 		},
 		
 
 		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
-
 		defaultStyles : {
 		    //STYLES FOR WIDGET
 			autoCompltList : {
-				maxHeight : "400px",
-				border : "1px solid rgb(170, 170, 170)",
-				padding : "0",
-				margin: "0",
-				overflowX : "hidden",
-				overflowY : "auto",
-				display : "none",
-				position: "absolute",
-				backgroundColor : "#FFF",
-				width:'',
-				top:'',
-				left:''
+				maxHeight 	: "400px",
+				border 		: "1px solid black",
+				backgroundColor : "white",
+				width:'default',
+				top:'default',
+				left:'default',
+				padding: "4px 0px 0px 0px",
+				margin:"0px 0px 0px 0px"
 			},
 			//STYLES FOR EACH ROW INSIDE WIDGET
 			autoCompltHint : {
-				height : "22px",
-				padding: "0 2px 0 5px",
-				margin: "0",
-				overflow: "auto",
-				listStyleType: "none",
-				color : "#ffff",
-				cursor : "default",
+				height : "23px",
+				padding: "0px 0px 0px 5px",
+				margin: "0px 0px 0px 0px",
+				color : "black",
+				backgroundColor:'white',
 				fontSize : "14px"
 			}
-		},
+		}
    }
 
   
