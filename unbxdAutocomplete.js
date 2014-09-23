@@ -38,8 +38,6 @@ var unbxdAutocomplete = (function () {
 		},
 
 		callbackfunction:function(){}, //will be called on select
-
-		inCat:['brand_in', 'category_in'],
 		
 		autoCompltListClass : "unbxd-autocomplete-list-ul",
 		
@@ -59,23 +57,19 @@ var unbxdAutocomplete = (function () {
 
 		unbxdSelectorClass:'_unbxd-hint',
 
-		callSearch: false,
-
 		formSubmit : false,
-
-		catageries:['brand_in', 'category_in'],
-
-		type:"productname",
 
 		productDetails:true,
 
 		searchUrl:'',
 
-		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
-
-		rows:20,
+	    UnbxdSiteName:'',
 		
-		autoCompltDelay : 0.1, // in ms
+		UnbxdApiKey:'',
+
+		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
+		
+		autoCompltDelay : 0, // in ms
 		
 		listStatus : {
 			attr : "data-listStatus",
@@ -88,21 +82,8 @@ var unbxdAutocomplete = (function () {
 			esc : 27,
 			enter : 13
 		},
-
-		widgetWidth:null,
-
-		widgetLeft:null,
-
-		widgetTop:null,
-
-		widgetMaxheight:400,
-
-		widgetBackground:'white',
-
-		hintHeight:null,
 	
 		defaultStyles : {
-		    //STYLES FOR WIDGET
 			autoCompltList : {
 				maxHeight : "400px",
 				border : "1px solid rgb(170, 170, 170)",
@@ -117,7 +98,6 @@ var unbxdAutocomplete = (function () {
 				top:'',
 				left:''
 			},
-			//STYLES FOR EACH ROW INSIDE WIDGET
 			autoCompltHint : {
 				height : "22px",
 				padding: "0 2px 0 5px",
@@ -125,91 +105,44 @@ var unbxdAutocomplete = (function () {
 				overflow: "auto",
 				listStyleType: "none",
 				color : "#ffff",
-				cursor : "default",
-				fontSize : "14px"
+				fontSize : "14px",
+				backgroundColor:'white'
 			},
-			//STYLES FOR SELECTED ROW ( MOUSE OVER )
-			autoCompltHintSelected : {
-				// color : "none",
-				// backgroundColor : "#f2f2f2"
+			autoCompltHintSelected:{
+				color:'black',
+				backgroundColor:"green"
 			}
-		},
-		
-		adjStyleAttrs : {
-			autoCompltList : [ "border", "maxHeight", "backgroundColor" ],
-			autoCompltHint : [ "height", "padding", "margin", "color", "backgroundColor", "fontSize" ],
-			autoCompltHintSelected : [ "color", "backgroundColor" ]
 		}
 };
 
-
-function myAjax(openCallback) {
-		var xmlHttp = new XMLHttpRequest();
-		var url=_CONST.searchUrl
-		var parameters = "first=barack&last=obama";
-		xmlHttp.open("GET", url, true);
-
-		//Black magic paragraph
-		xmlHttp.setRequestHeader("Content-type", "application/json");
-		xmlHttp.setRequestHeader("Content-length", parameters.length);
-		xmlHttp.setRequestHeader("Connection", "close");
-
-		xmlHttp.onreadystatechange = function() {
-			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-				
-				response = JSON.parse(xmlHttp.responseText);
-				var buckets = response.buckets,
-					types = ['brand', 'category', 'product'],
-					result = [];
-
-				for(var k=0; k<types.length; k++){
-					if( buckets[types[k]] ){
-						var temp = buckets[types[k]].products,
-						    arr = [];
-
-						for(var j=0; j<temp.length; j++){
-							var obj = {"name":temp[j].autosuggest };
-
-							if(types[k] == 'product'){
-								obj.imgUrl = temp[j].image_url;
-								obj.price = temp[j].price;
-							}
-							arr.push( obj );
-						}
-
-
-						var v = {}
-    					v[types[k]] = arr;
-					    result.push( v );
-					}
-				}
-				
-				openCallback(result)
-				//return xmlHttp.responseText;
+	var getParent = function( element ){
+			 	if(!element)
+			 		return;
+				if(element && element.tagName && element.tagName === "LI")
+					return element;
+				else
+					return getParent(element.parentElement)
 			}
-		}
+    //push analytics
+	var pushAnalytics = function( element ){
+		try{
+			var analyticObj = {	type : element.getAttribute("type"),
+					 		suggestion : element.getAttribute("value"),
+					 		infield : element.getAttribute("filter"),
+					 		src_field: element.getAttribute("src_field"),
+					 		pid: element.getAttribute("pid")};
 
-		xmlHttp.send(parameters);
- };
+			Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
+			Unbxd.log("Pushed autosuggest query : " + analyticObj);
+		}catch(e){
+			console.info("pushAnalytics failed", e);
+		}
+	}
 
 	var _DBG = 0; 
 	
 	
 	var _normalizeEvt = function (e) {					
-		// e = e || window.event;
-		// e.target = e.target || e.srcElement;
-		// e.stopBubble = function () {
-		// 	this.cancelBubble = true;
-		// 	if (this.stopPropoagation) {
-		// 	 this.stopPropoagation(); 
-		// 	}
-		// }
-		// e.stopDefault = function () {
-		// 	if (this.preventDefault) { 
-		// 		this.preventDefault(); }
-		// 	this.returnValue = false;
-		// 	return false;
-		// }
 		return e;
 	}
 	
@@ -288,13 +221,10 @@ function myAjax(openCallback) {
 				var value = hint.name,
 				    reg = new RegExp(_CONST.inputText, 'gi'),
 		
-				hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
+				hint = this.buildElem('<li data-value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
 				hint.innerHTML = hint.innerHTML.replace(reg, function(str) {
 				    	return '<em>'+str+'</em>'
 				    });
-
-                if( _CONST.hintHeight )
-                	hint.style.height = _CONST.hintHeight +'px';
 
                 hint.style.height = hint.style.lineHeight = styles.autoCompltHint.height; // line-height shall always be equal to the height
 				hint.style.padding = styles.autoCompltHint.padding;
@@ -311,14 +241,15 @@ function myAjax(openCallback) {
 			return null;
 		},
 
-		buildCategory : function(hint, styles, value, key){
+		buildCategory : function(hint, styles, value, key, unbxdSrc){
 			if (hint) {
 				var filter 	= hint,
 					key 	= key,
-				    hint 	= this.buildElem('<li value="'+value+'" filter="'+filter+'"  key="'+key+'" class="' + _CONST.autoCompltHintClass + '">&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp; <span value="'+value+'" filter="'+filter+'"  key="'+key+'" class="' + _CONST.autoCompltHintClass + '">' + hint + '</span></li>');
-				
-				if( _CONST.hintHeight )
-                	hint.style.height = _CONST.hintHeight +'px';
+				    hint 	= this.buildElem('<li data-value="'+value+'" data-filterValue="'+filter+'"  data-filterName="'+key+'" data-source="'+unbxdSrc+'"  class="' + _CONST.autoCompltHintClass + '">'
+				    			+'&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;' 
+				    			+'<span  class="' + _CONST.autoCompltHintClass + '">' + hint + '</span>'
+				    			+'</li>');
+			
 
                 hint.style.height = hint.style.lineHeight = styles.autoCompltHint.height; // line-height shall always be equal to the height
 				hint.style.padding = styles.autoCompltHint.padding;
@@ -346,56 +277,46 @@ function myAjax(openCallback) {
 				    });
 				
 				if( hint.productUrl ){
-					var hint = this.buildElem('<li isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
-				
-				
-				    +'<div isProduct="'+hint.productUrl+'" class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
-				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
-				         	+ '<img isProduct="'+hint.productUrl+'" class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
-				         +'</div>'
-				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
-				             +hint.name
-				         + '</div>'
-				          +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
-				             +hint.price
-				         + '</div>'
-				         +'<div isProduct="'+hint.productUrl+'" value="'+value+'" class="_unbxd-autosuggest-clearfix"></div>'
-				    +'</div>'
+					var hint = this.buildElem('<li isProduct="'+hint.productUrl+'" data-productUrl="'+hint.productUrl+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+					    +'<div class="_unbxd-hint unbxd-product-suggest" >'
+					         +'<div class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
+					         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
+					         +'</div>'
+					         +'<div class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
+					             +hint.name
+					         + '</div>'
+					          +'<div class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
+					             +hint.price
+					         + '</div>'
+					         +'<div class="_unbxd-autosuggest-clearfix"></div>'
+					    +'</div>'
 				    + '</li>');
 				}else{
-					var hint = this.buildElem('<li value="'+value+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
-				
-				
-				    +'<div class="_unbxd-hint unbxd-product-suggest" value="'+value+'" >'
-				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
-				         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
-				         +'</div>'
-				         +'<div value="'+value+'" class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
-				             +hint.name
-				         + '</div>'
-				          +'<div value="'+value+'" class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
-				             +hint.price
-				         + '</div>'
-				         +'<div value="'+value+'" class="_unbxd-autosuggest-clearfix"></div>'
-				    +'</div>'
+					var hint = this.buildElem('<li data-productUrl="'+hint.productUrl+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+					    +'<div class="_unbxd-hint unbxd-product-suggest" >'
+					         +'<div class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
+					         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
+					         +'</div>'
+					         +'<div class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
+					             +hint.name
+					         + '</div>'
+					          +'<div class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
+					             +hint.price
+					         + '</div>'
+					         +'<div class="_unbxd-autosuggest-clearfix"></div>'
+					    +'</div>'
 				    + '</li>');
 				}
 				
-			
-
 				return hint;
 			}
 			return null;
 		},	
 		//to give header like popular prducts, top queries
 		buildHeader:function( headerValue ){
-
 				var header = "";
-		
 				hint = this.buildElem('<li class="unbxd-header" ><span class="text">'+headerValue+'</span></li>');
-		
-				return hint;
-			
+				return hint;	
 		},			
 		/*	Arg:
 				<OBJ> styles = the obk holding the styles to set. Refer to _CONST.defaultStyles.autoCompltList for the required styles
@@ -471,26 +392,14 @@ function myAjax(openCallback) {
 					setTimeout(function () {
 						that.assocInput.focus();
 					}, 50);
-					if (that.isHint(e.target)) {
-						that.select(e.target);
-						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.target.parentNode.getAttribute("value");
-						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.target.getAttribute("filter"), filterName:e.target.getAttribute("key"), isProduct:e.target.getAttribute("isProduct") }; 
+					var hint = getParent( e.target )
+					if (that.isHint( hint )) {
+						that.select(hint);
+						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("data-value") : e.target.parentNode.getAttribute("data-value");
 						that.assocInput.autoComplt.close();
-						that.assocInput.autoComplt.unbxdSearch();
+						that.assocInput.autoComplt.alalyze(e);
 					}
 				});				
-				
-				// Select hint by clicking
-				_addEvt(this.uiElem, "mouseup", function (e) {
-					e = _normalizeEvt(e);
-					if (that.isHint(e.target)) {
-						that.select(e.target);
-						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("value") : e.target.parentNode.getAttribute("value");
-						window.unbxdSelected = { val:that.assocInput.value, filterValue:e.target.getAttribute("filter"), filterName:e.target.getAttribute("key"),  isProduct:e.target.getAttribute("isProduct") }; 
-						that.assocInput.autoComplt.close();
-						that.assocInput.autoComplt.unbxdSearch();
-					}
-				});
 				
 				document.body.appendChild(this.uiElem);
 			}
@@ -504,8 +413,8 @@ function myAjax(openCallback) {
 		_AutoCompltList.prototype.isHint = function (el) {
 			if (el && typeof el == "object" && el.nodeType === 1) {
 				 var cls = " " + el.className + " ";
-				 var isHint = (cls.indexOf(" " + _CONST.autoCompltHintClass + " ") >= 0)  ;
-				return true;
+				 if(cls.indexOf(" " + _CONST.autoCompltHintClass + " ") >= 0) 
+					return true;
 			}
 			return false;
 		}
@@ -541,6 +450,7 @@ function myAjax(openCallback) {
 						for(var j= 0; j < _CONST.inFields.fields.length; j++){
 							var arr = [],
 								value = hintObject.name,
+								unbxdSrc = hintObject.unbxdSrc ? hintObject.unbxdSrc : "",
 								field = _CONST.inFields.fields[j],
 								propertyName = field.name+'_in';
 
@@ -548,7 +458,7 @@ function myAjax(openCallback) {
 								arr = hintObject[ propertyName ];
 
 								for (i = 0; i < arr.length; i++) {
-									hs.push( _ui.buildCategory( arr[i], this.styles, value, propertyName ));
+									hs.push( _ui.buildCategory( arr[i], this.styles, value, propertyName, unbxdSrc ));
 									if (!hs[hs.length - 1]) {
 										hs.pop();
 									}
@@ -693,9 +603,6 @@ function myAjax(openCallback) {
 		_AutoCompltList.prototype.close = function () {
 			if (this.uiElem && !_DBG) {
 				this.uiElem.style.display = "none";
-				// this.mouseOnList = false;
-				// this.uiElem.parentNode.removeChild(this.uiElem);
-				// this.uiElem = null;
 			}
 		}
 		/*
@@ -745,7 +652,7 @@ function myAjax(openCallback) {
 
 			if (this.uiElem) {
 			
-				var hint = null;
+				var hint = candidate;
 			
 				if (typeof candidate == "object" && this.isHint(candidate)) {
 				
@@ -761,20 +668,18 @@ function myAjax(openCallback) {
 						hint = hints[hint];
 					}					
 				}
-				
-			    var cls = hint.className ,
-				    isHint = (cls.indexOf( _CONST.autoCompltHintClass) >= 0) ||  (cls.indexOf( _CONST.unbxdSelectorClass ) >= 0) ;
 
 				if (   hint !== null 
 					&& hint.tagName !=='EM' 
 					&& hint.tagName !=='UL' 
-					&& isHint ) {
-					
+					&& this.isHint(hint) ) {
+					hint = getParent(hint);
 					this.deselect();	
 					hint.className = hint.className.trim();				
 					hint.className += " " + _CONST.autoCompltHintSelectedClass;
-					if(hint.tagName ==="LI" || hint.tagName ==="DIV" ){
+					if( hint.tagName ==="LI" ){
 						hint.style.color = this.styles.autoCompltHintSelected.color;
+					    // hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;
 					}
 					
 				}
@@ -788,7 +693,7 @@ function myAjax(openCallback) {
 				if (slct && slct.tagName !=='EM') {
 					slct.className = slct.className.replace(_CONST.autoCompltHintSelectedClass, "").replace(_CONST.autoCompltHintClass, "");
 					slct.className = slct.className + _CONST.autoCompltHintClass;
-					if(slct.tagName ==="LI" || slct.tagName ==="DIV" ){
+					if( slct.tagName ==="LI" ){
 						slct.style.color = this.styles.autoCompltHint.color;
 						slct.style.backgroundColor = this.styles.autoCompltHint.backgroundColor;
 					}	
@@ -801,6 +706,7 @@ function myAjax(openCallback) {
 		*/
 		_AutoCompltList.prototype.getSelected = function () {
 			var ret =  !this.uiElem ? null : this.uiElem.querySelector("." + _CONST.autoCompltHintSelectedClass) ||   null;
+			ret = getParent(ret);
 			return ret;
 		}
 	}
@@ -829,6 +735,9 @@ function myAjax(openCallback) {
 
 							var product = products[k],
 								fields = _CONST.inFields.fields;
+
+								if(product.unbxdAutosuggestSrc)
+									obj.unbxdSrc = product.unbxdAutosuggestSrc;
 
 							for(var j=0; j<fields.length; j++){
 
@@ -900,7 +809,7 @@ function myAjax(openCallback) {
 			this.openCallback = openCallback;
 			_CONST.inputText = input;
 			var script = document.createElement('script');
-			script.src = _CONST.searchUrl+"&q="+input;
+			script.src = _CONST.apiUrl+"&q="+input;
 			document.body.appendChild(script);
 		},
 
@@ -912,7 +821,7 @@ function myAjax(openCallback) {
 				  	 _CONST[k] = config[k];
 				  }if( typeof _CONST[k] === 'object'  &&   config[k] ){
                       unbxdAutocomplete.setConfigValues( _CONST[k], config[k] );
-				  }else if( config[k] || config[k] === false || config[k] === 0 ){
+				  }else if(config[k] !== 'default' && (config[k] || config[k] === false || config[k] === 0 ) ){
 				  	 _CONST[k] = config[k];
 				  }
 			}
@@ -920,24 +829,37 @@ function myAjax(openCallback) {
 		   return;
 		},
 
+		//form autosuggest api end point
 		formUrl:function(){
-			_CONST.searchUrl = _CONST.searchUrl + _CONST.jsonpCallback;
+			 if( _CONST.searchUrl ){
+				_CONST.apiUrl = _CONST.searchUrl + _CONST.jsonpCallback;
+				_CONST.apiUrl = _CONST.apiUrl 
+						+ '&inFields.count=' + _CONST.inFields.count
+							+ '&topQueries.count=' + _CONST.topQueries.count
+							+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
+							+ '&popularProducts.count=' + _CONST.popularProducts.count;
+							+ '&indent=off'
+			 }else{
+				 window.UnbxdSiteName = _CONST.UnbxdSiteName;
 
-			_CONST.searchUrl = _CONST.searchUrl 
+				_CONST.apiUrl = "//"+_CONST.UnbxdSiteName+".search.unbxdapi.com/"+ _CONST.UnbxdApiKey+"/autosuggest" + _CONST.jsonpCallback;
+
+				_CONST.apiUrl = _CONST.apiUrl  
 							+ '&inFields.count=' + _CONST.inFields.count
-		   					+ '&topQueries.count=' + _CONST.topQueries.count
-		   					+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
-		   					+ '&popularProducts.count=' + _CONST.popularProducts.count;
-		   					+ '&indent=off'
+							+ '&topQueries.count=' + _CONST.topQueries.count
+							+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
+							+ '&popularProducts.count=' + _CONST.popularProducts.count;
+							+ '&indent=off'
+			 }
 
-		   	_CONST.originalSearchUrl = _CONST.searchUrl;
+		   	_CONST.originalapiUrl = _CONST.apiUrl;
 		},
 
 		setFilter:function( obj ){
-			    if( _CONST.searchUrl.indexOf('&'+obj['name']) ){
-			    	_CONST.searchUrl  = _CONST.originalSearchUrl+'&'+obj['name']+'='+obj['value'];
+			    if( _CONST.apiUrl.indexOf('&'+obj['name']) ){
+			    	_CONST.apiUrl  = _CONST.originalapiUrl+'&'+obj['name']+'='+obj['value'];
 			    }else{
-			    	_CONST.searchUrl  = _CONST.searchUrl+'&'+obj['name']+'='+obj['value'];
+			    	_CONST.apiUrl  = _CONST.apiUrl+'&'+obj['name']+'='+obj['value'];
 			    } 		 
 		},
 
@@ -1022,29 +944,27 @@ function myAjax(openCallback) {
 						if (input_autoComplt_enabled) {
 							var hint = input_autoComplt_list.getSelected();
 							if (hint) {
-								this.value = hint.getAttribute("value");
+								this.value = hint.getAttribute("data-value");
 							} else {
 							// If no hint is selected, just use the original user input to autocomplete
 								this.value = input_autoComplt_currentTarget;
 							}
 
-							window.unbxdSelected = {val:this.value, filterValue:hint ? hint.getAttribute("filter"):null, filterName:hint ? hint.getAttribute("key"):null,  isProduct:hint ? hint.getAttribute("isProduct"):null}
-							//input.autoComplt.unbxdSearch();
+							//window.unbxdSelected = {val:this.value, filterValue:hint ? hint.getAttribute("filter"):null, filterName:hint ? hint.getAttribute("key"):null,  isProduct:hint ? hint.getAttribute("isProduct"):null}
+							//input.autoComplt.alalyze(hint);
 						}
 					},
 					/*
 					*/
 					input_autoComplt_blurEvtHandle = function (e) {
-						input.autoComplt.close();
-						// e = _normalizeEvt(e);
-						// if (input_autoComplt_list.mouseOnList) {
-						// // If the mouse is on the autocomplete list, do not close the list
-						// // and still need to focus on the input.
-						// 	input.focus();
-						// 	input_autoComplt_list.mouseOnList = false; // Assign false for the next detection
-						// } else {
-						// 	input.autoComplt.close();
-						// }
+						if (input_autoComplt_list.mouseOnList) {
+						// If the mouse is on the autocomplete list, do not close the list
+						// and still need to focus on the input.
+							input.focus();
+							input_autoComplt_list.mouseOnList = false; // Assign false for the next detection
+						} else {
+							input.autoComplt.close();
+						}
 					},
 					/*
 					*/
@@ -1102,7 +1022,8 @@ function myAjax(openCallback) {
 							else if (e.type == "keyup") {
 								
 								var startFetching = false;
-								
+								var hint = input_autoComplt_list.getSelected();
+
 								switch (e.keyCode) {
 									case _CONST.keyCode.up: case _CONST.keyCode.down:
 										if (input_autoComplt_list.isOpen()) {
@@ -1125,7 +1046,7 @@ function myAjax(openCallback) {
 											// When pressing the enter key, let's try autocomplete
 											input_autoComplt_compltInput.call(input);
 											input.autoComplt.close();
-											 input.autoComplt.unbxdSearch();
+											input.autoComplt.alalyze( hint );
 										}
 									break;
 									
@@ -1179,70 +1100,37 @@ function myAjax(openCallback) {
 					return false;
 				}
 				
-				input.autoComplt.setStyles = function (targetClass, styles) {
-				
-					var tStyles,
-						adjStyleAttrs,
-						newStyles = false;
-					
-					// Let's find out which the target UI part is being set
-					switch (targetClass) {
-						case _CONST.autoCompltListClass:
-							tStyles = input_autoComplt_list.styles.autoCompltList;
-							adjStyleAttrs = _CONST.adjStyleAttrs.autoCompltList;
-						break;
-						
-						case _CONST.autoCompltHintClass:
-							tStyles = input_autoComplt_list.styles.autoCompltHint;
-							adjStyleAttrs = _CONST.adjStyleAttrs.autoCompltHint;
-						break;
-						
-						case _CONST.autoCompltHintSelectedClass:
-							tStyles = input_autoComplt_list.styles.autoCompltHintSelected;
-							adjStyleAttrs = _CONST.adjStyleAttrs.autoCompltHintSelected;
-						break;
-					}
-
-					if (styles instanceof Object && tStyles && adjStyleAttrs) {
-						
-						for (var i = 0; i < adjStyleAttrs.length; i++) {
-							
-							if (typeof styles[adjStyleAttrs[i]] == "string" || typeof styles[adjStyleAttrs[i]] == "number") { // A simple type checking
-								if (!newStyles) {
-									newStyles = {};
-								}
-								newStyles[adjStyleAttrs[i]] = tStyles[adjStyleAttrs[i]] = styles[adjStyleAttrs[i]];
-							}
-							
-						}						
-					
-					}
-					
-					return newStyles;
-				}
-				
 				//CLOSING AUTO COMPLETE PDN
 				input.autoComplt.close = function () {
-				  //return;
+				    //return;
 					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
 					input_autoComplt_list.close();
 
 				}
 
-				//fire search api
-				input.autoComplt.unbxdSearch = function () {
+				//alalyze selected element and call registered callback, push analytics and navigate to product page
+				input.autoComplt.alalyze = function ( event ) {
+					 var element = "", 
+					 	data = {};
 
-					 if(unbxdSelected.isProduct)
-					 	 document.location = unbxdSelected.isProduct;
+					 if(event && event.target)
+					 	element  = getParent( event.target );
 					 else
-					 	_CONST.callbackfunction(unbxdSelected.val, unbxdSelected.filterName, unbxdSelected.filterValue, unbxdSelected.isProduct );
+					 	element = event;
+
+					 data = element.dataset;
+					 data = JSON.parse(JSON.stringify(data));
+					 pushAnalytics(element);
+					 if(data.productUrl)
+					 	 document.location = data.productUrl;
+					 else
+					 	_CONST.callbackfunction(data.value, data.filterName, data.filterValue, data );
 					
 					unbxdSelected = null;
 
 					if( _CONST.formSubmit )
 						input.form.submit();
-					if( _CONST.callSearch )
-						unbxdApi.getSearchResults( this.getSelected().getAttribute("value"), 'search', paintHomePage, 1, 12 );						
+
 				}
 				
 				input.autoComplt.enable = function () {

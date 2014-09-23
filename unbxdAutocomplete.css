@@ -12,13 +12,12 @@
         z-index: 99999;
         background-color: #fff;
         border-radius: 4px;
-        padding-top: 4px !important;
+        padding-top: 4px;
         text-align: left;
 }
 li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
         z-index: 10;
         padding-left: 10px;
-        cursor: default;
         color: #000000;
         font-size: 13px;
         font-weight: normal;
@@ -33,37 +32,36 @@ li.unbxd-autocomplete-list-li, .unbxd-prouct-suggest {
         text-overflow: ellipsis;
         padding-bottom: 10px;
 }
-
 .unbxd-prouct-suggest{
     padding-top: 3px;
     padding-bottom: 3px;
 }
 li.unbxd-autocomplete-list-li:hover,  li.unbxd-autoComplt-hint-selected {
+    color: #000;
+    cursor: pointer;
     background-color: #f2f2f2 !important;
-    color: #000 !important;
-    cursor: pointer !important;
-    }
+}
 li.unbxd-autocomplete-list-li span:hover {
     background-color: #f2f2f2;
-    cursor: pointer !important;
+    cursor: pointer;
 }
 li.unbxd-autoComplt-hint-selected span:hover {
     background-color: #f2f2f2;
-    cursor: pointer !important;
+    cursor: pointer;
 }
 li.unbxd-autocomplete-list-li img:hover {
     background-color: #f2f2f2;
     color: #000;
-    cursor: pointer !important;
+    cursor: pointer;
 }
 li.unbxd-autoComplt-hint-selected img:hover {
     background-color: #f2f2f2;
     color: #000;
-    cursor: pointer !important;
+    cursor: pointer;
 }
 li#unbxd_hint:hover, li.autoComplt-hint-selected{
         color: #000;
-        cursor: pointer ;
+        cursor: pointer;
 }
 .unbxd-autocomplete-list-ul em{
         font-weight: 900;
@@ -108,7 +106,6 @@ li#unbxd_hint:hover, li.autoComplt-hint-selected{
     padding-left: 25%;
 }
 .unbxd-product-img{
-    cursor: default;
     display: block;
     float: left;
     font-family: arial, tahoma, verdana, sans-serif;
@@ -192,7 +189,6 @@ span.unbxd-autocomplete-list-li, span.unbxd-autocomplete-list-li:hover{
     border-top-style: solid;
     border-top-width: 1px;
     color: rgb(51, 51, 51);
-    cursor: default;
     display: block;
     font-family: arial, tahoma, verdana, sans-serif;
     font-size: 13px;
