@@ -31,7 +31,7 @@ var unbxdAutocomplete = (function () {
 			title:true,
 			price:true,
 			priceFunction:false,
-			currency:'$',
+			currency:'',
 			image:true,
 			imageUrl:'imageUrl',
 			productUrl:'productUrl'
@@ -63,7 +63,7 @@ var unbxdAutocomplete = (function () {
 
 		searchUrl:'',
 
-	    UnbxdSiteName:'',
+	    UnbxdSiteKey:'',
 		
 		UnbxdApiKey:'',
 
@@ -840,9 +840,9 @@ var unbxdAutocomplete = (function () {
 							+ '&popularProducts.count=' + _CONST.popularProducts.count;
 							+ '&indent=off'
 			 }else{
-				 window.UnbxdSiteName = _CONST.UnbxdSiteName;
+				 window.UnbxdSiteName = _CONST.UnbxdSiteKey;
 
-				_CONST.apiUrl = "//"+_CONST.UnbxdSiteName+".search.unbxdapi.com/"+ _CONST.UnbxdApiKey+"/autosuggest" + _CONST.jsonpCallback;
+				_CONST.apiUrl = "//"+_CONST.UnbxdSiteKey+".search.unbxdapi.com/"+ _CONST.UnbxdApiKey+"/autosuggest" + _CONST.jsonpCallback;
 
 				_CONST.apiUrl = _CONST.apiUrl  
 							+ '&inFields.count=' + _CONST.inFields.count
@@ -860,6 +860,14 @@ var unbxdAutocomplete = (function () {
 			    	_CONST.apiUrl  = _CONST.originalapiUrl+'&'+obj['name']+'='+obj['value'];
 			    }else{
 			    	_CONST.apiUrl  = _CONST.apiUrl+'&'+obj['name']+'='+obj['value'];
+			    } 		 
+		},
+		//adds query param filter=name:value
+		addFilter:function( obj ){
+			    if( _CONST.apiUrl.indexOf('&filter='+obj['name']) ){
+			    	_CONST.apiUrl  = _CONST.originalapiUrl+'&filter='+obj['name']+':'+obj['value'];
+			    }else{
+			    	_CONST.apiUrl  = _CONST.apiUrl+'&filter='+obj['name']+':'+obj['value'];
 			    } 		 
 		},
 
