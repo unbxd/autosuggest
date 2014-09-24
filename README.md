@@ -1,4 +1,4 @@
-## unbxdAutocomplete.js
+## unbxdAutosuggest.js
 #####no jquery auto complete library for unbxd search
 
 ###STEP 1
@@ -103,7 +103,7 @@
    }
 
   
-   unbxdAutocomplete.enable(input,  config);
+   unbxdAutosuggest.enable(input,  config);
 ```
 
 With default config you should get autosuggest like below

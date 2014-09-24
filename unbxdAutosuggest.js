@@ -1176,3 +1176,4 @@ var unbxdAutocomplete = (function () {
 
 	return publicProps;
 }());
+var unbxdAutosuggest  = unbxdAutocomplete; 
