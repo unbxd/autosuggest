@@ -145,7 +145,7 @@ Usage unbxdAutosuggest.removeFilter()
 This will remove queryparam filter added by addFilter
 
 
-###### PS - if you want more css changes than given in config file, please override classes in styles.css
+###### PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css 
 
 
 
