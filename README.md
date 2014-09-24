@@ -115,6 +115,17 @@
   
    unbxdAutosuggest.enable(input,  config);
 ```
+#### in fields
+![in fields](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/infields.png "in fields")
+
+#### keyword suggestions
+![keyword-suggestions](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/keyword-suggestions.png "keyword-suggestions")
+
+#### top queries
+![top-queries](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/top-queries.png "top-queries")
+
+#### popular products
+![popular-products](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/popular-products.png "popular-products")
 
 With default config you should get autosuggest like below
 
