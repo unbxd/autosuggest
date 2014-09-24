@@ -1,9 +1,9 @@
 ## unbxdAutosuggest.js
-#####no jquery auto complete library for unbxd search
+#####no jquery auto suggest library for unbxd search
 
 ###STEP 1
 - - - -
-#####Include **unbxdAutocomplete.js** and **unbxdAutocomplete.css** after downloading this repo by including this in head of your html page
+#####Include **unbxdAutosuggest.js** and **unbxdAutosuggest.css** after downloading this repo by including this in head of your html page
 ```javascript
 <link rel="stylesheet" href="unbxdAutosuggest.css">
 <script src="unbxdAutosuggest.js"></script>
