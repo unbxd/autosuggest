@@ -5,18 +5,11 @@
 - - - -
 #####Include **unbxdAutosuggest.js** and **unbxdAutosuggest.css** after downloading this repo by including this in head of your html page
 ```javascript
+
 <link rel="stylesheet" href="unbxdAutosuggest.css">
-<script src="unbxdAutosuggest.js"></script>
+<script src="unbxdAutosuggest.js"></script> 
+
 ```
-
-####OR
-#####You can include from cdn, by including this in your head of your html page
-```javascript
-<link rel="stylesheet" href="http://d21gpk1vhmjuf5.cloudfront.net/unbxdAutosuggest.css">
-<script src="http://d21gpk1vhmjuf5.cloudfront.net/unbxdAutosuggest.js"></script>
-```
-
-
 
 ###STEP 2
 - - - -
