@@ -72,8 +72,11 @@
 		formSubmit : false, //if input box is a form and you want to submit it on selection from autosuggest make this true
 		
 		//this will be called on selecting a item from autosuggest, can be used to call search query
-		callbackfunction:function( selectedValue, filterName, filterValue){
-			console.log("value "+selectedValue +" "+ filterName + " "+ filterValue);
+		callbackfunction:function( selectedValue, filterName, filterValue, product){
+			 //selectedValue is the suggestion selected by user
+			 //filterName is name of the filter selected ( eg. brand )
+			 //filterValue is the value of the filter selcetd ( eg. nike )
+			 //product is all the details of suggestion clicked in the form of a json
 		},
 		
 
