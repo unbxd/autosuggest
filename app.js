@@ -4,7 +4,7 @@
    config = {
 
 		
-		UnbxdSiteName:'',
+		UnbxdSiteKey:'',
 		
 		UnbxdApiKey:'',
 
@@ -48,15 +48,18 @@
 			productUrl:'url_path' // url to navigate to product page
 		},
 
+		filter:{
+			name:'',
+			value:''
+		},
+
 		callbackfunction:function( selectedValue, filterName, filterValue, data){
 			console.log("value "+selectedValue +" "+ filterName + " "+ filterValue);
 			console.log(data);
 		},
 		
 
-		//STYLES FOR AUTOSUGGEST BOX, CHANGE THE VALUES HERE IF WANT STYLES APRT FROM DEFAULT ONE
 		defaultStyles : {
-		    //STYLES FOR WIDGET
 			autoCompltList : {
 				maxHeight 	: "400px",
 				border 		: "1px solid black",
@@ -67,7 +70,6 @@
 				padding: "4px 0px 0px 0px",
 				margin:"0px 0px 0px 0px"
 			},
-			//STYLES FOR EACH ROW INSIDE WIDGET
 			autoCompltHint : {
 				height : "23px",
 				padding: "0px 0px 0px 5px",
@@ -80,7 +82,7 @@
    }
 
   
-   unbxdAutocomplete.enable(input,  config);
+   unbxdAutosuggest.enable(input,  config);
 
 
 

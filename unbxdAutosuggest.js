@@ -70,6 +70,8 @@ var unbxdAutocomplete = (function () {
 		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
 		
 		autoCompltDelay : 0, // in ms
+
+		filter:false,
 		
 		listStatus : {
 			attr : "data-listStatus",
@@ -852,6 +854,9 @@ var unbxdAutocomplete = (function () {
 							+ '&indent=off'
 			 }
 
+			 if(_CONST.filter && _CONST.filter.name && _CONST.filter.value)
+			 	_CONST.apiUrl = _CONST.apiUrl + '&filter=' + _CONST.filter.name +':'+ _CONST.filter.value; 
+
 		   	_CONST.originalapiUrl = _CONST.apiUrl;
 		},
 
@@ -869,6 +874,10 @@ var unbxdAutocomplete = (function () {
 			    }else{
 			    	_CONST.apiUrl  = _CONST.apiUrl+'&filter='+obj['name']+':'+obj['value'];
 			    } 		 
+		},
+		//remove query param filter
+		removeFilter:function(){
+			_CONST.apiUrl  = _CONST.originalapiUrl;
 		},
 
 		enable : function (input, config) {

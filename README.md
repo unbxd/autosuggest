@@ -20,7 +20,7 @@
 
 ###STEP 2
 - - - -
-##### Then configure the autosuggest by modifying below snippet according to your parameters and include that in you html page, each variables has comments expalining it so you can configure them
+##### Configure the autosuggest by modifying below snippet according to your parameters and include that in you html page, each variables has comments expalining it so you can configure them
 
 ```javascript
     var input = document.querySelector("#input"), //YOUR INPUT ELEMENT
@@ -69,6 +69,13 @@
 			productUrl:'url_path' // url to navigate on click of product
 		},
 
+		//if you want to add any filter bt default, give name and value so it will be add to API url 
+		//like filter=name:value
+		filter:{
+			name:'',
+			value:''
+		},
+
 		formSubmit : false, //if input box is a form and you want to submit it on selection from autosuggest make this true
 		
 		//this will be called on selecting a item from autosuggest, can be used to call search query
@@ -114,12 +121,21 @@ With default config you should get autosuggest like below
 
 ![autosuggest with category](https://raw.githubusercontent.com/unbxd/autosuggest/master/screenshots/default.png "autosuggest with category")
 
-On selection on autosuggest function assigned to callbackfunction will be called with selected value and the filter if any
+On selection on autosuggest function assigned to callbackfunction will be called with selected value and the filter if any and passing a object containing all the details about selected sugestion.
+
+####functions you can call on **unbxdAutosuggest** object 
+
+- **addFilter** :
+Usage unbxdAutosuggest.addFilter({name:"state", value:"Minnesota"})
+This will add filter to the API end point, **filter=state:Minnesota**
+
++ **removeFilter** :
+Usage unbxdAutosuggest.removeFilter()
+This will remove queryparam filter added by addFilter
 
 
 ###### PS - if you want more css changes than given in config file, please override classes in styles.css
 
-###### Thanks to -  [https://github.com/Fischer-L/autoComplt](https://github.com/Fischer-L/autoComplt)
 
 
 
