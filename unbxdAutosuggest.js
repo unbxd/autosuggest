@@ -844,7 +844,8 @@ var unbxdAutocomplete = (function () {
 			 }else{
 				 window.UnbxdSiteName = _CONST.UnbxdSiteKey;
 
-				_CONST.apiUrl = "//"+_CONST.UnbxdSiteKey+".search.unbxdapi.com/"+ _CONST.UnbxdApiKey+"/autosuggest" + _CONST.jsonpCallback;
+				//_CONST.apiUrl = "//"+_CONST.UnbxdSiteKey+".search.unbxdapi.com/"+ _CONST.UnbxdApiKey+"/autosuggest" + _CONST.jsonpCallback;
+				_CONST.apiUrl = "//search.unbxdapi.com/unbxdApiKey/unbxdSiteKey/autosuggest".replace('unbxdApiKey', _CONST.UnbxdApiKey ).replace('unbxdSiteKey', _CONST.UnbxdSiteKey ) + _CONST.jsonpCallback;
 
 				_CONST.apiUrl = _CONST.apiUrl  
 							+ '&inFields.count=' + _CONST.inFields.count
