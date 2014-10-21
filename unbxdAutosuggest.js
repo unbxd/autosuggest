@@ -220,7 +220,7 @@ var unbxdAutocomplete = (function () {
 		buildHint : function (hint, styles) {
 			if ( hint) {
 
-				var value = hint.name,
+				var value = hint.name.replace (/"/g,''),
 				    reg = new RegExp(_CONST.inputText, 'gi'),
 		
 				hint = this.buildElem('<li data-value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
@@ -799,7 +799,7 @@ var unbxdAutocomplete = (function () {
 				result.prods = prods;
 				result.queries = queries;
 				result.suggestions = suggestions;
-				//console.log(  result );
+				console.log(  result );
 				this.openCallback(result);
 		 },
 
