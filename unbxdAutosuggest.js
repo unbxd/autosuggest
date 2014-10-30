@@ -1142,7 +1142,7 @@ var unbxdAutocomplete = (function () {
 					 if(data.productUrl)
 					 	 document.location = data.productUrl;
 					 else
-					 	_CONST.callbackfunction(data.value, data.filterName, data.filterValue, data );
+					 	_CONST.callbackfunction(data.value, data.filtername, data.filtervalue, data );
 					
 					unbxdSelected = null;
 
