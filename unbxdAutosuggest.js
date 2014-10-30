@@ -535,7 +535,11 @@ var unbxdAutocomplete = (function () {
 		*/		
 		_AutoCompltList.prototype.isOpen = function () {
 			if (this.uiElem) {
-				return !!(this.uiElem.getAttribute(_CONST.listStatus.attr) == _CONST.listStatus.open);
+				if(this.uiElem.style.display !== "none")
+					return true;
+				else
+					return false;
+				//return !!(this.uiElem.getAttribute(_CONST.listStatus.attr) == _CONST.listStatus.open);
 			}
 			return false;
 		}
@@ -799,7 +803,7 @@ var unbxdAutocomplete = (function () {
 				result.prods = prods;
 				result.queries = queries;
 				result.suggestions = suggestions;
-				console.log(  result );
+				//console.log(  result );
 				this.openCallback(result);
 		 },
 
@@ -1128,6 +1132,7 @@ var unbxdAutocomplete = (function () {
 
 				//alalyze selected element and call registered callback, push analytics and navigate to product page
 				input.autoComplt.alalyze = function ( event ) {
+		
 					 var element = "", 
 					 	data = {};
 
@@ -1135,10 +1140,11 @@ var unbxdAutocomplete = (function () {
 					 	element  = getParent( event.target );
 					 else
 					 	element = event;
-
+					 
 					 data = element.dataset;
 					 data = JSON.parse(JSON.stringify(data));
 					 pushAnalytics(element);
+		
 					 if(data.productUrl)
 					 	 document.location = data.productUrl;
 					 else
