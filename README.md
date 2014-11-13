@@ -1,6 +1,8 @@
 ## unbxdAutosuggest.js
 #####no jquery auto suggest library for unbxd search
 
+### if you are using for a site, please create a seperate CDN instance with a unique url and use
+
 ###STEP 1
 - - - -
 #####Include **unbxdAutosuggest.js** and **unbxdAutosuggest.css** after downloading this repo by including this in head of your html page
