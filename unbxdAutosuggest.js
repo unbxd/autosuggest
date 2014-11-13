@@ -440,13 +440,19 @@ var unbxdAutocomplete = (function () {
 					hs = [],
 					hints = [],
 					hintObject = {},
-					product = {};
+					product = {},
+                    isheaderset = false;
 				
 			  //build hints
 			  if(result && result.inFields && result.inFields.length > 0){
 			  	 hints = result.inFields
 			  	for(var k=0; k<hints.length;k++ ){
 			  		hintObject = hints[k];
+
+                    if(!isheaderset) {
+                            hs.push(_ui.buildHeader(' SEARCH SUGGESTIONS '));
+                            isheaderset = true;
+                    }
 
 			  		hs.push( _ui.buildHint(hintObject, this.styles, "infield") );
 							if (!hs[hs.length - 1]) {
@@ -500,7 +506,7 @@ var unbxdAutocomplete = (function () {
 			  }
 			  //build products with thunmbnails
 			  if(result.prods && result.prods.length > 0 && _CONST.productDetails === true){
-			  	  hs.push( _ui.buildHeader(' Popular Products ') );
+			  	  hs.push( _ui.buildHeader(' POPULAR PRODUCTS ') );
 			  	  prods = result.prods;
 			  	  for(var k=0; k < prods.length; k++){
 			  	  	product = prods[k];
