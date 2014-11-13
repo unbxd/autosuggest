@@ -125,21 +125,26 @@ var unbxdAutocomplete = (function () {
 				else
 					return getParent(element.parentElement)
 			}
-    //push analytics
-	var pushAnalytics = function( element ){
-		try{
-			var analyticObj = {	type : element.getAttribute("type"),
-					 		suggestion : element.getAttribute("value"),
-					 		infield : element.getAttribute("filter"),
-					 		src_field: element.getAttribute("src_field"),
-					 		pid: element.getAttribute("pid")};
+	//push analytics
+    var pushAnalytics = function( element ){
+                    try{
+                        data = element.dataset;
+                        var analyticObj = { 
+                                        type          : data.type,
+                                        suggestion    : data.value,
+                                        infield_value : data.filtervalue,
+                                        infield_name  : data.filtername,
+                                        src_field     : data.source,
+                                        pid           : data.pid
+                                    };
 
-			Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
-			Unbxd.log("Pushed autosuggest query : " + analyticObj);
-		}catch(e){
-			console.info("pushAnalytics failed", e);
-		}
-	}
+                        Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
+                        console.info("Pushed autosuggest query :", analyticObj);
+                        Unbxd.log("Pushed autosuggest query : " + analyticObj);
+                    }catch(e){
+                        console.warn("pushAnalytics failed", e);
+                    }
+                }
 
 	var _DBG = 0; 
 	
@@ -217,13 +222,12 @@ var unbxdAutocomplete = (function () {
 			return div.firstChild.cloneNode(true);
 		},
 		
-		buildHint : function (hint, styles) {
+		buildHint : function (hint, styles, type) {
 			if ( hint) {
-
 				var value = hint.name.replace (/"/g,''),
 				    reg = new RegExp(_CONST.inputText, 'gi'),
 		
-				hint = this.buildElem('<li data-value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
+				hint = this.buildElem('<li data-type="'+type+'" data-value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
 				hint.innerHTML = hint.innerHTML.replace(reg, function(str) {
 				    	return '<em>'+str+'</em>'
 				    });
@@ -243,11 +247,12 @@ var unbxdAutocomplete = (function () {
 			return null;
 		},
 
-		buildCategory : function(hint, styles, value, key, unbxdSrc){
+		buildCategory : function(hint, styles, key, type, obj){
 			if (hint) {
 				var filter 	= hint,
 					key 	= key,
-				    hint 	= this.buildElem('<li data-value="'+value+'" data-filterValue="'+filter+'"  data-filterName="'+key+'" data-source="'+unbxdSrc+'"  class="' + _CONST.autoCompltHintClass + '">'
+                    src_field = obj.unbxdSrc || "",
+				    hint 	= this.buildElem('<li data-type="'+type+'" data-value="'+obj.name+'" data-filterValue="'+filter+'"  data-filterName="'+key+'" data-source="'+src_field+'"  class="' + _CONST.autoCompltHintClass + '">'
 				    			+'&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;' 
 				    			+'<span  class="' + _CONST.autoCompltHintClass + '">' + hint + '</span>'
 				    			+'</li>');
@@ -268,7 +273,7 @@ var unbxdAutocomplete = (function () {
 			return null;
 		},	
 
-		buildProduct : function(hint){
+		buildProduct : function(hint, type){
 			if (hint) {
 				var value = hint.name,
 				    reg = new RegExp(_CONST.inputText, 'gi');
@@ -279,7 +284,7 @@ var unbxdAutocomplete = (function () {
 				    });
 				
 				if( hint.productUrl ){
-					var hint = this.buildElem('<li isProduct="'+hint.productUrl+'" data-productUrl="'+hint.productUrl+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+					var hint = this.buildElem('<li isProduct="'+hint.productUrl+'" data-type="'+type+'" data-pid="'+hint.pid+'" data-productUrl="'+hint.productUrl+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 					    +'<div class="_unbxd-hint unbxd-product-suggest" >'
 					         +'<div class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
 					         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
@@ -294,7 +299,7 @@ var unbxdAutocomplete = (function () {
 					    +'</div>'
 				    + '</li>');
 				}else{
-					var hint = this.buildElem('<li data-productUrl="'+hint.productUrl+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
+					var hint = this.buildElem('<li data-productUrl="'+hint.productUrl+'"  data-type="'+type+'" data-pid="'+hint.pid+'" data-type="'+type+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
 					    +'<div class="_unbxd-hint unbxd-product-suggest" >'
 					         +'<div class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
 					         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
@@ -443,7 +448,7 @@ var unbxdAutocomplete = (function () {
 			  	for(var k=0; k<hints.length;k++ ){
 			  		hintObject = hints[k];
 
-			  		hs.push( _ui.buildHint(hintObject, this.styles) );
+			  		hs.push( _ui.buildHint(hintObject, this.styles, "infield") );
 							if (!hs[hs.length - 1]) {
 								hs.pop();
 							}
@@ -460,7 +465,7 @@ var unbxdAutocomplete = (function () {
 								arr = hintObject[ propertyName ];
 
 								for (i = 0; i < arr.length; i++) {
-									hs.push( _ui.buildCategory( arr[i], this.styles, value, propertyName, unbxdSrc ));
+                                    hs.push( _ui.buildCategory( arr[i], this.styles, propertyName, "infield", hintObject ));
 									if (!hs[hs.length - 1]) {
 										hs.pop();
 									}
@@ -475,7 +480,7 @@ var unbxdAutocomplete = (function () {
 				  	for(var k=0; k<queries.length;k++ ){
 				  		querie = queries[k];
 
-				  		hs.push( _ui.buildHint(querie, this.styles) );
+				  		hs.push( _ui.buildHint(querie, this.styles, "topquerie") );
 								if (!hs[hs.length - 1]) {
 									hs.pop();
 								}
@@ -487,7 +492,7 @@ var unbxdAutocomplete = (function () {
 				  	for(var k=0; k<suggestions.length;k++ ){
 				  		suggestion = suggestions[k];
 
-				  		hs.push( _ui.buildHint(suggestion, this.styles) );
+				  		hs.push( _ui.buildHint(suggestion, this.styles, "key_suggestion") );
 								if (!hs[hs.length - 1]) {
 									hs.pop();
 								}
@@ -499,7 +504,7 @@ var unbxdAutocomplete = (function () {
 			  	  prods = result.prods;
 			  	  for(var k=0; k < prods.length; k++){
 			  	  	product = prods[k];
-			  	  	hs.push( _ui.buildProduct(product, this.styles) );
+			  	  	hs.push( _ui.buildProduct(product, "popularproduct") );
 							if (!hs[hs.length - 1]) {
 								hs.pop();
 							}
@@ -764,6 +769,8 @@ var unbxdAutocomplete = (function () {
 						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
 							var imageUrl 	= _CONST.popularProducts.imageUrl;  
 							obj.imgUrl 		= 	products[k][ imageUrl ] ? products[k][ imageUrl ] : products[k].image_url;
+                            obj.pid         =  products[k].uniqueId ? products[k].uniqueId : null;
+
 							if(_CONST.popularProducts.priceFunction){
 								 obj.price  = _CONST.popularProducts.priceFunction(products[k]);
 							}else{
