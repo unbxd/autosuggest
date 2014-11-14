@@ -84,6 +84,13 @@ var unbxdAutocomplete = (function () {
 			esc : 27,
 			enter : 13
 		},
+
+		types:{
+			infield:"inField",
+			topquery:"topQuery",
+			suggestion:"keywordSuggestion",
+			product:"popularProduct"
+		},
 	
 		defaultStyles : {
 			autoCompltList : {
@@ -454,7 +461,7 @@ var unbxdAutocomplete = (function () {
                             isheaderset = true;
                     }
 
-			  		hs.push( _ui.buildHint(hintObject, this.styles, "infield") );
+			  		hs.push( _ui.buildHint(hintObject, this.styles, _CONST.types.infield ) );
 							if (!hs[hs.length - 1]) {
 								hs.pop();
 							}
@@ -486,7 +493,7 @@ var unbxdAutocomplete = (function () {
 				  	for(var k=0; k<queries.length;k++ ){
 				  		querie = queries[k];
 
-				  		hs.push( _ui.buildHint(querie, this.styles, "topquerie") );
+				  		hs.push( _ui.buildHint(querie, this.styles, _CONST.types.topquery ) );
 								if (!hs[hs.length - 1]) {
 									hs.pop();
 								}
@@ -498,7 +505,7 @@ var unbxdAutocomplete = (function () {
 				  	for(var k=0; k<suggestions.length;k++ ){
 				  		suggestion = suggestions[k];
 
-				  		hs.push( _ui.buildHint(suggestion, this.styles, "key_suggestion") );
+				  		hs.push( _ui.buildHint(suggestion, this.styles, _CONST.types.suggestion) );
 								if (!hs[hs.length - 1]) {
 									hs.pop();
 								}
@@ -510,7 +517,7 @@ var unbxdAutocomplete = (function () {
 			  	  prods = result.prods;
 			  	  for(var k=0; k < prods.length; k++){
 			  	  	product = prods[k];
-			  	  	hs.push( _ui.buildProduct(product, "popularproduct") );
+			  	  	hs.push( _ui.buildProduct(product, _CONST.types.product ) );
 							if (!hs[hs.length - 1]) {
 								hs.pop();
 							}
