@@ -146,7 +146,7 @@ var unbxdAutocomplete = (function () {
                                         pid           			  : data.pid
                                     };
 
-                      //  Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
+                        Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
                         console.info("Pushed autosuggest query :", analyticObj);
                         Unbxd.log("Pushed autosuggest query : " + analyticObj);
                     }catch(e){
