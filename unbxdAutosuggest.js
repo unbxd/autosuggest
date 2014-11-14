@@ -137,12 +137,12 @@ var unbxdAutocomplete = (function () {
                     try{
                         data = element.dataset;
                         var analyticObj = { 
-                                        type          : data.type,
-                                        suggestion    : data.value,
-                                        infield_value : data.filtervalue,
-                                        infield_name  : data.filtername,
-                                        src_field     : data.source,
-                                        pid           : data.pid
+                                        autosuggest_type          : data.type,
+                                        autosuggest_suggestion    : data.value,
+                                        field_value 			  : data.filtervalue,
+                                        field_name  			  : data.filtername,
+                                        src_field     			  : data.source,
+                                        pid           			  : data.pid
                                     };
 
                         Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
