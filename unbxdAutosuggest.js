@@ -135,8 +135,9 @@ var unbxdAutocomplete = (function () {
 	//push analytics
     var pushAnalytics = function( element ){
                     try{
-                        data = element.dataset;
-                        var analyticObj = { 
+                        var data = element.dataset,
+
+                            analyticObj = { 
                                         autosuggest_type          : data.type,
                                         autosuggest_suggestion    : data.value,
                                         field_value 			  : data.filtervalue,
@@ -145,7 +146,7 @@ var unbxdAutocomplete = (function () {
                                         pid           			  : data.pid
                                     };
 
-                        Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
+                      //  Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
                         console.info("Pushed autosuggest query :", analyticObj);
                         Unbxd.log("Pushed autosuggest query : " + analyticObj);
                     }catch(e){
