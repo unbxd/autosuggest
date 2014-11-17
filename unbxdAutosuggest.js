@@ -31,6 +31,7 @@
 			,showCarts : true
 			,cartType : "inline" // "separate"
 			,onCartClick : function(obj){}
+			,onSimpleEnter : null
 			,inFields:{
 				count: 2,
 				fields:{
@@ -132,7 +133,7 @@
 						var data = p.data();
 						data.quanity = parseFloat(p.find("input.unbxd-popular-product-qty-input").val());
 
-						self.options.onCartClick.call(self,data, self.currentResults.products[parseInt(data['index'])]._original) && self.hideResults();
+						self.options.onCartClick.call(self,data, self.currentResults.POPULAR_PRODUCTS[parseInt(data['index'])]._original) && self.hideResults();
 
 						return;
 					}
@@ -170,8 +171,6 @@
 					case 9:  // tab
 					case 13: // return
 						if( self.selectCurrent() ){
-							// make sure to blur off the current field
-							//$input.get(0).blur();
 							e.preventDefault();
 						}else{
 							self.hideResultsNow();
@@ -242,9 +241,9 @@
 				this.selectItem(li.data());
 				return true;
 			} else {
-				if (this.options.onSimpleEnter && (this.lastKeyPressCode == 10 || this.lastKeyPressCode == 13)){
+				if (typeof this.options.onSimpleEnter == "function" && (this.lastKeyPressCode == 10 || this.lastKeyPressCode == 13)){
 					this.lastKeyEvent.preventDefault();
-					setTimeout(function() { self.options.onSimpleEnter.call(self,self.input); }, 1);
+					self.options.onSimpleEnter.call(self);
 				}
 				
 				return false;
@@ -253,7 +252,7 @@
 		,selectItem: function (data) {
 			if (!('value' in data))
 				return ;
-	self.log("selected Item : ",data);
+			this.log("selected Item : ",data);
 			var v = $.trim(data['value']);
 			
 			this.previous = v;
@@ -262,13 +261,22 @@
 			this.$input.val(v);
 			this.hideResultsNow(this);
 			
-			if (typeof this.options.onItemSelect == "function"){
-				
-				setTimeout(function() { self.options.onItemSelect(self.input,data); }, 1);
-			}
-			
 			//lets add it to analytics
+			if("Unbxd" in window && "track" in window.Unbxd && typeof window.Unbxd.track == "function"){
+				this.log("Pushing data to analytics",data);
+				Unbxd.track( "search", {query : this.previous, autosuggestParams : { 
+					type : data.type,
+					suggestion : data.value,
+					infield_value : data.filtervalue || null,
+					infield_name : data.filtername || null,
+					src_field : data.source || null,
+					pid : data.pid || null
+				}});
+			}
 
+			if (typeof this.options.onItemSelect == "function"){
+				this.options.onItemSelect.call(this,data);
+			}
 		}
 		,showResults: function () {
 			
@@ -455,26 +463,24 @@
 		}
 		,processData: function(data){
 			this.currentResults = {
-				infields : []
-				,keywords : []
-				,topqueries : []
-				,products : []
+				KEYWORD_SUGGESTION : []
+				,TOP_SEARCH_QUERIES : []
+				,POPULAR_PRODUCTS : []
+				,IN_FIELD : []
 			};
-
-			var templateInResults = [];
 
 			for(var x = 0; x < data.response.products.length; x++){
 				var doc = data.response.products[x]
 					,o = {};
-				if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.topqueries.length){
+				if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length){
 					o = {
 						autosuggest : doc.autosuggest
 						,highlighted : this.highlightStr(doc.autosuggest)
-						,type : "topQuery"
-						,_original : doc
+						,type : "TOP_SEARCH_QUERIES"
+						,_original : doc.doctype
 					};
-					this.currentResults.topqueries.push(o);
-				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > this.currentResults.infields.length){
+					this.currentResults.TOP_SEARCH_QUERIES.push(o);
+				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > this.currentResults.IN_FIELD.length){
 					var ins = {}
 						,asrc = " " + doc.unbxdAutosuggestSrc + " "
 						,highlightedtext = this.highlightStr(doc.autosuggest);
@@ -485,44 +491,39 @@
 						}
 					}
 
-					o = {
+					this.currentResults.IN_FIELD.push({
 						autosuggest : doc.autosuggest
 						,highlighted : highlightedtext
-						,_original : doc
-						,type : "inField"
-						,ins : ins
-					};
-					this.currentResults.infields.push(o);
-
-					templateInResults.push({
-						autosuggest : doc.autosuggest
-						,highlighted : highlightedtext
-						,type : "keyword" //this is kept as keyword but in template it will be used as "inField"
+						,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
+						,source : doc.unbxdAutosuggestSrc
 					});
 
 					for(var a in ins){
 						for(var b = 0; b < ins[a].length; b++)
-							templateInResults.push({
+							this.currentResults.IN_FIELD.push({
 								autosuggest : doc.autosuggest
 								,highlighted : ins[a][b]
-								,type : "inField"
+								,type : doc.doctype
 								,filtername : a
 								,filtervalue : ins[a][b]
+								,_original : doc
+								,source : doc.unbxdAutosuggestSrc
 							})
 					}
-				}else if("KEYWORD_SUGGESTION" == doc.doctype  && this.options.keywordSuggestions.count > this.currentResults.keywords.length){
+				}else if("KEYWORD_SUGGESTION" == doc.doctype  && this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length){
 					o = {
 						autosuggest : doc.autosuggest
 						,highlighted : this.highlightStr(doc.autosuggest)
-						,type : "keywordSuggestion"
+						,type : doc.doctype
 						,_original : doc
+						,source : doc.unbxdAutosuggestSrc || ""
 					};
-					this.currentResults.keywords.push(o);
-				}else if("POPULAR_PRODUCTS" == doc.doctype && this.options.popularProducts.count > this.currentResults.products.length){
+					this.currentResults.KEYWORD_SUGGESTION.push(o);
+				}else if("POPULAR_PRODUCTS" == doc.doctype && this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
 					o = {
 						autosuggest : doc.autosuggest
 						,highlighted : this.highlightStr(doc.autosuggest)
-						,type : "popularProduct"
+						,type : doc.doctype
 						,pid : doc.uniqueId.replace("popularProduct_","")
 						,_original : doc
 					};
@@ -548,11 +549,9 @@
 						}
 					}
 
-					this.currentResults.products.push(o);
+					this.currentResults.POPULAR_PRODUCTS.push(o);
 				}
 			}
-
-			this.currentResults["inresults"] = templateInResults;
 		}
 		,escapeStr: function(str){return str.replace(/([\\{}()|.?*+\-\^$\[\]])/g,'\\$1');}
 		,highlightStr : function(str){
@@ -579,41 +578,41 @@
 		}
 		,prepareHTML: function (){
 			var temp1 = '<ul class="unbxd-as-maincontent">'
-	+'{{#if data.inresults}}'
-		+'{{#each data.inresults}}'
+	+'{{#if data.IN_FIELD}}'
+		+'{{#each data.IN_FIELD}}'
 			+'{{#unbxdIf type "keyword"}}'
-			+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="inField">'
+			+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
 				+'{{{highlighted}}}'
 			+'</li>'
 			+'{{else}}'
-			+'<li class="unbxd-as-insuggestion" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}">'
+			+'<li class="unbxd-as-insuggestion" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 				+'in {{{highlighted}}}'
 			+'</li>'
 			+'{{/unbxdIf}}'
 		+'{{/each}}'
 	+'{{/if}}'
-	+'{{#if data.keywords}}'
-		+'{{#each data.keywords}}'
+	+'{{#if data.KEYWORD_SUGGESTION}}'
+		+'{{#each data.KEYWORD_SUGGESTION}}'
+		+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}"  data-source="{{source}}">'
+			+'{{{highlighted}}}'
+		+'</li>'
+		+'{{/each}}'
+	+'{{/if}}'
+	+'{{#if data.TOP_SEARCH_QUERIES}}'
+		+'{{#each data.TOP_SEARCH_QUERIES}}'
 		+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}">'
 			+'{{{highlighted}}}'
 		+'</li>'
 		+'{{/each}}'
 	+'{{/if}}'
-	+'{{#if data.topqueries}}'
-		+'{{#each data.topqueries}}'
-		+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}">'
-			+'{{{highlighted}}}'
-		+'</li>'
-		+'{{/each}}'
-	+'{{/if}}'
-	+'{{#if data.products}}'
+	+'{{#if data.POPULAR_PRODUCTS}}'
 		+'<li class="unbxd-as-header">'
 			+'Popular products'
 		+'</li>'
-		+'{{#data.products}}'
+		+'{{#data.POPULAR_PRODUCTS}}'
 		+'<li class="unbxd-as-popular-product" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
 			+'{{#if ../showCarts}}'
-				+'{{#unbxdIf ../../cartType "inline"}}'//"inline" || "separate"
+				+'{{#unbxdIf ../../cartType "inline"}}'
 					+'<div class="unbxd-as-popular-product-inlinecart">'
 						+'<div class="unbxd-as-popular-product-image-container">'
 							+'{{#if image}}'
@@ -685,25 +684,25 @@
 				+'</div>'
 			+'{{/if}}'
 		+'</li>'
-		+'{{/data.products}}'
+		+'{{/data.POPULAR_PRODUCTS}}'
 	+'{{/if}}'
 +'</ul>'
 			,temp2 = '<ul class="unbxd-as-sidecontent">'
-						+'{{#if data.keywords}}'
+						+'{{#if data.KEYWORD_SUGGESTION}}'
 							+'<li class="unbxd-as-header">'
 								+'Keyword Suggestions'
 							+'</li>'
-							+'{{#each data.keywords}}'
-							+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}">'
+							+'{{#each data.KEYWORD_SUGGESTION}}'
+							+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}"  data-source="{{source}}">'
 								+'{{{highlighted}}}'
 							+'</li>'
 							+'{{/each}}'
 						+'{{/if}}'
-						+'{{#if data.topqueries}}'
+						+'{{#if data.TOP_SEARCH_QUERIES}}'
 							+'<li class="unbxd-as-header">'
 								+'Top Queries'
 							+'</li>'
-							+'{{#each data.topqueries}}'
+							+'{{#each data.TOP_SEARCH_QUERIES}}'
 							+'<li class="unbxd-as-keysuggestion" data-type="{{type}}" data-value="{{autosuggest}}">'
 								+'{{{highlighted}}}'
 							+'</li>'
@@ -711,24 +710,24 @@
 						+'{{/if}}'
 					+'</ul>'
 					+'<ul class="unbxd-as-maincontent">'
-						+'{{#if data.inresults}}'
-							+'{{#each data.inresults}}'
+						+'{{#if data.IN_FIELD}}'
+							+'{{#each data.IN_FIELD}}'
 								+'{{#unbxdIf type "keyword"}}'
-								+'<li class="unbxd-as-keysuggestion" data-type="inField" data-value="{{autosuggest}}">'
+								+'<li class="unbxd-as-keysuggestion" data-type="IN_FIELD" data-value="{{autosuggest}}"  data-source="{{source}}">'
 									+'{{{highlighted}}}'
 								+'</li>'
 								+'{{else}}'
-								+'<li class="unbxd-as-insuggestion" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}">'
+								+'<li class="unbxd-as-insuggestion" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 									+'in {{{highlighted}}}'
 								+'</li>'
 								+'{{/unbxdIf}}'
 							+'{{/each}}'
 						+'{{/if}}'
-						+'{{#if data.products}}'
+						+'{{#if data.POPULAR_PRODUCTS}}'
 							+'<li class="unbxd-as-header">'
 								+'Popular products'
 							+'</li>'
-							+'{{#data.products}}'
+							+'{{#data.POPULAR_PRODUCTS}}'
 							+'<li class="unbxd-as-popular-product" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
 								+'{{#if ../showCarts}}'
 									+'{{#unbxdIf ../../cartType "inline"}}'//"inline" || "separate"
@@ -803,7 +802,7 @@
 									+'</div>'
 								+'{{/if}}'
 							+'</li>'
-							+'{{/data.products}}'
+							+'{{/data.POPULAR_PRODUCTS}}'
 						+'{{/if}}'
 					+'</ul>';
 			var cmpld = Handlebars.compile( this.options.template == "2column" ? temp2 : temp1);
