@@ -1,20 +1,152 @@
 <!DOCTYPE html>
 <html>
-
 <head>
 	<link rel="stylesheet" href="unbxdAutosuggest.css">
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="unbxdAutosuggest.js"></script>
+	<style type="text/css">
+		*{
+			font-family: proxima-nova,Arial, sans-serif;
+		}
+.rt{
+	float:right;
+}
+
+.lt{
+	float: left;
+}
+
+.clearfix:after{
+	clear: both;
+	content: ".";
+	display: block;
+	font-size: 0px;
+	height: 0px;
+	visibilty: hidden;
+}
+	</style>
 </head>
-
 <body>
-	
-      <input id="input"  class="autoCmplt-input input-0"  placeholder="Please type here to search " type="text"  size="30" x-webkit-speech/>
-   
+	<div style="margin:auto; width:600px;">
+		<div class="clearfix">
+			<div class="lt">
+				<div style="padding:5px 0px;">
+					max no of keywords<br>
+					<input type="text" name="keywords" value="2">
+				</div>
+				<div style="padding:5px 0px;">
+					max no of topqueries<br>
+					<input type="text" name="topqueries" value="2">
+				</div>
+			</div>
+			<div class="lt">
+				<div style="padding:5px;">
+					max no of in-fields<br>
+					<input type="text" name="infields" value="2">
+				</div>
+				<div style="padding:5px;">
+					max no of products<br>
+					<input type="text" name="products" value="2">
+				</div>
+			</div>
+		</div>
+		<div style="padding:5px 0px;">
+			<input type="radio" name="template" value="1column" checked>1column &nbsp;&nbsp;
+			<input type="radio" name="template" value="2column">2column
+		</div>
+		<div style="padding:5px 0px;">
+			<input type="radio" name="sideContent" value="left">left &nbsp;&nbsp;
+			<input type="radio" name="sideContent" value="right">right
+		</div>
+		<div style="padding:5px 0px;">
+			<input type="checkbox" name="showcarts" value="1"> Show add-to-carts
+			<br>
+			<input type="radio" name="cartType" value="inline">inline &nbsp;&nbsp;
+			<input type="radio" name="cartType" value="separate">separate
+		</div>
+		<input id="input"  class="autoCmplt-input input-0"  placeholder="Please type here to search " type="text"  size="100" style="padding:4px;"/>
+	</div>
+	<script type="text/javascript">
+	$(function(){
+		window.auto = $("#input").autocomplete({
+			siteName : 'demosite-u1407617955968'
+        	,APIKey : '64a4a2592a648ac8415e13c561e44991'
+        	,minChars : 2
+        	,showCarts : false
+			,template : "1column" // "2column"
+			,cartType : "separate"
+			,onCartClick : function(obj){
+				console.log("addtocart",this, obj);
 
-	  
-	<script src="app.js"></script>
-	
+				return true;
+			}
+			,inFields:{
+				count: 2,
+				fields:{
+					'brand':3
+					,'category':3
+					,'color':3
+				}
+			},
+			topQueries:{
+				count: 2
+			},
+			keywordSuggestions:{
+				count: 2
+			}
+			,popularProducts:{
+				count: 2
+				,title:true
+				,price:true
+				,priceFunctionOrKey : "price"
+				,image:true
+				,imageUrlOrFunction: "imageUrl"
+				,currency : "Rs."
+			}
+		});
+		/*counts start*/
+		$("input[name=keywords]").blur(function(){
+			console.log("keywordSuggestions.count", parseInt(this.value));
+			auto[0].auto.setOption("keywordSuggestions.count", parseInt(this.value));
+		});
+
+		$("input[name=topqueries]").blur(function(){
+			console.log("topQueries.count", parseInt(this.value));
+			auto[0].auto.setOption("topQueries.count", parseInt(this.value));
+		});
+
+		$("input[name=infields]").blur(function(){
+			console.log("inFields.count", parseInt(this.value));
+			auto[0].auto.setOption("inFields.count", parseInt(this.value));
+		});
+
+		$("input[name=products]").blur(function(){
+			console.log("popularProducts.count", parseInt(this.value));
+			auto[0].auto.setOption("popularProducts.count", parseInt(this.value));
+		});
+		/*counts end*/
+
+		$("input[name=template]").change(function(){
+			console.log("template", (this.value));
+			auto[0].auto.setOption("template", (this.value));
+		});
+
+		$("input[name=sideContent]").change(function(){
+			console.log("sideContentOn", (this.value));
+			auto[0].auto.setOption("sideContentOn", (this.value));
+		});
+
+		$("input[name=showcarts]").change(function(){
+			console.log("showCarts",$(this).is(":checked"));
+			auto[0].auto.setOption("showCarts", $(this).is(":checked"));
+		});
+
+		$("input[name=cartType]").change(function(){
+			console.log("cartType", (this.value));
+			auto[0].auto.setOption("cartType", (this.value));
+		});
+	});
+	</script>
 </body>
-
-
 </html>
