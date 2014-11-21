@@ -121,7 +121,7 @@
 					if(e.target.tagName == "BUTTON" && $et.hasClass("unbxd-as-popular-product-cart-button") && typeof self.options.onCartClick == "function"){
 						self.log("BUTTON click");
 						var data = p.data();
-						data.quanity = parseFloat(p.find("input.unbxd-popular-product-qty-input").val());
+						data.quantity = parseFloat(p.find("input.unbxd-popular-product-qty-input").val());
 
 						self.addToAnalytics("click",{
 							pr : parseInt(data.index) + 1
@@ -322,7 +322,7 @@
 		,setScrollWidth:function(){
 			var scrollDiv = document.createElement("div");
 			scrollDiv.setAttribute("style","width: 100px;height: 100px;overflow: scroll;position: absolute;top: -9999px;");
-			
+
 			document.body.appendChild(scrollDiv);
 
 			this.scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
