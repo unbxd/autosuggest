@@ -71,11 +71,14 @@
 	$(function(){
 		window.auto = $("#input").autocomplete({
 			siteName : 'demosite-u1407617955968'
-        	,APIKey : '64a4a2592a648ac8415e13c561e44991'
-        	,minChars : 2
-        	,showCarts : false
+			,APIKey : '64a4a2592a648ac8415e13c561e44991'
+			,minChars : 2
+			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
+			,onItemSelect : function(){
+				console.log("onItemSelect",arguments);
+			}
 			,onCartClick : function(obj){
 				console.log("addtocart",this, arguments);
 
@@ -97,7 +100,6 @@
 			}
 			,popularProducts:{
 				count: 2
-				,title:true
 				,price:true
 				,priceFunctionOrKey : "price"
 				,image:true

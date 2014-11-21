@@ -16,7 +16,7 @@
 		default_options: {
 			siteName : 'demosite-u1407617955968'
         	,APIKey : '64a4a2592a648ac8415e13c561e44991'
-			,inputClass : 'unbxd-as-input'
+			,inputClass : ''
 			,resultsClass : 'unbxd-as-wrapper'
 			,minChars : 3
 			,delay : 100
@@ -30,6 +30,7 @@
 			,cartType : "inline" // "separate"
 			,onCartClick : function(obj){}
 			,onSimpleEnter : null
+			,onItemSelect: null
 			,inFields:{
 				count: 2,
 				fields:{
@@ -46,7 +47,6 @@
 			}
 			,popularProducts:{
 				count: 2
-				,title:true
 				,price:true
 				,priceFunctionOrKey : "price"
 				,image:true
@@ -90,6 +90,11 @@
 			var self = this;
 			
 			this.$input.bind('keydown.auto',this.keyevents());
+
+			this.$input.bind('select.auto',function(){
+				self.log("select : setting focus");
+				self.hasFocus = true;
+			});
 			
 			$(document).bind("click.auto",function(e){
 				if(e.target == self.input){
@@ -174,6 +179,7 @@
 						break;
 					default:
 						self.activeRow = -1;
+						self.hasFocus = true;
 						
 						if (self.timeout) 
 							clearTimeout(self.timeout);
@@ -268,7 +274,7 @@
 			}});
 
 			if (typeof this.options.onItemSelect == "function"){
-				this.options.onItemSelect.call(this,data);
+				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original);
 			}
 		}
 		,addToAnalytics:function(type,obj){
@@ -315,8 +321,8 @@
 		}
 		,setScrollWidth:function(){
 			var scrollDiv = document.createElement("div");
-
-			scrollDiv.className = "scrollbar-measure";
+			scrollDiv.setAttribute("style","width: 100px;height: 100px;overflow: scroll;position: absolute;top: -9999px;");
+			
 			document.body.appendChild(scrollDiv);
 
 			this.scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
@@ -586,11 +592,11 @@
 	+'{{#if data.IN_FIELD}}'
 		+'{{#each data.IN_FIELD}}'
 			+'{{#unbxdIf type "keyword"}}'
-			+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
+			+'<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
 				+'{{{highlighted}}}'
 			+'</li>'
 			+'{{else}}'
-			+'<li class="unbxd-as-insuggestion" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+			+'<li class="unbxd-as-insuggestion" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 				+'in {{{highlighted}}}'
 			+'</li>'
 			+'{{/unbxdIf}}'
@@ -598,14 +604,14 @@
 	+'{{/if}}'
 	+'{{#if data.KEYWORD_SUGGESTION}}'
 		+'{{#each data.KEYWORD_SUGGESTION}}'
-		+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}"  data-source="{{source}}">'
+		+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}" data-index="{{@index}}" data-source="{{source}}">'
 			+'{{{highlighted}}}'
 		+'</li>'
 		+'{{/each}}'
 	+'{{/if}}'
 	+'{{#if data.TOP_SEARCH_QUERIES}}'
 		+'{{#each data.TOP_SEARCH_QUERIES}}'
-		+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}">'
+		+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}" data-index="{{@index}}">'
 			+'{{{highlighted}}}'
 		+'</li>'
 		+'{{/each}}'
@@ -698,7 +704,7 @@
 								+'Keyword Suggestions'
 							+'</li>'
 							+'{{#each data.KEYWORD_SUGGESTION}}'
-							+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-type="{{type}}"  data-source="{{source}}">'
+							+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">'
 								+'{{{highlighted}}}'
 							+'</li>'
 							+'{{/each}}'
@@ -708,7 +714,7 @@
 								+'Top Queries'
 							+'</li>'
 							+'{{#each data.TOP_SEARCH_QUERIES}}'
-							+'<li class="unbxd-as-keysuggestion" data-type="{{type}}" data-value="{{autosuggest}}">'
+							+'<li class="unbxd-as-keysuggestion" data-type="{{type}}" data-index="{{@index}}" data-value="{{autosuggest}}">'
 								+'{{{highlighted}}}'
 							+'</li>'
 							+'{{/each}}'
@@ -718,11 +724,11 @@
 						+'{{#if data.IN_FIELD}}'
 							+'{{#each data.IN_FIELD}}'
 								+'{{#unbxdIf type "keyword"}}'
-								+'<li class="unbxd-as-keysuggestion" data-type="IN_FIELD" data-value="{{autosuggest}}"  data-source="{{source}}">'
+								+'<li class="unbxd-as-keysuggestion" data-type="IN_FIELD" data-value="{{autosuggest}}" data-index="{{@index}}" data-source="{{source}}">'
 									+'{{{highlighted}}}'
 								+'</li>'
 								+'{{else}}'
-								+'<li class="unbxd-as-insuggestion" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+								+'<li class="unbxd-as-insuggestion" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 									+'in {{{highlighted}}}'
 								+'</li>'
 								+'{{/unbxdIf}}'
@@ -857,7 +863,7 @@
 			this.cache.length = 0;
 		}
 		,log: function(){
-			console.log(new Date(),arguments);
+			//console.log("unbxd auto :",arguments);
 		}
 	});
 
@@ -868,7 +874,7 @@
 			try{
 				this.auto = new autocomplete(self, options);
 			}catch(e){
-				console.log('autocomplete error',e);
+				//console.log('autocomplete error',e);
 			}
 		});
 	};
