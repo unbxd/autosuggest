@@ -16,7 +16,6 @@
 		default_options: {
 			siteName : 'demosite-u1407617955968'
         	,APIKey : '64a4a2592a648ac8415e13c561e44991'
-			,inputClass : ''
 			,resultsClass : 'unbxd-as-wrapper'
 			,minChars : 3
 			,delay : 100
@@ -74,7 +73,7 @@
 		,scrollbarWidth : null
 		,init: function(input, options) {
 			this.options = $.extend( {}, this.default_options, options);
-			this.$input = $(input).attr('autocomplete', 'off').addClass(this.options.inputClass);
+			this.$input = $(input).attr('autocomplete', 'off');
 			this.$results = $('<div/>', {'class' :this.options.resultsClass})
 				.css('position', this.options.position)
 				.hide();
@@ -478,7 +477,8 @@
 				,TOP_SEARCH_QUERIES : []
 				,POPULAR_PRODUCTS : []
 				,IN_FIELD : []
-			};
+			}
+			,infieldsCount = 0;
 
 			for(var x = 0; x < data.response.products.length; x++){
 				var doc = data.response.products[x]
@@ -491,7 +491,7 @@
 						,_original : doc.doctype
 					};
 					this.currentResults.TOP_SEARCH_QUERIES.push(o);
-				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > this.currentResults.IN_FIELD.length){
+				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount){
 					var ins = {}
 						,asrc = " " + doc.unbxdAutosuggestSrc + " "
 						,highlightedtext = this.highlightStr(doc.autosuggest);
@@ -508,6 +508,8 @@
 						,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
 						,source : doc.unbxdAutosuggestSrc
 					});
+
+					infieldsCount++;
 
 					for(var a in ins){
 						for(var b = 0; b < ins[a].length; b++)
@@ -837,7 +839,7 @@
 		,destroy: function(self){
 			self.$input.unbind('.auto');
 			self.input.lastSelected = null;
-			self.$input.removeAttr('autocomplete', 'off').removeClass(self.options.inputClass);
+			self.$input.removeAttr('autocomplete', 'off');
 			self.$results.remove();
 			self.$input.removeData('autocomplete');
 		}
