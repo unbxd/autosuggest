@@ -69,6 +69,7 @@ $(function(){
 - **cartType** : either **inline** or **separate**. Used only when **showCarts** is set to **true**
 - **onSimpleEnter** : This function will be called if user presses *enter* key without selecting any result.
 - **onItemSelect** : This function will be called when a user selects one of the suggestions. It will be passed 2 arguments. The first argument is shown below and second value will be the original value from Unbxd.
+
     ```javascript
     {//the first argument
         value : ""//user selected value
@@ -79,6 +80,7 @@ $(function(){
     ```
 - **onCartClick** : this function will be called when a user clicks on Add-to-cart button. The arguments will be same as **onItemSelect** but it includes quantity and uniqueId of the product.
 - **inFields** : This is an object with 2 properties. The first is **count** which is useful to adjust the number of IN-FEIDLS shown to user and the second is **fields** which is useful in adjusting what kind of values are shown in secondary level *in-suggestions*.
+
     ```javascript
     ,inFields:{
         //number of in-fields to display
@@ -94,6 +96,7 @@ $(function(){
 - **topQueries** : It takes an object with single property count. This will help in setting the number of top-queries shown to user.
 - **keywordSuggestions** : It takes an object with single property count. This will help in setting the number of keyword-suggests shown to user.
 - **popularProducts** : This value takes an object with different properties as explained below.
+
     ```javascript
     ,popularProducts:{
 		count: 2 //number of products to be shown
