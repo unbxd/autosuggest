@@ -107,5 +107,8 @@ $(function(){
 		,currency : "$"
 	}
     ```
+- **processResultsStyles** : This options should be a function, if defined, with a single argument which takes an object with top, left and right properties in it. The function should return the object with all the css properties that can be applied to suggestions container. 
+	Note: this object is generally used for positioning the suggestions.
+- **resultsContainerSelector** : This option, if set, should be jQuery selector for DOM element where suggestions should be appended in Document. If not set, then suggestions will be appended to body.
 
 ###### PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css 

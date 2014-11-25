@@ -52,6 +52,8 @@
 				,imageUrlOrFunction: "imageUrl"
 				,currency : "Rs."
 			}
+			,resultsContainerSelector : null
+			,processResultsStyles : null
 		}
 		,$input : null
 		,$results : null
@@ -81,7 +83,10 @@
 			if(this.options.zIndex > 0)
 				this.$results.css('zIndex',this.options.zIndex);
 
-			$('body').append(this.$results);
+			if(typeof this.options.resultsContainerSelector == "string" && this.options.resultsContainerSelector.length)
+				$(this.options.resultsContainerSelector).append(this.$results);
+			else
+				$("body").append(this.$results);
 
 			this.wire();
 		}
@@ -285,15 +290,11 @@
 		,showResults: function () {
 			
 			var pos = this.$input.offset()
-			// either use the specified width, or autocalculate based on form element
+			// either use the specified width or calculate based on form element
 			,iWidth = (this.options.width > 0) ? this.options.width : this.$input.innerWidth()
-			// reposition
-			//,w = parseInt(this.$input.css("width"),10)
 			,bt = parseInt(this.$input.css("border-top-width"),10)
 			,bl = parseInt(this.$input.css("border-left-width"),10)
 			,br = parseInt(this.$input.css("border-right-width"),10)
-			//,mt = parseInt(this.$input.css("margin-top"),10)
-			//,pt = parseInt(this.$input.css("padding-top"),10)
 			,pb = parseInt(this.$input.css("padding-bottom"),10)
 			,fwidth = (parseInt(iWidth)-2+bl+br)
 			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px',left: "auto",right: "auto"};
@@ -314,6 +315,10 @@
 				fpos.right = window.innerWidth - fwidth - pos.left -2 - this.scrollbarWidth + "px";
 			}else{
 				fpos.left = pos.left + "px";
+			}
+
+			if(typeof this.options.processResultsStyles == "function"){
+				fpos = this.options.processResultsStyles.call(this,fpos);
 			}
 
 			this.$results.css(fpos).show();
