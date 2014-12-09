@@ -145,10 +145,7 @@ var unbxdAutocomplete = (function () {
                                         src_field     			  : data.source,
                                         pid           			  : data.pid
                                     };
-
-                        Unbxd.track( "search", {query : analyticObj.suggestion, autosuggestParams : analyticObj});
-                        console.info("Pushed autosuggest query :", analyticObj);
-                        Unbxd.log("Pushed autosuggest query : " + analyticObj);
+                        Unbxd.track( "search", {query : _CONST.inputText, autosuggestParams : analyticObj});
                     }catch(e){
                         console.warn("pushAnalytics failed", e);
                     }
