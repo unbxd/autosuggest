@@ -141,7 +141,7 @@ This will remove queryparam filter added by addFilter
 
 
 ###### PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css 
-###### Note - To push the autosuggest.js to cdn or push any client specific file to cdn check wiki
+###### Note - To push the autosuggest.js to cdn or push any client specific file to cdn check [wiki](https://github.com/unbxd/autosuggest/wiki/pushing-autosuggest-to-CDN-and-maintaining--client-specific-files)
 
 
 
