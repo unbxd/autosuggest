@@ -58,6 +58,7 @@
 .unbxd-as-wrapper ul li{
     padding: 4px 9px;
     background-color: #fff;
+    cursor: pointer;
 }
 
 .unbxd-as-wrapper ul li.unbxd-as-header, .unbxd-as-wrapper ul li.unbxd-as-header:hover{
