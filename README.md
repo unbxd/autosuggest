@@ -104,10 +104,34 @@ $(function(){
 			,'category':3 //show 3 from category
 			,'color':3 //show 3 from color
 		}
+		//update title or header value here
+		,header: ''
+		//give HBS template here.
+		,tpl: ''
 	},
     ```
-- **topQueries** : It takes an object with single property count. This will help in setting the number of top-queries shown to user.
-- **keywordSuggestions** : It takes an object with single property count. This will help in setting the number of keyword-suggests shown to user.
+- **topQueries** : This will help in setting the number of top-queries shown to user. This value takes an object with different properties as explained below. 
+
+    ```javascript
+    ,topQueries:{
+		count: 2 //number of top queries to be shown
+		//update title or header value here
+		,header: ''
+		//give HBS template here.
+		,tpl: ''
+	}
+    ```
+- **keywordSuggestions** : This will help in setting the number of keyword-suggests shown to user. This value takes an object with different properties as explained below. 
+
+    ```javascript
+    ,keywordSuggestions:{
+		count: 2 //number of keyword suggestions to be shown
+		//update title or header value here
+		,header: ''
+		//give HBS template here.
+		,tpl: ''
+	}
+    ```
 - **popularProducts** : This value takes an object with different properties as explained below.
 
     ```javascript
@@ -118,6 +142,10 @@ $(function(){
 		,image: true //to show image
 		,imageUrlOrFunction: "imageUrl" //it can also be a function which takes an object as argument and returns a image url
 		,currency : "$"
+		//update title or header value here
+		,header: ''
+		//give HBS template here.
+		,tpl: ''
 	}
     ```
 - **processResultsStyles** : This options should be a function, if defined, with a single argument which takes an object with top, left and right properties in it. The function should return the object with all the css properties that can be applied to suggestions container. 
