@@ -7,7 +7,7 @@ Please include Jquery, Handlebars and unbxdautosuggest.js in order. Then add the
 ###Configuration
 ```javascript
 $(function(){
-		$("#input").autocomplete({
+		$("#input").unbxdautocomplete({
 			siteName : 'demosite-u1407617955968'
 			,APIKey : '64a4a2592a648ac8415e13c561e44991'
 			,minChars : 2
@@ -17,6 +17,8 @@ $(function(){
 			,zIndex : 0
 			,position : 'absolute'
 			,template : "1column" 
+			,mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']
+			,sideTpl: []
 			,sideContentOn : "right"
 			,showCarts : false
 			,cartType : "separate"
@@ -38,12 +40,18 @@ $(function(){
 					,'category':3
 					,'color':3
 				}
+				,header: ''
+				,tpl: ''
 			},
 			topQueries:{
 				count: 2
+				,header: ''
+				,tpl: ''
 			},
 			keywordSuggestions:{
 				count: 2
+				,header: ''
+				,tpl: ''
 			}
 			,popularProducts:{
 				count: 2
@@ -52,6 +60,8 @@ $(function(){
 				,image: true
 				,imageUrlOrFunction: "imageUrl"
 				,currency : "$"
+				,header: ''
+				,tpl: ''
 			}
 		});
 	});
@@ -64,6 +74,8 @@ $(function(){
 - **width** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input width.
 - **position** : either **absoulte** or **fixed**
 - **template** : either **1column** or **2column**
+- **mainTpl**: array of functionalities to be present in the main template in the order in which they need to appear. values can be **inFields**, **topQueries**, **keywordSuggestions**, **popularProducts**
+- **sideTpl**: array of functionalities to be present in the side template in the order in which they need to appear. same values as above
 - **sideContentOn** : either **left** or **right**. Used only when **template** is set to **2column**
 - **showCarts** : either **true** or **false**. To show Add-to-cart button and quantity input.
 - **cartType** : either **inline** or **separate**. Used only when **showCarts** is set to **true**
@@ -79,6 +91,7 @@ $(function(){
     }
     ```
 - **onCartClick** : this function will be called when a user clicks on Add-to-cart button. The arguments will be same as **onItemSelect** but it includes quantity and uniqueId of the product.
+- **hbsHelpers**: needs to be a function. Add custom handlebar helpers here
 - **inFields** : This is an object with 2 properties. The first is **count** which is useful to adjust the number of IN-FEIDLS shown to user and the second is **fields** which is useful in adjusting what kind of values are shown in secondary level *in-suggestions*.
 
     ```javascript
