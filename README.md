@@ -92,7 +92,7 @@ $(function(){
     ```
 - **onCartClick** : this function will be called when a user clicks on Add-to-cart button. The arguments will be same as **onItemSelect** but it includes quantity and uniqueId of the product.
 - **hbsHelpers**: needs to be a function. Add custom handlebar helpers here
-- **inFields** : This is an object with 2 properties. The first is **count** which is useful to adjust the number of IN-FEIDLS shown to user and the second is **fields** which is useful in adjusting what kind of values are shown in secondary level *in-suggestions*.
+- **inFields** : This is an object with 2 properties. The first is **count** which is useful to adjust the number of IN-FIELDS shown to user and the second is **fields** which is useful in adjusting what kind of values are shown in secondary level *in-suggestions*.
 
     ```javascript
     ,inFields:{
