@@ -69,7 +69,9 @@
 	</div>
 	<script type="text/javascript">
 	$(function(){
-		window.auto = $("#input").autocomplete({
+		unbxdAutoSuggestFunction($, Handlebars);
+
+		window.auto = $("#input").unbxdautocomplete({
 			siteName : 'demosite-u1407617955968'
 			,APIKey : '64a4a2592a648ac8415e13c561e44991'
 			,minChars : 2

@@ -1,4 +1,25 @@
 var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
+	var isMobile = {
+    Android: function() {
+      return navigator.userAgent.match(/Android/i);
+    },
+    BlackBerry: function() {
+      return navigator.userAgent.match(/BlackBerry/i);
+    },
+    iOS: function() {
+      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+    },
+    Opera: function() {
+      return navigator.userAgent.match(/Opera Mini/i);
+    },
+    Windows: function() {
+      return navigator.userAgent.match(/IEMobile/i);
+    },
+    any: function() {
+      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+    }
+	};
+
 	Handlebars.registerHelper('unbxdIf', function(v1,v2,options){
 		return v1 === v2 ? options.fn(this) : options.inverse(this);
 	});
@@ -729,6 +750,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		,prepareHTML: function (){
 			var html = '<ul class="unbxd-as-maincontent">',
 					self = this;
+
+			if(isMobile.any()) this.options.template = '1column';
 
 			if(this.options.template === '2column' && !this.options.sideTpl.length){
 				this.options.sideTpl = ['keywordSuggestions', 'topQueries'];
