@@ -2,11 +2,16 @@
 #####This library depends on jQuery and Handlebars libraries.
 
 ###Usage
-Please include Jquery, Handlebars and unbxdautosuggest.js in order. Then add the required configuration.
+Please include Jquery, Handlebars and unbxdAutosuggest.js in order. Then add the required configuration. Default css can be applied by including unbxdAutosuggest.css in your html.
 
 ###Configuration
 ```javascript
+// initialize autocomplete by invoking the unbxdAutoSuggestFunction
+// with jquery & handlebars as its parameters.
+unbxdAutoSuggestFunction(jQuery, Handlebars);
+
 $(function(){
+		// set autocomplete options
 		$("#input").unbxdautocomplete({
 			siteName : 'demosite-u1407617955968'
 			,APIKey : '64a4a2592a648ac8415e13c561e44991'
@@ -73,7 +78,7 @@ $(function(){
 - **loadingClass** : This class name will be added to input during data fetching process, so that user can see some loader animation or state change.
 - **width** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input width.
 - **position** : either **absoulte** or **fixed**
-- **template** : either **1column** or **2column**
+- **template** : either **1column** or **2column**. On mobile browsers, this value is set to **1column** by default and the functionalities in the *mainTpl* value will be displayed in the autocomplete.
 - **mainTpl**: array of functionalities to be present in the main template in the order in which they need to appear. values can be **inFields**, **topQueries**, **keywordSuggestions**, **popularProducts**
 - **sideTpl**: array of functionalities to be present in the side template in the order in which they need to appear. same values as above
 - **sideContentOn** : either **left** or **right**. Used only when **template** is set to **2column**
