@@ -1,6 +1,15 @@
-## unbxdAutosuggest.js
-#####This library depends on jQuery and Handlebars libraries.
+## UNBXD AUTOSUGGEST
+This plug-in depends on jQuery and Handlebars libraries. It works with the UNBXD Autosuggest APIs to provide a flexible and configurable auto-suggest for an e-commerce site. It provides features, especially required by e-commerce sites like
+#####1. IN FIELDS  
+![in fields](/screenshots/infields.png "in fields")
+#####2. TOP QUERIES
+![top-queries](/screenshots/top-queries.png "top-queries")
+#####3. KEYWORD SUGGESTIONS
+![keyword-suggestions](/screenshots/keyword-suggestions.png "keyword-suggestions")
+#####4. POPULAR PRODUCTS
+![popular-products](/screenshots/popular-products.png "popular-products")
 
+## USAGE
 ###Step 1 - Include scripts
 Please include Jquery(> 1.7), Handlebars and unbxdAutosuggest.js in order.  
 Default css can be applied by including unbxdAutosuggest.css in your html.
@@ -83,63 +92,74 @@ $(function(){
 		});
 	});
 ```
-####Configuraton Options
-- **siteName** : This value can be found in UNBXD dashboard. It is unique for every search site created in the dashboard.
-- **APIKey** : This is a unique for every user account. It can also be found in dashboard in the account section.
-- **minChars** : Minimum number of characters required to start showing suggestions. The value should be 0 or greater than 0
-- **delay** : Number of milliseconds to wait before fetching results from server. This is helpful in waiting till user stops typing. 
+####Configuration Options
+- **siteName** : This value can be found in UNBXD dashboard. It is unique for every search site created on the dashboard.
+- **APIKey** : Use the API key which was mailed during account creation. It can also be found on the account section of the dashboard. 
+- **minChars** : Minimum number of characters required to start showing suggestions. The value should be *0 or > 0 (greater than zero)*
+- **delay** : Number of *milliseconds* to wait before fetching results from server. This is helpful in waiting till user stops typing. 
 - **loadingClass** : This class name will be added to input during data fetching process, so that user can see some loader animation or state change.
 - **width** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input width.
-- **position** : either **absoulte** or **fixed**
-- **template** : either **1column** or **2column**. On mobile browsers, this value is set to **1column** by default and the functionalities in the **mainTpl** value will be displayed in the autocomplete.
-- **mainTpl**: array of functionalities to be present in the main template in the order in which they need to appear. values can be **inFields**, **topQueries**, **keywordSuggestions**, **popularProducts**
-- **sideTpl**: array of functionalities to be present in the side template in the order in which they need to appear. Values are same as the previous option.
+- **position** : either **absolute** or **fixed**
+- **template** : either **1column** or **2column**. On mobile browsers, this value is set to **1column** by default and the features in the **mainTpl** value will be displayed in the autocomplete.
+- **mainTpl**: array of features to be present in the main template in the order in which they need to appear. values can be **inFields**, **topQueries**, **keywordSuggestions**, **popularProducts**
+- **sideTpl**: array of features to be present in the side template in the order in which they need to appear. Values are same as the previous option.
 - **sideContentOn** : either **left** or **right**. Used only when **template** is set to **2column**
 - **showCarts** : either **true** or **false**. To show Add-to-cart button and quantity input.
 - **cartType** : either **inline** or **separate**. Used only when **showCarts** is set to **true**
-- **inFields** : This is an object with 2 properties. The first is **count** which is useful to adjust the number of IN-FIELDS shown to user and the second is **fields** which is useful in adjusting what kind of values are shown in secondary level *in-suggestions*.
+- **inFields** : configure the IN-FIELDS feature. This value takes an object with different properties as explained below. 
+  - **count** is useful to adjust the number of IN-FIELDS shown to user
+  - **fields** is an object containing the name & count of values for fields uploaded to UNBXD. These fields will appear as *in-suggestions* in secondary level. 
+  - **header** will display the header above the results if any IN FIELDS are present. 
+  - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of IN FIELDS.
+
 ```javascript
 ,inFields:{
-//number of in-fields to display
-	count: 2,
-	//you can add or remove from fields list and also change the respective counts
-	fields:{
-		'brand':3 //show 3 values from brand
-		,'category':3 //show 3 from category
-		,'color':3 //show 3 from color
+	count: 2
+	,fields:{
+		'brand':3 //shows 3 values from brand
+		,'category':3 //shows 3 from category
+		,'color':3 //shows 3 from color
 	}
-	//update title or header value here
 	,header: ''
-	//give HBS template here.
 	,tpl: ''
 },
 ```
-![in fields](/screenshots/infields.png "in fields")
-- **topQueries** : This will help in setting the number of top-queries shown to user. This value takes an object with different properties as explained below. 
+
+- **topQueries** : configures the TOP-QUERIES feature. This value takes an object with different properties as explained below.
+  - **count** is useful to adjust the number of TOP QUERIES shown to user
+  - **header** will display the header above the results if any TOP QUERIES are present. 
+  - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of TOP QUERIES.
 
 ```javascript
 ,topQueries:{
-	count: 2 //number of top queries to be shown
-	//update title or header value here
+	count: 2
 	,header: ''
-	//give HBS template here.
 	,tpl: ''
 }
 ```
-![top-queries](/screenshots/top-queries.png "top-queries")
-- **keywordSuggestions** : This will help in setting the number of keyword-suggests shown to user. This value takes an object with different properties as explained below. 
+
+- **keywordSuggestions** : configures the KEYWORD-SUGGESTION feature. This value takes an object with different properties as explained below. 
+  - **count** is useful to adjust the number of KEYWORD SUGGESTIONS shown to user
+  - **header** will display the header above the results if any KEYWORD SUGGESTIONS are present. 
+  - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of KEYWORD SUGGESTIONS.
 
 ```javascript
 ,keywordSuggestions:{
-	count: 2 //number of keyword suggestions to be shown
-	//update title or header value here
+	count: 2 
 	,header: ''
-	//give HBS template here.
 	,tpl: ''
 }
 ```
-![keyword-suggestions](/screenshots/keyword-suggestions.png "keyword-suggestions")
-- **popularProducts** : This value takes an object with different properties as explained below.
+
+- **popularProducts** : configures the POPULAR-PRODUCTS feature. This value takes an object with different properties as explained below.
+  - **count** is useful to adjust the number of POPULAR PRODUCTS shown to user.
+  - **currency** has to be a string containing the symbol of the currency.
+  - **image** based on whether it is *true* or *false*, it can either be shown or hidden.
+  - **imageUrlOrFunction** can be either a fieldname(*string*) uploaded to UNBXD or a function which takes an object as argument and returns an image url.
+  - **price** based on whether it is *true* or *false*, it can either be shown or hidden.
+  - **priceFunctionOrKey** can be either a fieldname(*string*) uploaded to UNBXD or a function which takes an object as argument and returns string or a number.
+  - **header** will display the header above the results if any POPULAR PRODUCTS are present. 
+  - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of POPULAR PRODUCTS.
 
 ```javascript
 ,popularProducts:{
@@ -155,16 +175,17 @@ $(function(){
 	,tpl: ''
 }
 ```
-![popular-products](/screenshots/popular-products.png "popular-products")
+
 - **onSimpleEnter** : This function will be called if user presses *enter* key without selecting any result.
 - **onItemSelect** : This function will be called when a user selects one of the suggestions. It will be passed 2 arguments. The first argument is an object shown below and second value will be the original value from Unbxd.
+
 ```javascript
 //the first argument
 {
-value : ""//user selected value
-,type : ""//IN_FIELD || KEYWORD_SUGGESTION || TOP_SEARCH_QUERIES || POPULAR_PRODUCTS
-,filtername : ""//available only incase of IN_FIELD
-,filtervalue : ""//available only incase of IN_FIELD
+	value : ""//user selected value
+	,type : ""//IN_FIELD || KEYWORD_SUGGESTION || TOP_SEARCH_QUERIES || POPULAR_PRODUCTS
+	,filtername : ""//available only incase of IN_FIELD
+	,filtervalue : ""//available only incase of IN_FIELD
 }
 ```
 - **onCartClick** : this function will be called when a user clicks on Add-to-cart button. The arguments will be same as **onItemSelect** but it includes quantity and uniqueId of the product.
