@@ -15,10 +15,10 @@ Please include Jquery(> 1.7), Handlebars and unbxdAutosuggest.js in order.
 Default css can be applied by including unbxdAutosuggest.css in your html.
 
 ```javascript
-<link rel="stylesheet" href="//unbxd.s3.amazonaws.com/unbxdAutosuggest.css">
+<link rel="stylesheet" href="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.css">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//unbxd.s3.amazonaws.com/unbxdAutosuggest.js"></script> 
+<script src="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.js"></script> 
 ```
 ###### PS - please include these script tags before the ending `</head>` tag in your html page.
 
