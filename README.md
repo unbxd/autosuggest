@@ -18,7 +18,7 @@ Default css can be applied by including unbxdAutosuggest.css in your html.
 <link rel="stylesheet" href="//unbxd.s3.amazonaws.com/unbxdAutosuggest.css">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//unbxd.s3.amazonaws.com/unbxdAutosuggest.js"></script> 
+<script src="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.js"></script> 
 ```
 ###### PS - please include these script tags before the ending `</head>` tag in your html page.
 
@@ -192,6 +192,6 @@ $(function(){
 - **hbsHelpers**: needs to be a function. You can register your handlebars helpers here.
 - **processResultsStyles** : This option, if set, should be a function, with a single argument which takes an object with top, left and right properties in it. The function should return the object with all the css properties that can be applied to suggestions container. 
 	Note: this object is generally used for positioning the suggestions.
-- **resultsContainerSelector** : This option, if set, should be jQuery selector for DOM element where suggestions should be appended in Document. If not set, then suggestions will be appended to body.
+- **resultsContainerSelector** : This option, if set, should be jQuery selector string for DOM element where suggestions should be appended in Document. If not set, then suggestions will be appended to body.
 
 ###### PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css 

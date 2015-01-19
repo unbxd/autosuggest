@@ -257,6 +257,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					self.hideResults();
 				}
 			});
+
+			$(window).bind('resize.auto', function(){
+				self.hasFocus = false;
+				self.hideResults();
+			});
 		}
 		,keyevents : function(){
 			var self = this;
