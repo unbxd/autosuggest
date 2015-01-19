@@ -381,10 +381,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.hideResultsNow(this);
 			
 			this.addToAnalytics("search",{query : data.value, autosuggestParams : { 
-				type : data.type
-				,suggestion : data.value
-				,infield_value : data.filtervalue || null
-				,infield_name : data.filtername || null
+				autosuggest_type : data.type
+				,autosuggest_suggestion : data.value
+				,field_value : data.filtervalue || null
+				,field_name : data.filtername || null
 				,src_field : data.source || null
 				,pid : data.pid || null
 				,internal_query : prev
