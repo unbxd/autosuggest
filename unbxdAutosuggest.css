@@ -15,9 +15,10 @@
     margin: 0;
 }
 
-.unbxd-as-wrapper ul.unbxd-as-sidecontent{
+/*.unbxd-as-wrapper ul.unbxd-as-sidecontent{
     width: 180px;
-}
+
+}*/
 
 .unbxd-as-extra-left:after, .unbxd-as-extra-right:after{
     clear: both;

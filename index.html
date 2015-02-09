@@ -87,6 +87,16 @@
 					products Header<br>
 					<input type="text" name="headerProducts">
 				</div>
+				<div style="padding:5px 20px;">
+					
+					Main Width<br>
+					<input type="text" name="widthMain">
+				</div>
+				<div style="padding:5px 20px;">
+					
+					Side Width<br>
+					<input type="text" name="widthSide">
+				</div>
 			</div>
 			
 				
@@ -125,7 +135,8 @@
 			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
-			
+			,mainWidth : 0
+			,sideWidth : 180
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
@@ -211,6 +222,15 @@
 		
 
 		/*header ends*/
+		$("input[name=widthMain]").blur(function(){
+			
+			auto[0].auto.setOption("mainWidth", this.value);
+		});
+		$("input[name=widthSide]").blur(function(){
+			
+			auto[0].auto.setOption("sideWidth", this.value);
+		});
+
 
 		$("input[name=template]").change(function(){
 			console.log("template", (this.value));
