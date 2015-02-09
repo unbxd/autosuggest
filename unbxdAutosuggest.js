@@ -1,10 +1,13 @@
+
+window.countKey=0;
+window.countKeyLeft=0;
+window.outLength=0;
 var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	var isMobile = {
     Android: function() {
       return navigator.userAgent.match(/Android/i);
     },
     BlackBerry: function() {
-      return navigator.userAgent.match(/BlackBerry/i);
     },
     iOS: function() {
       return navigator.userAgent.match(/iPhone|iPad|iPod/i);
@@ -14,6 +17,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
     },
     Windows: function() {
       return navigator.userAgent.match(/IEMobile/i);
+      return navigator.userAgent.match(/BlackBerry/i);
     },
     any: function() {
       return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
@@ -261,26 +265,45 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,keyevents : function(){
 			var self = this;
+
 			
 			return function(e){
 				self.lastKeyPressCode = e.keyCode;
 				self.lastKeyEvent = e;
+				if((e.keyCode>=48)&&(e.keyCode<=105)){
+					countKey=0;
+					countKeyLeft=0;
+				}
+				
 				switch(e.keyCode) {
 					case 38: // up
+					if(countKey>0)
+						countKey--;
 						e.preventDefault();
 						self.moveSelect(-1);
 						break;
 					case 40: // down
+						countKey++;
+						//if(countKey>outLength){countKey=0;}
 						e.preventDefault();
 						self.moveSelect(1);
 						break;
 					case 39: // right
-						e.preventDefault();
-						self.moveSide(1);
+						if(countKey!=0){
+							e.preventDefault();
+							self.moveSide(1);
+						}
+						else
+							countKeyLeft--;
 						break;
 					case 37: // left
-						e.preventDefault();
+						if(countKey!=0){e.preventDefault();
 						self.moveSide(-1);
+						
+
+						}
+						else 
+							countKeyLeft++;
 						break;
 					case 9:  // tab
 					case 13: // return
@@ -289,6 +312,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						}else{
 							self.hideResultsNow();
 						}
+						countKeyLeft=0;
+						countKey=0;
 						break;
 					default:
 						self.activeRow = -1;
@@ -679,6 +704,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					this.currentResults.POPULAR_PRODUCTS.push(o);
 				}
 			}
+			//lenth of result list
+			outLength=this.currentResults.POPULAR_PRODUCTS.length+this.currentResults.IN_FIELD.length;
 		}
 		,escapeStr: function(str){return str.replace(/([\\{}()|.?*+\-\^$\[\]])/g,'\\$1');}
 		,highlightStr : function(str){
