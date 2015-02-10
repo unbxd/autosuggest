@@ -17,6 +17,18 @@
 	float: left;
 }
 
+.clearfix{
+	
+  box-sizing: content-box;
+  width: 250px;
+  height: 730px;
+
+}
+.searchBar{
+	position: absolute;
+  	left: 300px;
+  	top: 50px;
+}
 .clearfix:after{
 	clear: both;
 	content: ".";
@@ -24,50 +36,95 @@
 	font-size: 0px;
 	height: 0px;
 	visibilty: hidden;
+
 }
 	</style>
 </head>
 <body>
-	<div style="margin:auto; width:600px;">
-		<div class="clearfix">
-			<div class="lt">
-				<div style="padding:5px 0px;">
+	<div id="inputField">
+		
+
+		<div class="clearfix" >
+			<div >
+				
+				<div style="padding:5px 20px;">
+					
 					max no of keywords<br>
-					<input type="text" name="keywords" value="2">
+					<input type="text" name="keywords" value="2" size=4px >
 				</div>
-				<div style="padding:5px 0px;">
+
+				<div style="padding:5px 20px;">
+					
+					keywords Header<br>
+					<input type="text" name="headerKeywords" >
+				</div>
+				<div style="padding:5px 20px;">
 					max no of topqueries<br>
-					<input type="text" name="topqueries" value="2">
+					<input type="text" name="topqueries" value="2" size=4px>
+				</div>
+				<div style="padding:5px 20px;">
+					
+					topqueries Header<br>
+					<input type="text" name="headerTopqueries" >
 				</div>
 			</div>
-			<div class="lt">
-				<div style="padding:5px;">
+			<div >
+				<div style="padding:5px 20px;">
 					max no of in-fields<br>
-					<input type="text" name="infields" value="2">
+					<input type="text" name="infields" value="2" size=4px>
 				</div>
-				<div style="padding:5px;">
+				<div style="padding:5px 20px;">
+					
+					in-fields Header<br>
+					<input type="text" name="headerInfields">
+				</div>
+				<div style="padding:5px 20px;">
 					max no of products<br>
-					<input type="text" name="products" value="2">
+					<input type="text" name="products" value="2" size=4px>
+				</div>
+				<div style="padding:5px 20px;">
+					
+					products Header<br>
+					<input type="text" name="headerProducts">
+				</div>
+				<div style="padding:5px 20px;">
+					
+					Main Width<br>
+					<input type="text" name="widthMain">
+				</div>
+				<div style="padding:5px 20px;">
+					
+					Side Width<br>
+					<input type="text" name="widthSide">
 				</div>
 			</div>
+			
+				
+			
+		
+		<div style="padding:5px 20px;">
+			<input type="radio" name="template" value="1column" checked>1column &nbsp;
+			<input type="radio" name="template" value="2column">2column 
 		</div>
-		<div style="padding:5px 0px;">
-			<input type="radio" name="template" value="1column" checked>1column &nbsp;&nbsp;
-			<input type="radio" name="template" value="2column">2column
-		</div>
-		<div style="padding:5px 0px;">
-			<input type="radio" name="sideContent" value="left">left &nbsp;&nbsp;
+		<div style="padding:5px 20px;">
+			<input type="radio" name="sideContent" value="left">left &nbsp;
 			<input type="radio" name="sideContent" value="right">right
 		</div>
-		<div style="padding:5px 0px;">
+		<div style="padding:5px 20px;">
 			<input type="checkbox" name="showcarts" value="1"> Show add-to-carts
 			<br>
-			<input type="radio" name="cartType" value="inline">inline &nbsp;&nbsp;
+			<input type="radio" name="cartType" value="inline">inline &nbsp;
 			<input type="radio" name="cartType" value="separate">separate
 		</div>
-		<input id="input"  class="autoCmplt-input input-0"  placeholder="Please type here to search " type="text"  size="100" style="padding:4px;"/>
+		
+	
+	<div>
+		<input id="input"  class="autoCmplt-input input-0 searchBar"  placeholder="Please type here to search " type="text"  size="100" style="padding:4px;"/>
 	</div>
 	<script type="text/javascript">
+	
+	
+
 	$(function(){
 		unbxdAutoSuggestFunction($, Handlebars);
 
@@ -78,6 +135,8 @@
 			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
+			,mainWidth : 0
+			,sideWidth : 180
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
@@ -93,12 +152,17 @@
 					,'category':3
 					,'color':3
 				}
+				,header:''
 			},
 			topQueries:{
 				count: 2
+				,header:''
+
 			},
+			
 			keywordSuggestions:{
 				count: 2
+				,header:''
 			}
 			,popularProducts:{
 				count: 2
@@ -107,6 +171,7 @@
 				,image:true
 				,imageUrlOrFunction: "imageUrl"
 				,currency : "Rs."
+				,header:''
 			}
 		});
 		/*counts start*/
@@ -131,6 +196,42 @@
 		});
 		/*counts end*/
 
+
+		/*header starts*/
+
+		$("input[name=headerKeywords]").blur(function(){
+			console.log("keywordSuggestions.header", this.value);
+			auto[0].auto.setOption("keywordSuggestions.header", this.value);
+		});
+
+		$("input[name=headerTopqueries]").blur(function(){
+			console.log("topQueries.header", this.value);
+			auto[0].auto.setOption("topQueries.header", this.value);
+		});
+
+		$("input[name=headerInfields]").blur(function(){
+			console.log("inFields.header", this.value);
+			auto[0].auto.setOption("inFields.header", this.value);
+		});
+
+		$("input[name=headerProducts]").blur(function(){
+			console.log("popularProducts.header", this.value);
+			auto[0].auto.setOption("popularProducts.header", this.value);
+		});
+
+		
+
+		/*header ends*/
+		$("input[name=widthMain]").blur(function(){
+			
+			auto[0].auto.setOption("mainWidth", this.value);
+		});
+		$("input[name=widthSide]").blur(function(){
+			
+			auto[0].auto.setOption("sideWidth", this.value);
+		});
+
+
 		$("input[name=template]").change(function(){
 			console.log("template", (this.value));
 			auto[0].auto.setOption("template", (this.value));
@@ -150,6 +251,10 @@
 			console.log("cartType", (this.value));
 			auto[0].auto.setOption("cartType", (this.value));
 		});
+
+		
+		
+		
 	});
 	</script>
 	<script type="text/javascript">

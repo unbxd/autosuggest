@@ -1,10 +1,10 @@
+
 var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	var isMobile = {
     Android: function() {
       return navigator.userAgent.match(/Android/i);
     },
     BlackBerry: function() {
-      return navigator.userAgent.match(/BlackBerry/i);
     },
     iOS: function() {
       return navigator.userAgent.match(/iPhone|iPad|iPod/i);
@@ -14,6 +14,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
     },
     Windows: function() {
       return navigator.userAgent.match(/IEMobile/i);
+      return navigator.userAgent.match(/BlackBerry/i);
     },
     any: function() {
       return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
@@ -41,7 +42,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,minChars : 3
 			,delay : 100
 			,loadingClass : 'unbxd-as-loading'
-			,width : 0
+			,mainWidth:0
+			,sideWidth:180
 			,zIndex : 0
 			,position : 'absolute'
 			,sideContentOn : "right" //"left"
@@ -261,10 +263,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,keyevents : function(){
 			var self = this;
+
 			
 			return function(e){
 				self.lastKeyPressCode = e.keyCode;
 				self.lastKeyEvent = e;
+				
 				switch(e.keyCode) {
 					case 38: // up
 						e.preventDefault();
@@ -275,12 +279,15 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						self.moveSelect(1);
 						break;
 					case 39: // right
-						e.preventDefault();
-						self.moveSide(1);
+						if(self.activeRow>-1){
+							e.preventDefault();
+							self.moveSide(1);
+						}
 						break;
 					case 37: // left
-						e.preventDefault();
+						if(self.activeRow>-1){e.preventDefault();
 						self.moveSide(-1);
+						}
 						break;
 					case 9:  // tab
 					case 13: // return
@@ -289,6 +296,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						}else{
 							self.hideResultsNow();
 						}
+						countKeyLeft=0;
+						countKey=0;
 						break;
 					default:
 						self.activeRow = -1;
@@ -400,7 +409,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			
 			var pos = this.$input.offset()
 			// either use the specified width or calculate based on form element
-			,iWidth = (this.options.width > 0) ? this.options.width : this.$input.innerWidth()
+			,iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
 			,bt = parseInt(this.$input.css("border-top-width"),10)
 			,bl = parseInt(this.$input.css("border-left-width"),10)
 			,br = parseInt(this.$input.css("border-right-width"),10)
@@ -409,13 +418,14 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px',left: "auto",right: "auto"};
 			
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
-
+			
 			if(this.scrollbarWidth == null){
 				this.setScrollWidth();
 			}
 
 			//set column direction
 			if(this.options.template == "2column"){
+				this.$results.find("ul.unbxd-as-sidecontent").css("width", this.options.sideWidth+"px");
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 			}
@@ -679,6 +689,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					this.currentResults.POPULAR_PRODUCTS.push(o);
 				}
 			}
+			//lenth of result list
+			outLength=this.currentResults.POPULAR_PRODUCTS.length+this.currentResults.IN_FIELD.length;
 		}
 		,escapeStr: function(str){return str.replace(/([\\{}()|.?*+\-\^$\[\]])/g,'\\$1');}
 		,highlightStr : function(str){
@@ -760,6 +772,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			}
 
 			if(this.options.template === '2column') {
+
 				html = '<ul class="unbxd-as-sidecontent">';
 				this.options.sideTpl.forEach(function(key){
 					key = 'prepare' + key + 'HTML';
