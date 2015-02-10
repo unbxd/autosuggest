@@ -100,7 +100,22 @@
 			</div>
 			
 				
-			
+		<div style="padding:5px 20px;">MainTpl
+			<select name="MainTpl" id="a" multiple>
+  				<option value="inFields">inFields</option>
+  				<option value="keywordSuggestions">keywordSuggestions</option>
+ 				<option value="topQueries">topQueries</option>
+  				<option value="popularProducts">popularProducts</option>
+			</select>	
+		</div>
+		<div style="padding:5px 20px;">SideTpl
+			<select name="SideTpl" multiple>
+  				<option value="inFields">inFields</option>
+  				<option value="keywordSuggestions">keywordSuggestions</option>
+ 				<option value="topQueries">topQueries</option>
+  				<option value="popularProducts">popularProducts</option>
+			</select>	
+		</div>
 		
 		<div style="padding:5px 20px;">
 			<input type="radio" name="template" value="1column" checked>1column &nbsp;
@@ -119,7 +134,9 @@
 		
 	
 	<div>
-		<input id="input"  class="autoCmplt-input input-0 searchBar"  placeholder="Please type here to search " type="text"  size="100" style="padding:4px;"/>
+		<input id="input"  class="autoCmplt-input input-0 searchBar"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
+		<div id="custombody">
+		</div>
 	</div>
 	<script type="text/javascript">
 	
@@ -135,8 +152,7 @@
 			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
-			,mainWidth : 0
-			,sideWidth : 180
+			,width : 300
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
@@ -252,8 +268,6 @@
 			auto[0].auto.setOption("cartType", (this.value));
 		});
 
-		
-		
 		
 	});
 	</script>

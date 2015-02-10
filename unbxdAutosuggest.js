@@ -1,24 +1,24 @@
 
 var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	var isMobile = {
-    Android: function() {
-      return navigator.userAgent.match(/Android/i);
-    },
-    BlackBerry: function() {
-    },
-    iOS: function() {
-      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-    },
-    Opera: function() {
-      return navigator.userAgent.match(/Opera Mini/i);
-    },
-    Windows: function() {
-      return navigator.userAgent.match(/IEMobile/i);
-      return navigator.userAgent.match(/BlackBerry/i);
-    },
-    any: function() {
-      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-    }
+	    Android: function() {
+	      return navigator.userAgent.match(/Android/i);
+	    },
+	    BlackBerry: function() {
+	    },
+	    iOS: function() {
+	      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	    },
+	    Opera: function() {
+	      return navigator.userAgent.match(/Opera Mini/i);
+	    },
+	    Windows: function() {
+	      return navigator.userAgent.match(/IEMobile/i);
+	      return navigator.userAgent.match(/BlackBerry/i);
+	    },
+	    any: function() {
+	      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+	    }
 	};
 
 	Handlebars.registerHelper('unbxdIf', function(v1,v2,options){
@@ -34,10 +34,25 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		this.init(input, options);
 	};
 	
+	function debounce(func, wait, immediate) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) func.apply(context, args);
+		};
+	};
+	
 	$.extend(autocomplete.prototype, {
 		default_options: {
 			siteName : 'demosite-u1407617955968'
-      ,APIKey : '64a4a2592a648ac8415e13c561e44991'
+      		,APIKey : '64a4a2592a648ac8415e13c561e44991'
 			,resultsClass : 'unbxd-as-wrapper'
 			,minChars : 3
 			,delay : 100
@@ -279,25 +294,25 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						self.moveSelect(1);
 						break;
 					case 39: // right
-						if(self.activeRow>-1){
+						if(self.activeRow > -1){
 							e.preventDefault();
 							self.moveSide(1);
 						}
 						break;
 					case 37: // left
-						if(self.activeRow>-1){e.preventDefault();
-						self.moveSide(-1);
+						if(self.activeRow > -1){
+							e.preventDefault();
+							self.moveSide(-1);
 						}
 						break;
 					case 9:  // tab
 					case 13: // return
 						if( self.selectCurrent() ){
 							e.preventDefault();
-						}else{
+						}
+						else{
 							self.hideResultsNow();
 						}
-						countKeyLeft=0;
-						countKey=0;
 						break;
 					default:
 						self.activeRow = -1;
@@ -306,7 +321,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						if (self.timeout) 
 							clearTimeout(self.timeout);
 						
-						self.timeout = setTimeout(function(){self.onChange();}, self.options.delay);
+						self.timeout = setTimeout(debounce(function(){self.onChange();}, 250), self.options.delay);
 						
 						break;
 				}
@@ -406,7 +421,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			}
 		}
 		,showResults: function () {
-			
+			if(this.options.width){
+				this.options.mainWidth = this.options.width;
+			}
 			var pos = this.$input.offset()
 			// either use the specified width or calculate based on form element
 			,iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
@@ -415,7 +432,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,br = parseInt(this.$input.css("border-right-width"),10)
 			,pb = parseInt(this.$input.css("padding-bottom"),10)
 			,fwidth = (parseInt(iWidth)-2+bl+br)
-			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px',left: "auto",right: "auto"};
+			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px', left: pos.left + "px"};
 			
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
 			
@@ -428,13 +445,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				this.$results.find("ul.unbxd-as-sidecontent").css("width", this.options.sideWidth+"px");
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
+				if(this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left"){
+					fpos.left = pos.left - this.options.sideWidth + "px";
+				}
 			}
 
-			if(this.options.sideContentOn == "left"){
-				fpos.right = window.innerWidth - fwidth - pos.left -2 - this.scrollbarWidth + "px";
-			}else{
-				fpos.left = pos.left + "px";
-			}
 
 			if(typeof this.options.processResultsStyles == "function"){
 				fpos = this.options.processResultsStyles.call(this,fpos);
@@ -507,16 +522,13 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if (v == this.previous) return;
 			
 			this.params.q = v
-
 			this.previous = v;
 			this.currentResults	=	{};
 			
 			if(this.inCache(v)){
 				this.log("picked from cache : " + v);
 				this.currentResults = this.getFromCache(v);
-
 				this.$results.html(this.prepareHTML());
-				
 				this.showResults();
 			}else{
 				if(this.ajaxCall) this.ajaxCall.abort();
@@ -524,7 +536,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				if (v.length >= this.options.minChars) {
 					this.$input.addClass(this.options.loadingClass);
 					this.requestData(v);
-				} else {
+				} 
+				else {
 					this.$input.removeClass(this.options.loadingClass);
 					this.$results.hide();
 				}	
@@ -762,8 +775,39 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,prepareHTML: function (){
 			var html = '<ul class="unbxd-as-maincontent">',
-					self = this;
+				self = this ,
+				mainlen = 0 ,
+				sidelen = 0 ;
+			this.options.mainTpl.forEach(function(key){
+				if(key === "inFields"){
+					key = "IN_FIELD";
+				}
+				else if(key === "popularProducts"){
+					key = "POPULAR_PRODUCTS";
+				}
+				else if(key === "topQueries"){
+					key = "TOP_SEARCH_QUERIES";
+				}
+				else
+					key = "KEYWORD_SUGGESTION";
+				mainlen=mainlen+self.currentResults[key].length;
+			});
 
+			this.options.sideTpl.forEach(function(key){
+				if(key === "inFields"){
+					key = "IN_FIELD";
+				}
+				else if(key === "popularProducts"){
+					key = "POPULAR_PRODUCTS";
+				}
+				else if(key === "topQueries"){
+					key = "TOP_SEARCH_QUERIES";
+				}
+				else
+					key = "KEYWORD_SUGGESTION";
+				sidelen=sidelen+self.currentResults[key].length;
+			});
+				
 			if(isMobile.any()) this.options.template = '1column';
 
 			if(this.options.template === '2column' && !this.options.sideTpl.length){
@@ -773,19 +817,35 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			if(this.options.template === '2column') {
 
-				html = '<ul class="unbxd-as-sidecontent">';
-				this.options.sideTpl.forEach(function(key){
-					key = 'prepare' + key + 'HTML';
-					html = html + self[key]();
-				});
-				html = html + '</ul><ul class="unbxd-as-maincontent">'; 
+				//main zero side not zero
+				if((mainlen == 0)&&(sidelen != 0)){
+					html = '<ul class="unbxd-as-maincontent">';
+					this.options.sideTpl.forEach(function(key){
+						key = 'prepare' + key + 'HTML';
+						html = html + self[key]();
+					});
+				//html = html + '</ul><ul class="unbxd-as-maincontent">';
+				}
+				else{
+					if(sidelen == 0){
+						html = html + '<ul class="unbxd-as-maincontent">';
+					}
+					else{
+						html = '<ul class="unbxd-as-sidecontent">';
+						this.options.sideTpl.forEach(function(key){
+						key = 'prepare' + key + 'HTML';
+						html = html + self[key]();
+						});
+						html = html + '</ul><ul class="unbxd-as-maincontent">';
+					}
+				}
+				 
 			}
 			this.options.mainTpl.forEach(function(key){
 				key = 'prepare' + key + 'HTML';
 				html = html + self[key]();
 			});
 			html = html + '</ul>';
-
 
 			var cmpld = Handlebars.compile( html );
 			this.log("prepraing html :-> template : " + this.options.template + " ,carts : " + this.options.showCarts + " ,cartType : " + this.options.cartType);

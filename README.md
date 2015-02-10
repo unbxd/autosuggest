@@ -39,7 +39,8 @@ $(function(){
 			,minChars : 2
 			,delay : 100
 			,loadingClass : 'unbxd-as-loading'
-			,width : 0
+			,mainWidth : 0
+			,sideWidth : 180
 			,zIndex : 0
 			,position : 'absolute'
 			,template : "1column" 
@@ -98,7 +99,8 @@ $(function(){
 - **minChars** : Minimum number of characters required to start showing suggestions. The value should be *0 or > 0 (greater than zero)*
 - **delay** : Number of *milliseconds* to wait before fetching results from server. This is helpful in waiting till user stops typing. 
 - **loadingClass** : This class name will be added to input during data fetching process, so that user can see some loader animation or state change.
-- **width** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input width.
+- **mainWidth** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input sideWidth.
+- **sideWidth** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input mainWidth.
 - **position** : either **absolute** or **fixed**
 - **template** : either **1column** or **2column**. On mobile browsers, this value is set to **1column** by default and the features in the **mainTpl** value will be displayed in the autocomplete.
 - **mainTpl**: array of features to be present in the main template in the order in which they need to appear. values can be **inFields**, **topQueries**, **keywordSuggestions**, **popularProducts**
