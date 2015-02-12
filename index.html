@@ -5,6 +5,11 @@
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="unbxdAutosuggest.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<style type="text/css">
 		*{
 			font-family: proxima-nova,Arial, sans-serif;
@@ -101,7 +106,7 @@
 			
 				
 		<div style="padding:5px 20px;">MainTpl
-			<select name="MainTpl" id="a" multiple>
+			<select class="form-control" id="MainTpl" multiple>
   				<option value="inFields">inFields</option>
   				<option value="keywordSuggestions">keywordSuggestions</option>
  				<option value="topQueries">topQueries</option>
@@ -109,7 +114,7 @@
 			</select>	
 		</div>
 		<div style="padding:5px 20px;">SideTpl
-			<select name="SideTpl" multiple>
+			<select class="form-control" id="SideTpl" multiple>
   				<option value="inFields">inFields</option>
   				<option value="keywordSuggestions">keywordSuggestions</option>
  				<option value="topQueries">topQueries</option>
@@ -153,6 +158,8 @@
 			,template : "1column" // "2column"
 			,cartType : "separate"
 			,width : 300
+			,mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']
+			,sideTpl: []
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
@@ -267,8 +274,26 @@
 			console.log("cartType", (this.value));
 			auto[0].auto.setOption("cartType", (this.value));
 		});
-
 		
+		var values = [];
+		$('#MainTpl').change(function(){
+			values=[];
+			$('#MainTpl :selected').each(function(i, selectedElement) {
+ 				values[i] = $(selectedElement).val();
+ 				$("#SideTpl option[value='"+ values[i] + "']").attr('disabled', true ); 
+			});
+			auto[0].auto.setOption("mainTpl", values);
+		});
+
+		$('#SideTpl').change(function(){
+			values=[];
+			$('#SideTpl :selected').each(function(i, selectedElement) {
+ 				values[i] = $(selectedElement).val();
+ 				$("#MainTpl option[value='"+ values[i] + "']").attr('disabled', true );
+			});
+			auto[0].auto.setOption("sideTpl", values);
+		});
+			
 	});
 	</script>
 	<script type="text/javascript">
