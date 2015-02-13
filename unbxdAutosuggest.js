@@ -213,6 +213,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if(typeof this.options.hbsHelpers === 'function')
 				this.options.hbsHelpers.call(this)
 
+
 			this.wire();
 		}
 		,wire: function(){
@@ -810,7 +811,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				
 			if(isMobile.any()) this.options.template = '1column';
 
-			if(this.options.template === '2column' && !this.options.sideTpl.length){
+			if(this.options.template === '2column' && !this.options.sideTpl.length && !this.options.mainTpl){
 				this.options.sideTpl = ['keywordSuggestions', 'topQueries'];
 				this.options.mainTpl = ['inFields', 'popularProducts'];
 			}

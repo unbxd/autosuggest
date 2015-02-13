@@ -5,6 +5,14 @@
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
 	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="unbxdAutosuggest.js"></script>
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
+	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.min.css">
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
+	<script type="text/javascript">
+		$(function(){
+    		$(".chzn-select").chosen();
+		});
+	</script>
 	<style type="text/css">
 		*{
 			font-family: proxima-nova,Arial, sans-serif;
@@ -98,40 +106,40 @@
 					<input type="text" name="widthSide">
 				</div>
 			</div>
-			
+		
 				
-		<div style="padding:5px 20px;">MainTpl
-			<select name="MainTpl" id="a" multiple>
-  				<option value="inFields">inFields</option>
-  				<option value="keywordSuggestions">keywordSuggestions</option>
- 				<option value="topQueries">topQueries</option>
-  				<option value="popularProducts">popularProducts</option>
-			</select>	
-		</div>
-		<div style="padding:5px 20px;">SideTpl
-			<select name="SideTpl" multiple>
-  				<option value="inFields">inFields</option>
-  				<option value="keywordSuggestions">keywordSuggestions</option>
- 				<option value="topQueries">topQueries</option>
-  				<option value="popularProducts">popularProducts</option>
-			</select>	
-		</div>
+			<div style="padding:5px 20px">MainTpl
+				<select class="chzn-select" multiple="multiple" id="MainTpl" style="width:200px;">
+  					<option value="inFields">inFields</option>
+  					<option value="keywordSuggestions">keywordSuggestions</option>
+ 					<option value="topQueries">topQueries</option>
+  					<option value="popularProducts">popularProducts</option>
+				</select>	
+			</div>
+			<div style="padding:5px 20px;">SideTpl
+				<select class="chzn-select" id="SideTpl" multiple style="width:200px">
+  					<option value="inFields">inFields</option>
+  					<option value="keywordSuggestions">keywordSuggestions</option>
+ 					<option value="topQueries">topQueries</option>
+  					<option value="popularProducts">popularProducts</option>
+				</select>	
+			</div>
 		
-		<div style="padding:5px 20px;">
-			<input type="radio" name="template" value="1column" checked>1column &nbsp;
-			<input type="radio" name="template" value="2column">2column 
+			<div style="padding:5px 20px;">
+				<input type="radio" name="template" value="1column" checked>1column &nbsp;
+				<input type="radio" name="template" value="2column">2column 
+			</div>
+			<div style="padding:5px 20px;">
+				<input type="radio" name="sideContent" value="left">left &nbsp;
+				<input type="radio" name="sideContent" value="right">right
+			</div>
+			<div style="padding:5px 20px;">
+				<input type="checkbox" name="showcarts" value="1"> Show add-to-carts
+				<br>
+				<input type="radio" name="cartType" value="inline">inline &nbsp;
+				<input type="radio" name="cartType" value="separate">separate
+			</div>
 		</div>
-		<div style="padding:5px 20px;">
-			<input type="radio" name="sideContent" value="left">left &nbsp;
-			<input type="radio" name="sideContent" value="right">right
-		</div>
-		<div style="padding:5px 20px;">
-			<input type="checkbox" name="showcarts" value="1"> Show add-to-carts
-			<br>
-			<input type="radio" name="cartType" value="inline">inline &nbsp;
-			<input type="radio" name="cartType" value="separate">separate
-		</div>
-		
 	
 	<div>
 		<input id="input"  class="autoCmplt-input input-0 searchBar"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
@@ -153,6 +161,8 @@
 			,template : "1column" // "2column"
 			,cartType : "separate"
 			,width : 300
+			,mainTpl: []
+			,sideTpl: []
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
@@ -212,7 +222,7 @@
 		});
 		/*counts end*/
 
-
+		
 		/*header starts*/
 
 		$("input[name=headerKeywords]").blur(function(){
@@ -236,7 +246,7 @@
 		});
 
 		
-
+		
 		/*header ends*/
 		$("input[name=widthMain]").blur(function(){
 			
@@ -267,8 +277,36 @@
 			console.log("cartType", (this.value));
 			auto[0].auto.setOption("cartType", (this.value));
 		});
-
 		
+		var values = [];
+		$('#MainTpl').change(function(){
+			values=[];
+			$("#SideTpl option").each(function(){
+    			$(this).attr('disabled',false);
+    			$('#SideTpl').trigger('chosen:updated');
+			});
+			$('#MainTpl :selected').each(function(i, selectedElement) {
+ 				values[i] = $(selectedElement).val();
+ 				$("#SideTpl option[value='"+ values[i] + "']").attr('disabled', true ); 
+ 				$('#SideTpl').trigger('chosen:updated');
+			});
+			auto[0].auto.setOption("mainTpl", values);
+		});
+
+		$('#SideTpl').change(function(){
+			values=[];
+			$("#MainTpl option").each(function(){
+    			$(this).attr('disabled',false);
+    			$('#MainTpl').trigger('chosen:updated');
+			});
+			$('#SideTpl :selected').each(function(i, selectedElement) {
+ 				values[i] = $(selectedElement).val();
+ 				$("#MainTpl option[value='"+ values[i] + "']").attr('disabled', true );
+ 				$('#MainTpl').trigger('chosen:updated');
+			});
+			auto[0].auto.setOption("sideTpl", values);
+		});
+			
 	});
 	</script>
 	<script type="text/javascript">
