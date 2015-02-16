@@ -8,6 +8,9 @@
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
 	<link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.min.css">
 	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/chosen/1.1.0/chosen.jquery.min.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
 		$(function(){
     		$(".chzn-select").chosen();
@@ -46,6 +49,12 @@
 	visibilty: hidden;
 
 }
+.form-control{
+	width: auto;
+}
+.chosen-container-multi .chosen-choices{
+	width:80%;
+}
 	</style>
 </head>
 <body>
@@ -58,58 +67,68 @@
 				<div style="padding:5px 20px;">
 					
 					max no of keywords<br>
-					<input type="text" name="keywords" value="2" size=4px >
+					<input class="form-control" type="text" name="keywords" value="2" style="width:60px" >
 				</div>
 
 				<div style="padding:5px 20px;">
 					
 					keywords Header<br>
-					<input type="text" name="headerKeywords" >
+					<input class="form-control" type="text" name="headerKeywords" >
 				</div>
 				<div style="padding:5px 20px;">
 					max no of topqueries<br>
-					<input type="text" name="topqueries" value="2" size=4px>
+					<input class="form-control" type="text" name="topqueries" value="2" style="width:60px">
 				</div>
 				<div style="padding:5px 20px;">
 					
 					topqueries Header<br>
-					<input type="text" name="headerTopqueries" >
+					<input class="form-control" type="text" name="headerTopqueries" >
 				</div>
 			</div>
 			<div >
 				<div style="padding:5px 20px;">
 					max no of in-fields<br>
-					<input type="text" name="infields" value="2" size=4px>
+					<input class="form-control" type="text" name="infields" value="2" style="width:60px">
 				</div>
 				<div style="padding:5px 20px;">
 					
 					in-fields Header<br>
-					<input type="text" name="headerInfields">
+					<input class="form-control" type="text" name="headerInfields">
 				</div>
 				<div style="padding:5px 20px;">
 					max no of products<br>
-					<input type="text" name="products" value="2" size=4px>
+					<input class="form-control" type="text" name="products" value="2" style="width:60px">
 				</div>
 				<div style="padding:5px 20px;">
 					
 					products Header<br>
-					<input type="text" name="headerProducts">
+					<input class="form-control" type="text" name="headerProducts">
 				</div>
 				<div style="padding:5px 20px;">
 					
 					Main Width<br>
-					<input type="text" name="widthMain">
+					<input class="form-control" type="text" name="widthMain" style="width:60px">
 				</div>
 				<div style="padding:5px 20px;">
 					
 					Side Width<br>
-					<input type="text" name="widthSide">
+					<input class="form-control" type="text" name="widthSide" style="width:60px">
+				</div>
+				<div style="padding:5px 20px;">
+					
+					Site Name<br>
+					<input class="form-control" type="text" name="siteName">
+				</div>
+				<div style="padding:5px 20px;">
+					
+					API Key<br>
+					<input class="form-control" type="text" name="APIKey">
 				</div>
 			</div>
 		
 				
-			<div style="padding:5px 20px">MainTpl
-				<select class="chzn-select" multiple="multiple" id="MainTpl" style="width:200px;">
+			<div style="padding:5px 20px">MainTpl 
+				<select class="chzn-select input-lg" multiple="multiple" id="MainTpl" style="width:200px;">
   					<option value="inFields">inFields</option>
   					<option value="keywordSuggestions">keywordSuggestions</option>
  					<option value="topQueries">topQueries</option>
@@ -124,25 +143,41 @@
   					<option value="popularProducts">popularProducts</option>
 				</select>	
 			</div>
-		
+		<div style="padding:5px 20px;">Theme
+			<select class="form-control" id="Theme">
+  				<option value="#ff8400">Orange</option>
+  				<option value="#19af91">Green</option>
+  				<option value="#6f6f6f">Gray</option>
+  				<option value="#004c92">Blue</option>
+  			</select>
+  		</div>
+  		<div style="padding:5px 20px;">Config
+			<select class="form-control" id="Config">
+				<option value="0">None</option>
+  				<option value="1">Config-1</option>
+  				<option value="2">Config-2</option>
+  				<option value="3">Config-3</option>
+  				<option value="4">Config-4</option>
+  			</select>
+  		</div>
 			<div style="padding:5px 20px;">
-				<input type="radio" name="template" value="1column" checked>1column &nbsp;
-				<input type="radio" name="template" value="2column">2column 
+				<input class="content" type="radio" name="template" value="1column" checked> 1column &nbsp;
+				<input class="content" type="radio" name="template" value="2column"> 2column 
 			</div>
 			<div style="padding:5px 20px;">
-				<input type="radio" name="sideContent" value="left">left &nbsp;
-				<input type="radio" name="sideContent" value="right">right
+				<input class="content" type="radio" name="sideContent" value="left"> left &nbsp;
+				<input class="content" type="radio" name="sideContent" value="right"> right
 			</div>
 			<div style="padding:5px 20px;">
-				<input type="checkbox" name="showcarts" value="1"> Show add-to-carts
+				<input class="content" type="checkbox" name="showcarts" value="1"> Show add-to-carts
 				<br>
-				<input type="radio" name="cartType" value="inline">inline &nbsp;
-				<input type="radio" name="cartType" value="separate">separate
+				<input class="content" type="radio" name="cartType" value="inline"> inline &nbsp;
+				<input class="content" type="radio" name="cartType" value="separate"> separate
 			</div>
 		</div>
 	
 	<div>
-		<input id="input"  class="autoCmplt-input input-0 searchBar"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
+		<input id="input"  class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
 		<div id="custombody">
 		</div>
 	</div>
@@ -160,9 +195,9 @@
 			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
-			,width : 300
 			,mainTpl: []
 			,sideTpl: []
+			,theme: "#ff8400"
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
@@ -256,6 +291,15 @@
 			
 			auto[0].auto.setOption("sideWidth", this.value);
 		});
+		$("input[name=siteName]").blur(function(){
+			
+			auto[0].auto.setOption("siteName", this.value);
+		});
+		$("input[name=APIKey]").blur(function(){
+			
+			auto[0].auto.setOption("APIKey", this.value);
+		});
+
 
 
 		$("input[name=template]").change(function(){
@@ -278,7 +322,48 @@
 			auto[0].auto.setOption("cartType", (this.value));
 		});
 		
+		$("#Theme").change(function(){
+			console.log("Theme",$( "#Theme option:selected" ).val());
+			auto[0].auto.setOption("theme", $( "#Theme option:selected" ).val());
+		});
 		var values = [];
+		$("#Config").change(function(){
+			if($("#Config option:selected" ).val() === "0"){
+				$("#MainTpl, #SideTpl, .content").prop("disabled",false);
+				$('#MainTpl,#SideTpl').trigger('chosen:updated');
+				auto[0].auto.setOption("mainTpl", []);
+				auto[0].auto.setOption("sideTpl", []);
+			}
+			else{
+				$("#MainTpl, #SideTpl, .content").prop("disabled",true);
+				$('#MainTpl, #SideTpl').trigger('chosen:updated');
+				if($("#Config option:selected" ).val() === "1"){
+					auto[0].auto.setOption("mainTpl", ['inFields','keywordSuggestions','topQueries','popularProducts']);
+					auto[0].auto.setOption("sideTpl", []);
+					auto[0].auto.setOption("showCarts",true);
+				}
+				else if($("#Config option:selected" ).val() === "2"){
+					auto[0].auto.setOption("mainTpl", ['inFields','popularProducts']);
+					auto[0].auto.setOption("sideTpl", ['topQueries','keywordSuggestions']);
+					auto[0].auto.setOption("template",'2column');
+					auto[0].auto.setOption("sideContentOn", 'right');
+					auto[0].auto.setOption("showCarts",true);
+				}
+				else if($("#Config option:selected" ).val() === "3"){
+					auto[0].auto.setOption("mainTpl", ['inFields','popularProducts']);
+					auto[0].auto.setOption("sideTpl", ['topQueries','keywordSuggestions']);
+					auto[0].auto.setOption("template",'2column');
+					auto[0].auto.setOption("sideContentOn", 'left');
+					auto[0].auto.setOption("showCarts",true);
+				}
+				else if($("#Config option:selected" ).val() === "4"){
+					auto[0].auto.setOption("mainTpl", ['popularProducts']);
+					auto[0].auto.setOption("sideTpl", []);
+					auto[0].auto.setOption("showCarts",true);
+				}
+			}
+		});
+		
 		$('#MainTpl').change(function(){
 			values=[];
 			$("#SideTpl option").each(function(){
@@ -291,6 +376,7 @@
  				$('#SideTpl').trigger('chosen:updated');
 			});
 			auto[0].auto.setOption("mainTpl", values);
+			console.log(typeof values);
 		});
 
 		$('#SideTpl').change(function(){

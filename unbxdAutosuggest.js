@@ -63,6 +63,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,position : 'absolute'
 			,sideContentOn : "right" //"left"
 			,template : "1column" // "2column"
+			,theme : "#ff8400"
 			,mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']
 			,sideTpl: []
 			,showCarts : true // will be used in default template of popular products
@@ -738,7 +739,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
 					+'</li>'
 					+'{{else}}'
-					+'<li class="unbxd-as-insuggestion" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+'<li class="unbxd-as-insuggestion" style="color:'+this.options.theme+'" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 						+'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
 					+'</li>'
 					+'{{/unbxdIf}}'
@@ -775,10 +776,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			+'{{/if}}';
 		}
 		,prepareHTML: function (){
-			var html = '<ul class="unbxd-as-maincontent">',
+			var html = '<style> .unbxd-as-popular-product-cart-button{background-color:'+this.options.theme+';}</style><ul class="unbxd-as-maincontent">',
 				self = this ,
 				mainlen = 0 ,
 				sidelen = 0 ;
+				//$(".unbxd-as-insuggestion").css("color:",this.options.theme);
 			this.options.mainTpl.forEach(function(key){
 				if(key === "inFields"){
 					key = "IN_FIELD";
@@ -832,7 +834,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						html = html + '<ul class="unbxd-as-maincontent">';
 					}
 					else{
-						html = '<ul class="unbxd-as-sidecontent">';
+						html = '<style> .unbxd-as-popular-product-cart-button{background-color:'+this.options.theme+';}</style><ul class="unbxd-as-sidecontent">';
 						this.options.sideTpl.forEach(function(key){
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
