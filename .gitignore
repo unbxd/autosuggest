@@ -1,13 +1,5 @@
-# dependencies
-/node_modules
-Microphone-icon.png
-backup.js
-data.json
-expected.json
-mic.png
-pro.html
-set.json
-unbxdAutocomplete.min.*
-unbxdAutocomplete.js.min.js
-unbxdAutocompletev2.min.js.gz
-api.json
+**/.*
+node_modules,
+bower_components,
+test,
+tests

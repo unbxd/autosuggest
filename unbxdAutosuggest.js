@@ -1,76 +1,276 @@
 
+var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
+	var isMobile = {
+	    Android: function() {
+	      return navigator.userAgent.match(/Android/i);
+	    },
+	    BlackBerry: function() {
+	    },
+	    iOS: function() {
+	      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	    },
+	    Opera: function() {
+	      return navigator.userAgent.match(/Opera Mini/i);
+	    },
+	    Windows: function() {
+	      return navigator.userAgent.match(/IEMobile/i);
+	      return navigator.userAgent.match(/BlackBerry/i);
+	    },
+	    any: function() {
+	      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+	    }
+	};
 
-var unbxdAutocomplete = (function () {
+	Handlebars.registerHelper('unbxdIf', function(v1,v2,options){
+		return v1 === v2 ? options.fn(this) : options.inverse(this);
+	});
 
-	var _CONST = {
+	Handlebars.registerHelper('safestring', function(value) {
+		return new Handlebars.SafeString(value);
+	});
 
-		inFields:{
-			count: 1,
-			fields:[
-				{
-					name:'brand',
-					count:3
-				},
-				{
-					name:'category',
-					count:3
+	function autocomplete (input, options) {
+		this.input = input;
+		this.init(input, options);
+	};
+	
+	function debounce(func, wait, immediate) {
+		var timeout;
+		return function() {
+			var context = this, args = arguments;
+			var later = function() {
+				timeout = null;
+				if (!immediate) func.apply(context, args);
+			};
+			var callNow = immediate && !timeout;
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+			if (callNow) func.apply(context, args);
+		};
+	};
+	
+	$.extend(autocomplete.prototype, {
+		default_options: {
+			siteName : 'demosite-u1407617955968'
+      		,APIKey : '64a4a2592a648ac8415e13c561e44991'
+			,resultsClass : 'unbxd-as-wrapper'
+			,minChars : 3
+			,delay : 100
+			,loadingClass : 'unbxd-as-loading'
+			,mainWidth:0
+			,sideWidth:180
+			,zIndex : 0
+			,position : 'absolute'
+			,sideContentOn : "right" //"left"
+			,template : "1column" // "2column"
+			,theme : "#ff8400"
+			,mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']
+			,sideTpl: []
+			,showCarts : true // will be used in default template of popular products
+			,cartType : "inline" // "separate" will be used in default template popular products
+			,onCartClick : function(obj){}
+			,hbsHelpers: null // handlebar helper functions
+			,onSimpleEnter : null
+			,onItemSelect: null
+			,inFields:{
+				count: 2
+				,fields:{
+					'brand':3
+					,'category':3
+					,'color':3
 				}
-			]
-		},
+				,header: ""
+				,tpl: "{{{safestring highlighted}}}"
+			},
+			topQueries:{
+				count: 2
+				,hidden: false
+				,header: ""
+				,tpl: "{{{safestring highlighted}}}"
+			},
+			keywordSuggestions:{
+				count: 2
+				,header: ""
+				,tpl: "{{{safestring highlighted}}}"
+			}
+			,popularProducts:{
+				count: 2
+				,price:true
+				,priceFunctionOrKey : "price"
+				,image:true
+				,imageUrlOrFunction: "imageUrl"
+				,currency : "Rs."
+				,header: ""
+				,tpl: '{{#if ../showCarts}}'
+						+'{{#unbxdIf ../../cartType "inline"}}'//"inline" || "separate"
+							+'<div class="unbxd-as-popular-product-inlinecart">'
+								+'<div class="unbxd-as-popular-product-image-container">'
+									+'{{#if image}}'
+									+'<img src="{{image}}"/>'
+									+'{{/if}}'
+								+'</div>'
+								+'<div  class="unbxd-as-popular-product-name">'
+									+'<div style="table-layout:fixed;width:100%;display:table;">'
+										+'<div style="display:table-row">'
+											+'<div style="display:table-cell;text-overflow:ellipsis;overflow: hidden;white-space: nowrap;">'
+												+'{{{safestring highlighted}}}'
+											+'</div>'
+										+'</div>'
+									+'</div>'
+								+'</div>'
+								+'{{#if price}}'
+									+'<div class="unbxd-as-popular-product-price">'
+										+'{{currency}}{{price}}'
+									+'</div>'
+								+'{{/if}}'
+								+'<div class="unbxd-as-popular-product-quantity">'
+									+'<div class="unbxd-as-popular-product-quantity-container">'
+										+'<span>Qty</span>'
+										+'<input class="unbxd-popular-product-qty-input" value="1"/>'
+									+'</div>'
+								+'</div>'
+								+'<div class="unbxd-as-popular-product-cart-action">'
+									+'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
+								+'</div>'
+							+'</div>'
+						+'{{else}}'
+							+'<div class="unbxd-as-popular-product-info">'
+								+'<div class="unbxd-as-popular-product-image-container">'
+									+'{{#if image}}'
+									+'<img src="{{image}}"/>'
+									+'{{/if}}'
+								+'</div>'
+								+'<div  class="unbxd-as-popular-product-name">'
+									+'{{{safestring highlighted}}}'
+								+'</div>'
+							+'</div>'
+							+'<div class="unbxd-as-popular-product-cart">'
+								+'<div class="unbxd-as-popular-product-cart-action">'
+									+'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
+								+'</div>'
+								+'<div class="unbxd-as-popular-product-quantity">'
+									+'<div class="unbxd-as-popular-product-quantity-container">'
+										+'<span>Qty</span>'
+										+'<input class="unbxd-popular-product-qty-input" value="1"/>'
+									+'</div>'
+								+'</div>'
+								+'{{#if price}}'
+								+'<div class="unbxd-as-popular-product-price">'
+									+'{{currency}}{{price}}'
+								+'</div>'
+								+'{{/if}}'
+							+'</div>'
+						+'{{/unbxdIf}}'
+					+'{{else}}'
+						+'<div class="unbxd-as-popular-product-info">'
+							+'<div class="unbxd-as-popular-product-image-container">'
+								+'{{#if image}}'
+								+'<img src="{{image}}"/>'
+								+'{{/if}}'
+							+'</div>'
+							+'<div  class="unbxd-as-popular-product-name">'
+								+'{{{safestring highlighted}}}'
+							+'</div>'
+						+'</div>'
+					+'{{/if}}'
+				+'</li>'
+			}
+			,resultsContainerSelector : null
+			,processResultsStyles : null
+		}
+		,$input : null
+		,$results : null
+		,timeout : null
+		,previous  : ''
+		,activeRow : -1//keeps track of focused result in navigation
+		,activeColumn : 0
+		,keyb : false
+		,hasFocus : false
+		,lastKeyPressCode : null
+		,ajaxCall : null//keeps track of current ajax call
+		,currentResults	: []
+		,cache : {}
+		,params : {
+			query : '*'
+			,filters : {}
+		}
+		,selectedClass : "unbxd-ac-selected"
+		,scrollbarWidth : null
+		,init: function(input, options) {
+			this.options = $.extend({}, this.default_options, options);
+			this.$input = $(input).attr('autocomplete', 'off');
+			this.$results = $('<div/>', {'class' :this.options.resultsClass})
+				.css('position', this.options.position)
+				.hide();
+			
+			if(this.options.zIndex > 0)
+				this.$results.css('zIndex',this.options.zIndex);
 
-		topQueries:{
-			count: 3
-		},
+			if(typeof this.options.resultsContainerSelector == "string" && this.options.resultsContainerSelector.length)
+				$(this.options.resultsContainerSelector).append(this.$results);
+			else
+				$("body").append(this.$results);
 
-		keywordSuggestions:{
-			count: 3
-		},
+			if(typeof this.options.hbsHelpers === 'function')
+				this.options.hbsHelpers.call(this)
 
-		popularProducts:{
-			count: 3,
-			title:true,
-			price:true,
-			priceFunction:false,
-			currency:'',
-			image:true,
-			imageUrl:'imageUrl',
-			productUrl:'productUrl'
-		},
 
-		callbackfunction:function(){}, //will be called on select
-		
-		autoCompltListClass : "unbxd-autocomplete-list-ul",
-		
-		autoCompltHintClass : "unbxd-autocomplete-list-li",
+			this.wire();
+		}
+		,wire: function(){
+			var self = this;
+			
+			this.$input.bind('keydown.auto',this.keyevents());
 
-		unbxdCatageryClass: "unbxd-autocomplete-category",
-		
-		autoCompltHintSelectedClass : "unbxd-autoComplt-hint-selected",
+			this.$input.bind('select.auto',function(){
+				self.log("select : setting focus");
+				self.hasFocus = true;
+			});
+			
+			$(document).bind("click.auto",function(e){
+				if(e.target == self.input){
+					self.log("clicked on input : focused");
+					self.hasFocus = true;
+					if(self.previous === self.$input.val())
+						self.showResults();
+				}else if(e.target == self.$results[0]){
+					self.log("clicked on results block : selecting")
+					self.hasFocus = false;
+				}else if($.contains(self.$results[0], e.target)){
+					self.log("clicked on element for selection",e.target.tagName);
+					var $et = $(e.target), p = $et;
 
-		unbxdProductClass:"unbxd-prouct-suggest",
+					self.hasFocus = false;
 
-		unbxdShowProductImg:true,
+					if(e.target.tagName !== "LI"){
+						p = $et.parents("li");
+					}
 
-		unbxdShowProductName:true,
+					if(!p || p.hasClass(".unbxd-as-header") || e.target.tagName == "INPUT")
+						return;
 
-		unbxdShowProductPrice:true,
+					if(e.target.tagName == "BUTTON" && $et.hasClass("unbxd-as-popular-product-cart-button") && typeof self.options.onCartClick == "function"){
+						self.log("BUTTON click");
+						var data = p.data();
+						data.quantity = parseFloat(p.find("input.unbxd-popular-product-qty-input").val());
 
-		unbxdSelectorClass:'_unbxd-hint',
+						self.addToAnalytics("click",{
+							pr : parseInt(data.index) + 1
+							,pid : data.pid || null
+							,url : window.location.href
+						});
 
-		formSubmit : false,
+						self.options.onCartClick.call(self,data, self.currentResults.POPULAR_PRODUCTS[parseInt(data['index'])]._original) && self.hideResults();
 
-		productDetails:true,
+						self.addToAnalytics("addToCart",{
+							pid : data.pid || null
+							,url : window.location.href
+						});
 
-		searchUrl:'',
+						return;
+					}
 
-	    UnbxdSiteKey:'',
-		
-		UnbxdApiKey:'',
-
-		jsonpCallback:'?json.wrf=unbxdAutocomplete.parseResponse',
-		
-		autoCompltDelay : 0, // in ms
-
+<<<<<<< HEAD
 		filter:false,
 		
 		listStatus : {
@@ -150,72 +350,117 @@ var unbxdAutocomplete = (function () {
                         console.warn("pushAnalytics failed", e);
                     }
                 }
+=======
+					self.selectItem(p.data());
+				}else{
+					self.hasFocus = false;
+					self.hideResults();
+				}
+			});
 
-	var _DBG = 0; 
-	
-	
-	var _normalizeEvt = function (e) {					
-		return e;
-	}
-	
-	var _addEvt = function (elem, evt, eHandle) {
-		if (elem.addEventListener) {
-			elem.addEventListener(evt, eHandle);
-		} else if (elem.attachEvent) { // The IE 8 case
-			elem.attachEvent("on" + evt, eHandle);
 		}
-	}
-	/*	Arg: Refer to _addEvt
-	*/
-	var _rmEvent = function (elem, evt, eHandle) {
-		if (elem.removeEventListener) {
-			elem.removeEventListener(evt, eHandle);
-		} else if (elem.detachEvent) { // The IE 8 case
-			elem.detachEvent("on" + evt, eHandle);
-		}
-	}
-	
-	var _getComputedStyle = function (elem, name) {
-		var v = null;
-		
-		if (window.getComputedStyle) {
-			
-			v = window.getComputedStyle(elem)[name] || null;
-			
-		} else if (elem.currentStyle) { // Hack for IE...Reference from the jQuery
-			
-			v = elem.currentStyle && elem.currentStyle[name]
-			
-			var left,
-				rsLeft,
-				style = elem.style;
+		,keyevents : function(){
+			var self = this;
+>>>>>>> jquery-unbxdautosuggest
 
-			// Avoid setting v to empty string here
-			// so we don't default to auto
-			if ( v == null && style && style[name] ) {
-				v = style[ name ];
+			
+			return function(e){
+				self.lastKeyPressCode = e.keyCode;
+				self.lastKeyEvent = e;
+				
+				switch(e.keyCode) {
+					case 38: // up
+						e.preventDefault();
+						self.moveSelect(-1);
+						break;
+					case 40: // down
+						e.preventDefault();
+						self.moveSelect(1);
+						break;
+					case 39: // right
+						if(self.activeRow > -1){
+							e.preventDefault();
+							self.moveSide(1);
+						}
+						break;
+					case 37: // left
+						if(self.activeRow > -1){
+							e.preventDefault();
+							self.moveSide(-1);
+						}
+						break;
+					case 9:  // tab
+					case 13: // return
+						if( self.selectCurrent() ){
+							e.preventDefault();
+						}
+						else{
+							self.hideResultsNow();
+						}
+						break;
+					default:
+						self.activeRow = -1;
+						self.hasFocus = true;
+						
+						if (self.timeout) 
+							clearTimeout(self.timeout);
+						
+						self.timeout = setTimeout(debounce(function(){self.onChange();}, 250), self.options.delay);
+						
+						break;
+				}
+			};
+		}
+		,moveSide: function(step){
+			//step : 1 -> right click
+			//step : -1 ->left click
+			var newcolumn = this.activeColumn;
+			if(this.options.template == "2column"){
+				//if(this.options.sideContentOn == "left" && ((this.activeColumn == 0 && step == -1) || (this.activeColumn == 1 && step == 1)))
+				if(this.options.sideContentOn == "left"){
+					(this.activeColumn == 0 && step == -1) && (newcolumn = 1);
+					(this.activeColumn == 1 && step == 1) && (newcolumn = 0);
+				}else{//it is on right
+					(this.activeColumn == 0 && step == 1) && (newcolumn = 1);
+					(this.activeColumn == 1 && step == -1) && (newcolumn = 0);
+				}
+
+				if(newcolumn != this.activeColumn){
+					this.activeColumn = newcolumn;
+					this.activeRow = -1
+					this.moveSelect(1);
+				}
+			}
+		}
+		,moveSelect: function (step) {
+			var lis = this.$results.find("ul." + (this.activeColumn ? "unbxd-as-sidecontent" : "unbxd-as-maincontent")).find('li:not(.unbxd-as-header)');
+			
+			if (!lis) return;
+
+			this.activeRow += step;
+			
+			if(this.activeRow < -1)
+				this.activeRow = lis.size()-1;
+			else if(this.activeRow == -1)
+				this.$input.focus();
+			else if(this.activeRow >= lis.size()){
+				this.activeRow = -1;
+				this.$input.focus();
 			}
 
-		
-			// Remember the original values
-			left = style.left;
-			rsLeft = elem.runtimeStyle && elem.runtimeStyle.left;
+			$("."+this.selectedClass).removeClass(this.selectedClass);
 
-			// Put in the new values to get a computed value out
-			if ( rsLeft ) {
-				elem.runtimeStyle.left = elem.currentStyle.left;
-			}
-			//style.left = name === "fontSize" ? "1em" : v;
-			v = style.pixelLeft + "px";
-
-			// Revert the changed values
-			style.left = left;
-			if ( rsLeft ) {
-				elem.runtimeStyle.left = rsLeft;
-			}
+			$(lis[this.activeRow]).addClass(this.selectedClass);
 			
+			if(this.activeRow >= 0 && this.activeRow < lis.size())
+				this.$input.val($(lis[this.activeRow]).data('value'));
+			else if(this.activeRow == -1)
+				this.$input.val(this.previous);
 		}
+		,selectCurrent: function () {
+			var li = this.$results.find('li.'+this.selectedClass),self = this;
 		
+<<<<<<< HEAD
 		return v;
 	}
 	
@@ -261,23 +506,83 @@ var unbxdAutocomplete = (function () {
 				    			+'&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;' 
 				    			+'<span  class="' + _CONST.autoCompltHintClass + '">' + hint + '</span>'
 				    			+'</li>');
-			
-
-                hint.style.height = hint.style.lineHeight = styles.autoCompltHint.height; // line-height shall always be equal to the height
-				hint.style.padding = styles.autoCompltHint.padding;
-				hint.style.margin = styles.autoCompltHint.margin;
-				hint.style.overflow = styles.autoCompltHint.overflow;
-				hint.style.listStyleType = styles.autoCompltHint.listStyleType;
-				hint.style.color = styles.autoCompltHint.color;
-				hint.style.backgroundColor = styles.autoCompltHint.backgroundColor;
-				hint.style.cursor = styles.autoCompltHint.cursor;
-				hint.style.fontSize = styles.autoCompltHint.fontSize;
-
-				return hint;
+=======
+			if (li.length) {
+				this.selectItem(li.data());
+				return true;
+			} else {
+				if (typeof this.options.onSimpleEnter == "function" && (this.lastKeyPressCode == 10 || this.lastKeyPressCode == 13)){
+					this.lastKeyEvent.preventDefault();
+					self.options.onSimpleEnter.call(self);
+				}
+				
+				return false;
 			}
-			return null;
-		},	
+		}
+		,selectItem: function (data) {
+			if (!('value' in data))
+				return ;
+			this.log("selected Item : ",data);
+			var v = $.trim(data['value']),prev = this.previous;
+			
+			this.previous = v;
+			this.input.lastSelected = data;
+			this.$results.html('');
+			this.$input.val(v);
+			this.hideResultsNow(this);
+			
+			this.addToAnalytics("search",{query : data.value, autosuggestParams : { 
+				autosuggest_type : data.type
+				,autosuggest_suggestion : data.value
+				,field_value : data.filtervalue || null
+				,field_name : data.filtername || null
+				,src_field : data.source || null
+				,pid : data.pid || null
+				,internal_query : prev
+			}});
 
+			if (typeof this.options.onItemSelect == "function"){
+				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original);
+			}
+		}
+		,addToAnalytics:function(type,obj){
+			if("Unbxd" in window && "track" in window.Unbxd && typeof window.Unbxd.track == "function"){
+				this.log("Pushing data to analytics",type,obj);
+				Unbxd.track( type, obj );
+			}
+		}
+		,showResults: function () {
+			if(this.options.width){
+				this.options.mainWidth = this.options.width;
+			}
+			var pos = this.$input.offset()
+			// either use the specified width or calculate based on form element
+			,iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
+			,bt = parseInt(this.$input.css("border-top-width"),10)
+			,bl = parseInt(this.$input.css("border-left-width"),10)
+			,br = parseInt(this.$input.css("border-right-width"),10)
+			,pb = parseInt(this.$input.css("padding-bottom"),10)
+			,fwidth = (parseInt(iWidth)-2+bl+br)
+			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px', left: pos.left + "px"};
+			
+			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
+>>>>>>> jquery-unbxdautosuggest
+			
+			if(this.scrollbarWidth == null){
+				this.setScrollWidth();
+			}
+
+			//set column direction
+			if(this.options.template == "2column"){
+				this.$results.find("ul.unbxd-as-sidecontent").css("width", this.options.sideWidth+"px");
+				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
+				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
+				if(this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left"){
+					fpos.left = pos.left - this.options.sideWidth + "px";
+				}
+			}
+
+<<<<<<< HEAD
 		buildProduct : function(hint, type){
 			if (hint) {
 				var value = hint.name,
@@ -321,115 +626,119 @@ var unbxdAutocomplete = (function () {
 				}
 				
 				return hint;
+=======
+
+			if(typeof this.options.processResultsStyles == "function"){
+				fpos = this.options.processResultsStyles.call(this,fpos);
+>>>>>>> jquery-unbxdautosuggest
 			}
-			return null;
-		},	
-		//to give header like popular prducts, top queries
-		buildHeader:function( headerValue ){
-				var header = "";
-				hint = this.buildElem('<li class="unbxd-header" ><span class="text">'+headerValue+'</span></li>');
-				return hint;	
-		},			
-		/*	Arg:
-				<OBJ> styles = the obk holding the styles to set. Refer to _CONST.defaultStyles.autoCompltList for the required styles
-			Return:
-				@ OK: <ELM> the list ui elem
-				@ NG: null
-		*/
-		buildList : function (styles) {
-			var list = this.buildElem('<ul class="' + _CONST.autoCompltListClass + '"></ul>');
 
-			list.style.maxHeight = styles.autoCompltList.maxHeight;
-			list.style.border = styles.autoCompltList.border;	
-			list.style.padding = styles.autoCompltList.padding;
-			list.style.margin = styles.autoCompltList.margin;
-			list.style.overflowX = styles.autoCompltList.overflowX;
-			list.style.overflowY= styles.autoCompltList.overflowY;
-			list.style.display = styles.autoCompltList.display;
-			list.style.position = styles.autoCompltList.position;
-			list.style.backgroundColor = styles.autoCompltList.backgroundColor;
-
-			return list;
+			this.$results.css(fpos).show();
 		}
+		,setScrollWidth:function(){
+			var scrollDiv = document.createElement("div");
+			scrollDiv.setAttribute("style","width: 100px;height: 100px;overflow: scroll;position: absolute;top: -9999px;");
 
+			document.body.appendChild(scrollDiv);
 
-	};
-	
-	var _AutoCompltList = function (assocInput) {
+			this.scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+            document.body.removeChild(scrollDiv);
+		}
+		,hideResults: function () {
+			if (this.timeout)
+				clearTimeout(this.timeout);
 
-		this.uiElem = null;
-		this.assocInput = assocInput;
-		this.mouseOnList = false;
-		this.pauseMouseoverSelection = false;
-		this.pauseMouseoutDeselection = false;
-		this.maxHintNum = _CONST.maxHintNum;
-		this.styles = JSON.parse(JSON.stringify(_CONST.defaultStyles)); // Copy the default first
+			var self = this;
 
-	}; 
-
-	{
-
-
-		/*
-		*/
-		_AutoCompltList.prototype.genList = function () {
-			if (!this.uiElem) {
+			this.timeout = setTimeout(function(){self.hideResultsNow();}, 200);
+		}
+		,hideResultsNow: function () {
+			this.log("hideResultsNow");
+			if (this.timeout) clearTimeout(this.timeout);
 			
-				var that = this;
-				
-				this.uiElem = _ui.buildList(this.styles);						
-				
-				// Make hint selected onmouseover
-				_addEvt(this.uiElem, "mouseover", function (e) {
-					e = _normalizeEvt(e);
-					if (that.isHint(e.target)) {
-						that.select(e.target);
-						//that.autoScroll();
-					}
-				});
-				
-				// Make hint not selected onmouseout
-				_addEvt(this.uiElem, "mouseout", function (e) {					
-					e = _normalizeEvt(e);
-					that.deselect();
-				});
-				
-				// Prepare for the hint selection by clicking
-				_addEvt(this.uiElem, "mousedown", function (e) {
-					e = _normalizeEvt(e);	
-					that.mouseOnList = true;						
-					// One hack for FF.
-					// Even call focus methos on the input's onblur event, however, still the input losese its focus.
-					// As a result we have to set a timeout here
-					setTimeout(function () {
-						that.assocInput.focus();
-					}, 50);
-					var hint = getParent( e.target )
-					if (that.isHint( hint )) {
-						that.select(hint);
-						that.assocInput.value = that.getSelected() ? that.getSelected().getAttribute("data-value") : e.target.parentNode.getAttribute("data-value");
-						that.assocInput.autoComplt.close();
-						that.assocInput.autoComplt.alalyze(e);
-					}
-				});				
-				
-				document.body.appendChild(this.uiElem);
+			this.$input.removeClass(this.options.loadingClass);
+			
+			if (this.$results.is(':visible')) {
+				this.$results.hide();
+			}
+			
+			if(this.ajaxCall) this.ajaxCall.abort();
+		}
+		,addFilter : function(field, value){
+			if(!(field in this.params.filters))
+				this.params.filters[field] = {};
+
+			this.params.filters[field][value] = field;
+
+			return this;
+		}
+		,removeFilter  : function(field, value){
+			if(value in this.params.filters[field])
+				delete this.params.filters[field][value];
+
+			if(Object.keys(this.params.filters[field]).length == 0)
+				delete this.params.filters[field];			
+
+			return this;
+		}
+		,clearFilters : function(){
+			this.params.filters = {}
+			return this;
+		}
+		,onChange: function () {
+			// ignore if the following keys are pressed: [del] [shift] [capslock]
+			if( this.lastKeyPressCode == 46 || (this.lastKeyPressCode > 8 && this.lastKeyPressCode < 32) )
+			{
+				if(this.lastKeyPressCode == 27 && typeof this.input.lastSelected == 'object'){
+					this.$input.val(this.input.lastSelected.value);
+				}
+
+				return this.$results.hide();
+			}
+			
+			var v = this.$input.val();
+			if (v == this.previous) return;
+			
+			this.params.q = v
+			this.previous = v;
+			this.currentResults	=	{};
+			
+			if(this.inCache(v)){
+				this.log("picked from cache : " + v);
+				this.currentResults = this.getFromCache(v);
+				this.$results.html(this.prepareHTML());
+				this.showResults();
+			}else{
+				if(this.ajaxCall) this.ajaxCall.abort();
+			
+				if (v.length >= this.options.minChars) {
+					this.$input.addClass(this.options.loadingClass);
+					this.requestData(v);
+				} 
+				else {
+					this.$input.removeClass(this.options.loadingClass);
+					this.$results.hide();
+				}	
 			}
 		}
-		/*	Arg:
-				<ELM> el = the elem to check
-			Return:
-				@ Ok: true
-				@ NG: false
-		*/
-		_AutoCompltList.prototype.isHint = function (el) {
-			if (el && typeof el == "object" && el.nodeType === 1) {
-				 var cls = " " + el.className + " ";
-				 if(cls.indexOf(" " + _CONST.autoCompltHintClass + " ") >= 0) 
-					return true;
-			}
-			return false;
+		,getClass : function(object){return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];}
+		,requestData: function (q) {
+			var self = this,url = self.autosuggestUrl();
+			this.log("requestData", url);
+			this.ajaxCall = $.ajax({
+				url: url
+				,dataType: "jsonp"
+				,jsonp: 'json.wrf'
+			})
+			.done(function(d) { 
+				self.receiveData(d);
+			})
+			.fail(function(f) {	
+				self.$input.removeClass(self.options.asLoadingClass);
+				self.$results.hide();
+			});
 		}
+<<<<<<< HEAD
 		/*	Arg:
 				<ARR> hints = the array of hint texts
 			Return:
@@ -528,209 +837,193 @@ var unbxdAutocomplete = (function () {
 					var buf = document.createDocumentFragment();
 					for (i = 0, count = hs.length; i < count; i++) {
 						buf.appendChild(hs[i]);
+=======
+		,autosuggestUrl : function(){
+			var host_path = this.getHostNPath();
+
+			var url = "q=" + encodeURIComponent(this.params.q);
+
+			url += '&inFields.count=' + this.options.inFields.count
+				+ '&topQueries.count=' + this.options.topQueries.count
+				+ '&keywordSuggestions.count=' + this.options.keywordSuggestions.count
+				+ '&popularProducts.count=' + this.options.popularProducts.count;
+				+ '&indent=off';
+
+			for(var x in this.params.filters){
+				if(this.params.filters.hasOwnProperty(x)){
+					var a = [];
+					for(var y in this.params.filters[x]){
+						if(this.params.filters[x].hasOwnProperty(y)){
+							a.push((x+':\"'+ encodeURIComponent(y.replace(/(^")|("$)/g, '')) +'\"').replace(/\"{2,}/g, '"'));
+						}
+>>>>>>> jquery-unbxdautosuggest
 					}
-					this.clearHints();
-					
-					this.genList(); // Geneate the list in case there is none
-					this.uiElem.appendChild(buf);							
+
+					url += '&filter='+a.join(' OR ');
 				}
 			}
-			return count;
+
+			return host_path + "?" + url;
 		}
-		/*
-		*/
-		_AutoCompltList.prototype.clearHints = function () {
-			if (this.uiElem) {
-				this.uiElem.innerHTML = "";
+		,getHostNPath: function(){
+			return "//search.unbxdapi.com/"+ this.options.APIKey + "/" + this.options.siteName + "/autosuggest"
+		}
+		,receiveData: function (data) {
+			if (data) {
+				this.$input.removeClass(this.options.loadingClass);
+				this.$results.html('');
+
+				// if the field no longer has focus or if there are no matches, do not display the drop down
+				if( !this.hasFocus || data.response.numberOfProducts == 0 || "error" in data ) return this.hideResultsNow(this);
+
+				this.processData(data);
+
+				this.addToCache(this.params.q, this.currentResults);
+
+				this.$results.html(this.prepareHTML());
+				
+				this.showResults();
+			} else {
+				this.hideResultsNow(this);
 			}
 		}
-		/*
-			Return:
-				@ Ok: true
-				@ NG: false
-		*/		
-		_AutoCompltList.prototype.isOpen = function () {
-			if (this.uiElem) {
-				if(this.uiElem.style.display !== "none")
-					return true;
-				else
-					return false;
-				//return !!(this.uiElem.getAttribute(_CONST.listStatus.attr) == _CONST.listStatus.open);
+		,processData: function(data){
+			this.currentResults = {
+				KEYWORD_SUGGESTION : []
+				,TOP_SEARCH_QUERIES : []
+				,POPULAR_PRODUCTS : []
+				,IN_FIELD : []
 			}
-			return false;
-		}
-		/*
-		*/
-		_AutoCompltList.prototype.open = function () {	
-			var hints;
-				
-			if (this.uiElem
-				&& (hints = this.uiElem.querySelectorAll("." + _CONST.autoCompltHintClass))
-				&& hints.length // At lease one hint exists, we would open...
-			) {
-				var i,
-					buf,
-					top,
-					left,
-					width,
-					maxHeight,
-					widgetWidth,
-					widgetTop,
-					widgetLeft;
+			,infieldsCount = 0;
 
-				
-				// Position the list
-				buf = this.assocInput.getBoundingClientRect();
+			for(var x = 0; x < data.response.products.length; x++){
+				var doc = data.response.products[x]
+					,o = {};
+				if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length){
+					o = {
+						autosuggest : doc.autosuggest
+						,highlighted : this.highlightStr(doc.autosuggest)
+						,type : "TOP_SEARCH_QUERIES"
+						,_original : doc.doctype
+					};
+					this.currentResults.TOP_SEARCH_QUERIES.push(o);
+				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount){
+					var ins = {}
+						,asrc = " " + doc.unbxdAutosuggestSrc + " "
+						,highlightedtext = this.highlightStr(doc.autosuggest);
 
-				widgetWidth = 	this.styles.autoCompltList.width? this.styles.autoCompltList.width.replace("px", ''):null;
-				widgetTop 	=	this.styles.autoCompltList.top? this.styles.autoCompltList.top.replace("px", ''):null;
-				widgetLeft =    this.styles.autoCompltList.left? this.styles.autoCompltList.left.replace("px", ''):null;
-
-				top =_CONST.widgetTop || (document.documentElement && document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop)
-									  + buf.bottom;
-				left = _CONST.widgetLeft || buf.left;
-	
-				this.uiElem.style.top = top + "px";
-				this.uiElem.style.left = left + "px";
-				this.uiElem.style.maxHeight = this.styles.autoCompltList.maxHeight;
-				this.uiElem.style.background = this.styles.autoCompltList.backgroundColor;
-				
-				// Calculate the list's width
-				buf = widgetWidth || buf.right - buf.left - parseFloat(_getComputedStyle(this.uiElem, "borderLeftWidth")) - parseFloat(_getComputedStyle(this.uiElem, "borderRightWidth"));
-				this.uiElem.style.width = buf + "px";
-
-				// Calculate the list's height
-				for (i = 0, buf = 0; i < hints.length; i++) {
-					buf += parseFloat(_getComputedStyle(hints[i], "height"))
-					     + parseFloat(_getComputedStyle(hints[i], "paddingTop"))
-					     + parseFloat(_getComputedStyle(hints[i], "paddingBottom"));						 
-						 
-					if (hints[i+1]) { // Compute the margin between the hints
-						buf += Math.max(
-							parseFloat(_getComputedStyle(hints[i], "marginBottom")), parseFloat(_getComputedStyle(hints[i+1], "marginTop"))
-						);
+					for(var a in this.options.inFields.fields){
+						if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
+							ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+						}
 					}
-				}
-				buf += parseFloat(_getComputedStyle(hints[0], "marginTop"))
-					 + parseFloat(_getComputedStyle(hints[hints.length - 1], "marginBottom"));
-				//this.uiElem.style.height = (buf + 1) + "px"; // Plus one for a little buffer
 
-				// Open
-				this.uiElem.setAttribute(_CONST.listStatus.attr, _CONST.listStatus.open);				
-				this.uiElem.style.display = "block";
-			}
-		}
-		/*
-		*/
-		_AutoCompltList.prototype.close = function () {
-			if (this.uiElem && !_DBG) {
-				this.uiElem.style.display = "none";
-			}
-		}
-		/*
-		*/
-		_AutoCompltList.prototype.autoScroll = function () {
-			var hint = this.getSelected();
-			if (hint) {
-				var currHint,
-					offset = 0,
-					minDisplayH = 0,
-					hintH = hint.clientHeight,
-					hintMT = parseFloat(_getComputedStyle(hint, "marginTop")),
-					hintMB = parseFloat(_getComputedStyle(hint, "marginBottom"));
-				
-				currHint = hint.previousSibling;
+					this.currentResults.IN_FIELD.push({
+						autosuggest : doc.autosuggest
+						,highlighted : highlightedtext
+						,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
+						,source : doc.unbxdAutosuggestSrc
+					});
 
-				minDisplayH = hintH + (currHint ? Math.max(hintMT, hintMB) : hintMT); // The min height to display one hint
-				
-				while (currHint) {
-				
-					offset += hintH; // Add the current hint' hintH
-					
-					currHint = currHint.previousSibling;
-					if (currHint) {
-						// There is one hint before the current hint so calculate based on the collapsed model
-						offset += Math.max(hintMT, hintMB);
-					} else {
-						// No more previous hint, this is the 1st hint so just take the marign top
-						offset += hintMT;
+					infieldsCount++;
+
+					for(var a in ins){
+						for(var b = 0; b < ins[a].length; b++)
+							this.currentResults.IN_FIELD.push({
+								autosuggest : doc.autosuggest
+								,highlighted : ins[a][b]
+								,type : doc.doctype
+								,filtername : a
+								,filtervalue : ins[a][b]
+								,_original : doc
+								,source : doc.unbxdAutosuggestSrc
+							})
 					}
-				}
-				
-				if (this.uiElem.clientHeight + this.uiElem.scrollTop - offset < minDisplayH
-					|| offset - this.uiElem.scrollTop < minDisplayH
-				) {
-				// Ther is no enough room displaying the current selected hint so adjust the scroll
-					this.uiElem.scrollTop = offset;
-				}
-			}
-		}
-		/*	Arg:
-				<ELM|NUM> candidate = could be
-				                      1) the hint elem or
-									  2) the index of the hint in the list. Passing in -1 would select the last hint. Passing in 0 would select the 1st hint.
-		*/
-		_AutoCompltList.prototype.select = function (candidate) {
+				}else if("KEYWORD_SUGGESTION" == doc.doctype  && this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length){
+					o = {
+						autosuggest : doc.autosuggest
+						,highlighted : this.highlightStr(doc.autosuggest)
+						,type : doc.doctype
+						,_original : doc
+						,source : doc.unbxdAutosuggestSrc || ""
+					};
+					this.currentResults.KEYWORD_SUGGESTION.push(o);
+				}else if("POPULAR_PRODUCTS" == doc.doctype && this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
+					o = {
+						autosuggest : doc.autosuggest
+						,highlighted : this.highlightStr(doc.autosuggest)
+						,type : doc.doctype
+						,pid : doc.uniqueId.replace("popularProduct_","")
+						,_original : doc
+					};
 
-			if (this.uiElem) {
-			
-				var hint = candidate;
-			
-				if (typeof candidate == "object" && this.isHint(candidate)) {
-				
-					hint = candidate;
-				
-				} else if (typeof candidate == "number" && (candidate >= 0 || candidate === -1)) {
-				
-					var hints = this.uiElem.querySelectorAll("." + _CONST.autoCompltHintClass);
-					
-					if (hints.length > 0) {
-						hint = +candidate;
-						hint = (hint === -1 || hint > hints.length - 1) ? hints.length - 1 : hint;
-						hint = hints[hint];
-					}					
-				}
+					if(this.options.popularProducts.price){
+						if(typeof this.options.popularProducts.priceFunctionOrKey == "function"){
+							o.price = this.options.popularProducts.priceFunctionOrKey(doc);
+						}else if(typeof this.options.popularProducts.priceFunctionOrKey == "string" && this.options.popularProducts.priceFunctionOrKey){
+							o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
+						}else{
+							o.price = "price" in doc ? doc["price"] : null;
+						}
 
-				if (   hint !== null 
-					&& hint.tagName !=='EM' 
-					&& hint.tagName !=='UL' 
-					&& this.isHint(hint) ) {
-					hint = getParent(hint);
-					this.deselect();	
-					hint.className = hint.className.trim();				
-					hint.className += " " + _CONST.autoCompltHintSelectedClass;
-					if( hint.tagName ==="LI" ){
-						hint.style.color = this.styles.autoCompltHintSelected.color;
-					    // hint.style.backgroundColor = this.styles.autoCompltHintSelected.backgroundColor;
+						if(this.options.popularProducts.currency)
+							o.currency = this.options.popularProducts.currency;
 					}
+
+					if(this.options.popularProducts.image){
+						if(typeof this.options.popularProducts.imageUrlOrFunction == "function"){
+							o.image = this.options.popularProducts.imageUrlOrFunction(doc);
+						}else if(typeof this.options.popularProducts.imageUrlOrFunction == "string" && this.options.popularProducts.imageUrlOrFunction){
+							o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+						}
+					}
+
+					this.currentResults.POPULAR_PRODUCTS.push(o);
+				}
+			}
+			//lenth of result list
+			outLength=this.currentResults.POPULAR_PRODUCTS.length+this.currentResults.IN_FIELD.length;
+		}
+		,escapeStr: function(str){return str.replace(/([\\{}()|.?*+\-\^$\[\]])/g,'\\$1');}
+		,highlightStr : function(str){
+			var output	=	str
+				,q = $.trim(this.params.q +'');
+
+			if(q.indexOf(' ')){
+				var arr = q.split(' ');
+				for(var k in arr){
+					if(!arr.hasOwnProperty(k))continue;
 					
+					var l	= output.toLowerCase().lastIndexOf("</strong>");
+					if(l != -1) l += 9;
+					output = output.substring(0,l) + output.substring(l).replace(new RegExp(this.escapeStr( arr[k] ), 'gi') , function($1){
+						return '<strong>'+$1+'<\/strong>';
+					});
 				}
+			}else{
+				var st = output.toLowerCase().indexOf( q );
+				output = st >= 0 ? output.substring(0,st) + '<strong>' + output.substring(st, st+q.length) + '</strong>' + output.substring(st+q.length) : output;
 			}
+
+			return output;
 		}
-		/*
-		*/
-		_AutoCompltList.prototype.deselect = function () {
-			if (this.uiElem) {
-				var slct = this.getSelected();
-				if (slct && slct.tagName !=='EM') {
-					slct.className = slct.className.replace(_CONST.autoCompltHintSelectedClass, "").replace(_CONST.autoCompltHintClass, "");
-					slct.className = slct.className + _CONST.autoCompltHintClass;
-					if( slct.tagName ==="LI" ){
-						slct.style.color = this.styles.autoCompltHint.color;
-						slct.style.backgroundColor = this.styles.autoCompltHint.backgroundColor;
-					}	
-				}
-			}
+		,prepareinFieldsHTML: function (){
+			return '{{#if data.IN_FIELD}}'
+				+ (this.options.inFields.header ? '<li class="unbxd-as-header">'+ this.options.inFields.header +'</li>' : '')
+				+'{{#each data.IN_FIELD}}'
+					+'{{#unbxdIf type "keyword"}}'
+					+'<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
+						+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+'</li>'
+					+'{{else}}'
+					+'<li class="unbxd-as-insuggestion" style="color:'+this.options.theme+'" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+						+'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+'</li>'
+					+'{{/unbxdIf}}'
+				+'{{/each}}'
+			+'{{/if}}';
 		}
-		/*	Return:
-				@ OK: <ELM> the selected hint element
-				@ NG: null
-		*/
-		_AutoCompltList.prototype.getSelected = function () {
-			var ret =  !this.uiElem ? null : this.uiElem.querySelector("." + _CONST.autoCompltHintSelectedClass) ||   null;
-			ret = getParent(ret);
-			return ret;
-		}
+<<<<<<< HEAD
 	}
 
 	var publicProps = {
@@ -797,417 +1090,172 @@ var unbxdAutocomplete = (function () {
 					    }else if( products[k].doctype ===  "KEYWORD_SUGGESTION" ){
 					    	suggestions.push( obj );
 					    }
-				}
-
-				if(inFields.length > _CONST.inFields.count){
-					inFields.length = _CONST.inFields.count;
-					
-				}
-					
-				if(prods.length > _CONST.popularProducts.count){
-					prods.length = _CONST.popularProducts.count;
-					
-				}
-
-				if(queries.length > _CONST.topQueries.numSuggestions){
-					queries.length = _CONST.topQueries.numSuggestions;
-					
-				}
-
-				if(suggestions.length > _CONST.keywordSuggestions.count){
-					suggestions.length = _CONST.keywordSuggestions.count;		
-				}
-				result.inFields = inFields;
-				result.prods = prods;
-				result.queries = queries;
-				result.suggestions = suggestions;
-				//console.log(  result );
-				this.openCallback(result);
-		 },
-
-		myJsonpAjax : function( input, openCallback ){
-			input = input.trim();
-			if(input.length < 1)
-				return;
-
-			this.openCallback = openCallback;
-			_CONST.inputText = input;
-			var script = document.createElement('script');
-			script.src = _CONST.apiUrl+"&q="+input;
-			document.body.appendChild(script);
-		},
-
-		setConfigValues:function(_CONST, config){
-
-			for(var k in _CONST ){
-
-				  if( Object.prototype.toString.call( _CONST[k] )  === '[object Array]' ){
-				  	 _CONST[k] = config[k];
-				  }if( typeof _CONST[k] === 'object'  &&   config[k] ){
-                      unbxdAutocomplete.setConfigValues( _CONST[k], config[k] );
-				  }else if(config[k] !== 'default' && (config[k] || config[k] === false || config[k] === 0 ) ){
-				  	 _CONST[k] = config[k];
-				  }
-			}
-
-		   return;
-		},
-
-		//form autosuggest api end point
-		formUrl:function(){
-			 if( _CONST.searchUrl ){
-				_CONST.apiUrl = _CONST.searchUrl + _CONST.jsonpCallback;
-				_CONST.apiUrl = _CONST.apiUrl 
-						+ '&inFields.count=' + _CONST.inFields.count
-							+ '&topQueries.count=' + _CONST.topQueries.count
-							+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
-							+ '&popularProducts.count=' + _CONST.popularProducts.count;
-							+ '&indent=off'
-			 }else{
-				 window.UnbxdSiteName = _CONST.UnbxdSiteKey;
-
-				//_CONST.apiUrl = "//"+_CONST.UnbxdSiteKey+".search.unbxdapi.com/"+ _CONST.UnbxdApiKey+"/autosuggest" + _CONST.jsonpCallback;
-				_CONST.apiUrl = "//search.unbxdapi.com/unbxdApiKey/unbxdSiteKey/autosuggest".replace('unbxdApiKey', _CONST.UnbxdApiKey ).replace('unbxdSiteKey', _CONST.UnbxdSiteKey ) + _CONST.jsonpCallback;
-
-				_CONST.apiUrl = _CONST.apiUrl  
-							+ '&inFields.count=' + _CONST.inFields.count
-							+ '&topQueries.count=' + _CONST.topQueries.count
-							+ '&keywordSuggestions.count=' + _CONST.keywordSuggestions.count
-							+ '&popularProducts.count=' + _CONST.popularProducts.count;
-							+ '&indent=off'
-			 }
-
-			 if(_CONST.filter && _CONST.filter.name && _CONST.filter.value)
-			 	_CONST.apiUrl = _CONST.apiUrl + '&filter=' + _CONST.filter.name +':'+ _CONST.filter.value; 
-
-		   	_CONST.originalapiUrl = _CONST.apiUrl;
-		},
-
-		setFilter:function( obj ){
-			    if( _CONST.apiUrl.indexOf('&'+obj['name']) ){
-			    	_CONST.apiUrl  = _CONST.originalapiUrl+'&'+obj['name']+'='+obj['value'];
-			    }else{
-			    	_CONST.apiUrl  = _CONST.apiUrl+'&'+obj['name']+'='+obj['value'];
-			    } 		 
-		},
-		//adds query param filter=name:value
-		addFilter:function( obj ){
-			    if( _CONST.apiUrl.indexOf('&filter='+obj['name']) ){
-			    	_CONST.apiUrl  = _CONST.originalapiUrl+'&filter='+obj['name']+':'+obj['value'];
-			    }else{
-			    	_CONST.apiUrl  = _CONST.apiUrl+'&filter='+obj['name']+':'+obj['value'];
-			    } 		 
-		},
-		//remove query param filter
-		removeFilter:function(){
-			_CONST.apiUrl  = _CONST.originalapiUrl;
-		},
-
-		enable : function (input, config) {
-			if (   input
-				&& typeof input == "object"
-				&& typeof input.tagName == "string"
-				&& input.tagName.toLowerCase() == "input"
-				&& input.type == "text"
-				&& input.nodeType === 1
-				&& !input.autoComplt
-			) {
-				
-				
-				input.autoComplt = {};
-			    //read config file
-			    config = config || {};
-			    unbxdAutocomplete.setConfigValues(_CONST, config);
-			    unbxdAutocomplete.formUrl(_CONST);
-				// for(var k in _CONST ){
-				//   if( config[k] || config[k] === false )
-				//     _CONST[k] = config[k];
-				// };
-
-				_CONST.popularProducts.image === false ? _CONST.unbxdShowProductImg = '_unbxd-hide' : _CONST.unbxdShowProductImg = ' ';
-				_CONST.popularProducts.title === false ? _CONST.unbxdShowProductName = '_unbxd-hide' : _CONST.unbxdShowProductName = ' ';
-				_CONST.popularProducts.price === false ? _CONST.unbxdShowProductPrice = '_unbxd-hide' : _CONST.unbxdShowProductPrice = ' ';
-
-				
-				var params = {					
-						hintsFetcher : function (v, openCallback) {
-				  			unbxdAutocomplete.myJsonpAjax(v, openCallback);
-						}
-				};
-
-				var input_autoComplt_delay = _CONST.autoCompltDelay,
-					input_autoComplt_enabled = true,
-					input_autoComplt_currentTarget = "",
-					input_autoComplt_hintsFetcher = null,
-					input_autoComplt_list = new _AutoCompltList(input),
-					/*
-					*/
-					input_autoComplt_startFetcher = function () {
-						if (this.value.length > 0
-							&& input_autoComplt_enabled
-							&& typeof input_autoComplt_hintsFetcher == "function"
-							&& input_autoComplt_currentTarget !== this.value // If equals, it means we've already been searching for the hints for the same value
-						) {
-							var fetcherCaller = {};
-							
-							fetcherCaller.call = function () {
-								input_autoComplt_hintsFetcher.call(
-									fetcherCaller.that,
-									fetcherCaller.compltTarget,
-									fetcherCaller.openHint
-								);
-							};
-							
-							fetcherCaller.that = input;
-							
-							// Record the autocomplete target for this fetching job
-							fetcherCaller.compltTarget = input_autoComplt_currentTarget = this.value;
-							//opencallback
-							fetcherCaller.openHint = function (hints) {
-								// If the user's input has changed during the fetching, this fetching job is useless.
-								// So only when the user's input doesn't change, we will proceed further.
-								if (fetcherCaller.compltTarget === input_autoComplt_currentTarget) {							
-									if (input_autoComplt_list.putHints(hints)) {
-										input_autoComplt_list.open();
-									} else {
-										fetcherCaller.that.autoComplt.close();
-									}
-								}
-							}
-							
-							setTimeout(fetcherCaller.call, input_autoComplt_delay);
-						}
-					},
-					/*
-					*/
-					input_autoComplt_compltInput= function () {
-						if (input_autoComplt_enabled) {
-							var hint = input_autoComplt_list.getSelected();
-							if (hint) {
-								this.value = hint.getAttribute("data-value");
-							} else {
-							// If no hint is selected, just use the original user input to autocomplete
-								this.value = input_autoComplt_currentTarget;
-							}
-
-							//window.unbxdSelected = {val:this.value, filterValue:hint ? hint.getAttribute("filter"):null, filterName:hint ? hint.getAttribute("key"):null,  isProduct:hint ? hint.getAttribute("isProduct"):null}
-							//input.autoComplt.alalyze(hint);
-						}
-					},
-					/*
-					*/
-					input_autoComplt_blurEvtHandle = function (e) {
-						if (input_autoComplt_list.mouseOnList) {
-						// If the mouse is on the autocomplete list, do not close the list
-						// and still need to focus on the input.
-							input.focus();
-							input_autoComplt_list.mouseOnList = false; // Assign false for the next detection
-						} else {
-							input.autoComplt.close();
-						}
-					},
-					/*
-					*/
-					input_autoComplt_keyEvtHandle = function (e) {
-						e = _normalizeEvt(e);
-						if (input_autoComplt_enabled) {
-							
-							if (e.type == "keydown"
-								&& input_autoComplt_list.isOpen()
-								&& (e.keyCode === _CONST.keyCode.up || e.keyCode === _CONST.keyCode.down)
-							) {
-							// At the case that the hint list is open ans user is walkin thru the hints.
-							// Let's try to autocomplete the input by the selected input.
-		
-								var hint = input_autoComplt_list.getSelected();
-								
-								if (e.keyCode === _CONST.keyCode.up) {
-								
-									if (!hint) {
-									// If none is selected, then select the last hint
-										input_autoComplt_list.select(-1);												
-									} else if (hint.previousSibling.className==='unbxd-header') {
-									// If some hint is selected and the next hint exists, then select the next hint
-										input_autoComplt_list.select(hint.previousSibling.previousSibling);
-									}else if (hint.previousSibling) {
-									// If some hint is selected and the previous hint exists, then select the previous hint
-										input_autoComplt_list.select(hint.previousSibling);
-									} else {
-									// If some hint is selected but the previous hint doesn't exists, then deselect all
-										input_autoComplt_list.deselect();
-									}
-									
-								} else if (e.keyCode === _CONST.keyCode.down) {
-									if (!hint) {
-									// If none is selected, then select the first hint
-										input_autoComplt_list.select(0);												
-									} else if (hint.nextSibling.className==='unbxd-header') {
-									// If some hint is selected and the next hint exists, then select the next hint
-										input_autoComplt_list.select(hint.nextSibling.nextSibling);	
-									}else if (hint.nextSibling) {
-									// If some hint is selected and the next hint exists, then select the next hint
-										input_autoComplt_list.select(hint.nextSibling);
-									}  else {
-									// If some hint is selected but the next hint doesn't exists, then deselect all
-										input_autoComplt_list.deselect();
-									}
-									
-								}
-								
-								input_autoComplt_list.autoScroll();
-								
-								input_autoComplt_compltInput.call(input);
-
-							}
-							else if (e.type == "keyup") {
-								
-								var startFetching = false;
-								var hint = input_autoComplt_list.getSelected();
-
-								switch (e.keyCode) {
-									case _CONST.keyCode.up: case _CONST.keyCode.down:
-										if (input_autoComplt_list.isOpen()) {
-											// We have handled this 2 key codes onkeydown, so must do nothing here
-										} else {
-											startFetching = true;
-										}
-									break;
-									
-									case _CONST.keyCode.esc:
-										if (input_autoComplt_list.isOpen()) {
-											// When pressing the ESC key, let's resume back to the original user input
-											input.value = input_autoComplt_currentTarget;
-											input.autoComplt.close();
-										}										
-									break;
-									
-									case _CONST.keyCode.enter:
-										if (input_autoComplt_list.isOpen()) {
-											// When pressing the enter key, let's try autocomplete
-											input_autoComplt_compltInput.call(input);
-											input.autoComplt.close();
-											input.autoComplt.alalyze( hint );
-										}
-									break;
-									
-									default:
-										startFetching = true;
-									break;
-								}
-								
-								if (startFetching) {
-									if (input.value.length > 0) {
-										input_autoComplt_startFetcher.call(input);
-									} else {
-										input.autoComplt.close();
-									}
-								}
-							}
-						}
-					};
-
-				input.autoComplt.setHintsFetcher = function (hintsFetcher) {
-					if (typeof hintsFetcher == "function") {
-						input_autoComplt_hintsFetcher = hintsFetcher;
-						return true;
-					}
-					return false;
-				}
-				
-				input.autoComplt.config = function (params) {
-					if (params instanceof Object) {
-						
-						
-						var buf,
-							pms = {};
-						
-						// Config the fetching delay timing
-						//
-						buf = Math.floor(+params.delay);
-						if (buf > 0) {
-							input_autoComplt_delay = pms.delay = buf;
-						}
-						
-						// Config the max number of displayed hints
-						//
-						buf = Math.floor(+params.maxHintNum);
-						if (buf > 0) {
-							input_autoComplt_list.maxHintNum = pms.maxHintNum = buf;
-						}
-						
-						return pms;
-					}
-					return false;
-				}
-				
-				//CLOSING AUTO COMPLETE PDN
-				input.autoComplt.close = function () {
-				    //return;
-					input_autoComplt_currentTarget = ""; // Closing means no need for autocomplete hint so no autocomplete target either
-					input_autoComplt_list.close();
-
-				}
-
-				//alalyze selected element and call registered callback, push analytics and navigate to product page
-				input.autoComplt.alalyze = function ( event ) {
-		
-					 var element = "", 
-					 	data = {};
-
-					 if(event && event.target)
-					 	element  = getParent( event.target );
-					 else
-					 	element = event;
-					 
-					 data = element.dataset;
-					 data = JSON.parse(JSON.stringify(data));
-					 pushAnalytics(element);
-		
-					 if(data.productUrl)
-					 	 document.location = data.productUrl;
-					 else
-					 	_CONST.callbackfunction(data.value, data.filtername, data.filtervalue, data );
-					
-					unbxdSelected = null;
-
-					if( _CONST.formSubmit )
-						input.form.submit();
-
-				}
-				
-				input.autoComplt.enable = function () {
-					input_autoComplt_enabled = true;
-				}
-				
-				input.autoComplt.disable = function () {
-					this.close();
-					input_autoComplt_enabled = false;
-				}
-				
-				input.autoComplt.destroy = function () {
-					_rmEvent(input, "blur", input_autoComplt_blurEvtHandle);
-					_rmEvent(input, "keyup", input_autoComplt_keyEvtHandle);
-					_rmEvent(input, "keydown", input_autoComplt_keyEvtHandle);
-					this.close();
-					delete input.autoComplt;
-				}
-				
-				_addEvt(input, "blur", input_autoComplt_blurEvtHandle);
-				_addEvt(input, "keyup", input_autoComplt_keyEvtHandle);
-				_addEvt(input, "keydown", input_autoComplt_keyEvtHandle);
-				
-				if (params instanceof Object) {
-					input.autoComplt.config(params);
-					input.autoComplt.setHintsFetcher(params.hintsFetcher);
-				}
-				
-				return input;
-			}
-			return null;
+=======
+		,preparekeywordSuggestionsHTML: function (){
+			return '{{#if data.KEYWORD_SUGGESTION}}'
+				+ (this.options.keywordSuggestions.header ? '<li class="unbxd-as-header">'+ this.options.keywordSuggestions.header +'</li>' : '')
+				+'{{#each data.KEYWORD_SUGGESTION}}'
+				+'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">'
+					+ (this.options.keywordSuggestions.tpl ? this.options.keywordSuggestions.tpl : this.default_options.keywordSuggestions.tpl)
+				+'</li>'
+				+'{{/each}}'
+			+'{{/if}}';
 		}
-		
-	};
+		,preparetopQueriesHTML: function (){
+			return '{{#if data.TOP_SEARCH_QUERIES}}'
+				+ (this.options.topQueries.header ? '<li class="unbxd-as-header">'+ this.options.topQueries.header +'</li>' : '')
+				+'{{#each data.TOP_SEARCH_QUERIES}}'
+				+'<li class="unbxd-as-keysuggestion" data-type="{{type}}" data-index="{{@index}}" data-value="{{autosuggest}}">'
+					+ (this.options.topQueries.tpl ? this.options.topQueries.tpl : this.default_options.topQueries.tpl)
+				+'</li>'
+				+'{{/each}}'
+			+'{{/if}}';
+		}
+		,preparepopularProductsHTML: function (){
+			return '{{#if data.POPULAR_PRODUCTS}}'
+				+ (this.options.popularProducts.header ? '<li class="unbxd-as-header">'+ this.options.popularProducts.header +'</li>' : '')
+				+'{{#data.POPULAR_PRODUCTS}}'
+				+'<li class="unbxd-as-popular-product" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
+					+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
+				+'{{/data.POPULAR_PRODUCTS}}'
+			+'{{/if}}';
+		}
+		,prepareHTML: function (){
+			var html = '<style> .unbxd-as-popular-product-cart-button{background-color:'+this.options.theme+';}</style><ul class="unbxd-as-maincontent">',
+				self = this ,
+				mainlen = 0 ,
+				sidelen = 0 ;
+				//$(".unbxd-as-insuggestion").css("color:",this.options.theme);
+			this.options.mainTpl.forEach(function(key){
+				if(key === "inFields"){
+					key = "IN_FIELD";
+>>>>>>> jquery-unbxdautosuggest
+				}
+				else if(key === "popularProducts"){
+					key = "POPULAR_PRODUCTS";
+				}
+				else if(key === "topQueries"){
+					key = "TOP_SEARCH_QUERIES";
+				}
+				else
+					key = "KEYWORD_SUGGESTION";
+				mainlen=mainlen+self.currentResults[key].length;
+			});
 
-	return publicProps;
-}());
-var unbxdAutosuggest  = unbxdAutocomplete; 
+			this.options.sideTpl.forEach(function(key){
+				if(key === "inFields"){
+					key = "IN_FIELD";
+				}
+				else if(key === "popularProducts"){
+					key = "POPULAR_PRODUCTS";
+				}
+				else if(key === "topQueries"){
+					key = "TOP_SEARCH_QUERIES";
+				}
+				else
+					key = "KEYWORD_SUGGESTION";
+				sidelen=sidelen+self.currentResults[key].length;
+			});
+				
+			if(isMobile.any()) this.options.template = '1column';
+
+			if(this.options.template === '2column' && !this.options.sideTpl.length && !this.options.mainTpl){
+				this.options.sideTpl = ['keywordSuggestions', 'topQueries'];
+				this.options.mainTpl = ['inFields', 'popularProducts'];
+			}
+
+			if(this.options.template === '2column') {
+
+				//main zero side not zero
+				if((mainlen == 0)&&(sidelen != 0)){
+					html = '<ul class="unbxd-as-maincontent">';
+					this.options.sideTpl.forEach(function(key){
+						key = 'prepare' + key + 'HTML';
+						html = html + self[key]();
+					});
+				//html = html + '</ul><ul class="unbxd-as-maincontent">';
+				}
+				else{
+					if(sidelen == 0){
+						html = html + '<ul class="unbxd-as-maincontent">';
+					}
+					else{
+						html = '<style> .unbxd-as-popular-product-cart-button{background-color:'+this.options.theme+';}</style><ul class="unbxd-as-sidecontent">';
+						this.options.sideTpl.forEach(function(key){
+						key = 'prepare' + key + 'HTML';
+						html = html + self[key]();
+						});
+						html = html + '</ul><ul class="unbxd-as-maincontent">';
+					}
+				}
+				 
+			}
+			this.options.mainTpl.forEach(function(key){
+				key = 'prepare' + key + 'HTML';
+				html = html + self[key]();
+			});
+			html = html + '</ul>';
+
+			var cmpld = Handlebars.compile( html );
+			this.log("prepraing html :-> template : " + this.options.template + " ,carts : " + this.options.showCarts + " ,cartType : " + this.options.cartType);
+			this.log("html data : ",this.currentResults);
+			return cmpld({
+				data : this.currentResults
+				,showCarts : this.options.showCarts
+				,cartType : this.options.cartType
+			});
+		}
+		,addToCache: function(q, processedData){
+			if(!(q in this.cache)) this.cache[q] = $.extend({},processedData);
+		}
+		,inCache: function(q){
+			return q in this.cache && this.cache.hasOwnProperty(q);
+		}
+		,getFromCache: function(q){
+			return this.cache[q];
+		}
+		,destroy: function(self){
+			self.$input.unbind('.auto');
+			self.input.lastSelected = null;
+			self.$input.removeAttr('autocomplete', 'off');
+			self.$results.remove();
+			self.$input.removeData('autocomplete');
+		}
+		,setOption : function(name,value){
+			var a = name.split(".")
+
+			if(a.length > 1){
+				var o = this.options;
+				for(var i = 0; i < a.length-1; i++){
+					if(!(a[i] in o))
+						o[a[i]] = {};
+
+					o = o[a[i]]
+				}
+
+				o[a[a.length-1]] = value;
+			}else
+				this.options[name] = value;
+
+			this.previous = "";
+			this.$results.html("");
+			this.cache = {};
+			this.cache.length = 0;
+		}
+		,log: function(){
+			//console.log("unbxd auto :",arguments);
+		}
+	});
+
+	$.fn.unbxdautocomplete = function(options) {
+		return this.each(function() {
+			var self = this;
+			
+			try{
+				this.auto = new autocomplete(self, options);
+			}catch(e){
+				//console.log('autocomplete error',e);
+			}
+		});
+	};
+};
