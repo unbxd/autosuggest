@@ -269,88 +269,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 						return;
 					}
-
-<<<<<<< HEAD
-		filter:false,
-		
-		listStatus : {
-			attr : "data-listStatus",
-			open : "open",
-		},
-		
-		keyCode : {
-			up : 38,
-			down : 40,
-			esc : 27,
-			enter : 13
-		},
-
-		types:{
-			infield:"inField",
-			topquery:"topQuery",
-			suggestion:"keywordSuggestion",
-			product:"popularProduct"
-		},
-	
-		defaultStyles : {
-			autoCompltList : {
-				maxHeight : "400px",
-				border : "1px solid rgb(170, 170, 170)",
-				padding : "0",
-				margin: "0",
-				overflowX : "hidden",
-				overflowY : "auto",
-				display : "none",
-				position: "absolute",
-				backgroundColor : "#FFF",
-				width:'',
-				top:'',
-				left:''
-			},
-			autoCompltHint : {
-				height : "22px",
-				padding: "0 2px 0 5px",
-				margin: "0",
-				overflow: "auto",
-				listStyleType: "none",
-				color : "#ffff",
-				fontSize : "14px",
-				backgroundColor:'white'
-			},
-			autoCompltHintSelected:{
-				color:'black',
-				backgroundColor:"green"
-			}
-		}
-};
-
-	var getParent = function( element ){
-			 	if(!element)
-			 		return;
-				if(element && element.tagName && element.tagName === "LI")
-					return element;
-				else
-					return getParent(element.parentElement)
-			}
-	//push analytics
-    var pushAnalytics = function( element ){
-                    try{
-                        var data = element.dataset,
-
-                            analyticObj = { 
-                                        autosuggest_type          : data.type,
-                                        autosuggest_suggestion    : data.value,
-                                        field_value 			  : data.filtervalue,
-                                        field_name  			  : data.filtername,
-                                        src_field     			  : data.source,
-                                        pid           			  : data.pid
-                                    };
-                        Unbxd.track( "search", {query : _CONST.inputText, autosuggestParams : analyticObj});
-                    }catch(e){
-                        console.warn("pushAnalytics failed", e);
-                    }
-                }
-=======
 					self.selectItem(p.data());
 				}else{
 					self.hasFocus = false;
@@ -361,9 +279,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,keyevents : function(){
 			var self = this;
->>>>>>> jquery-unbxdautosuggest
-
-			
 			return function(e){
 				self.lastKeyPressCode = e.keyCode;
 				self.lastKeyEvent = e;
@@ -459,54 +374,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,selectCurrent: function () {
 			var li = this.$results.find('li.'+this.selectedClass),self = this;
-		
-<<<<<<< HEAD
-		return v;
-	}
-	
-	var _ui = {
-		
-		buildElem : function (html) {
-			var div = document.createElement("DIV");
-			div.innerHTML = html;
-			return div.firstChild.cloneNode(true);
-		},
-		
-		buildHint : function (hint, styles, type) {
-			if ( hint) {
-				var value = hint.name.replace (/"/g,''),
-				    reg = new RegExp(_CONST.inputText, 'gi'),
-		
-				hint = this.buildElem('<li data-type="'+type+'" data-value="'+value+'" class="' + _CONST.autoCompltHintClass + '">' + hint.name + '</li>');
-				hint.innerHTML = hint.innerHTML.replace(reg, function(str) {
-				    	return '<em>'+str+'</em>'
-				    });
-
-                hint.style.height = hint.style.lineHeight = styles.autoCompltHint.height; // line-height shall always be equal to the height
-				hint.style.padding = styles.autoCompltHint.padding;
-				hint.style.margin = styles.autoCompltHint.margin;
-				hint.style.overflow = styles.autoCompltHint.overflow;
-				hint.style.listStyleType = styles.autoCompltHint.listStyleType;
-				hint.style.color = styles.autoCompltHint.color;
-				hint.style.backgroundColor = styles.autoCompltHint.backgroundColor;
-				hint.style.cursor = styles.autoCompltHint.cursor;
-				hint.style.fontSize = styles.autoCompltHint.fontSize;
-
-				return hint;
-			}
-			return null;
-		},
-
-		buildCategory : function(hint, styles, key, type, obj){
-			if (hint) {
-				var filter 	= hint,
-					key 	= key,
-                    src_field = obj.unbxdSrc || "",
-				    hint 	= this.buildElem('<li data-type="'+type+'" data-value="'+obj.name+'" data-filterValue="'+filter+'"  data-filterName="'+key+'" data-source="'+src_field+'"  class="' + _CONST.autoCompltHintClass + '">'
-				    			+'&nbsp;&nbsp;&nbsp;&nbsp;in&nbsp;' 
-				    			+'<span  class="' + _CONST.autoCompltHintClass + '">' + hint + '</span>'
-				    			+'</li>');
-=======
 			if (li.length) {
 				this.selectItem(li.data());
 				return true;
@@ -566,7 +433,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px', left: pos.left + "px"};
 			
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
->>>>>>> jquery-unbxdautosuggest
 			
 			if(this.scrollbarWidth == null){
 				this.setScrollWidth();
@@ -582,55 +448,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}
 			}
 
-<<<<<<< HEAD
-		buildProduct : function(hint, type){
-			if (hint) {
-				var value = hint.name,
-				    reg = new RegExp(_CONST.inputText, 'gi');
-		
-
-				hint.name = hint.name.replace(reg, function(str) {
-				    	return '<em>'+str+'</em>'
-				    });
-				
-				if( hint.productUrl ){
-					var hint = this.buildElem('<li isProduct="'+hint.productUrl+'" data-type="'+type+'" data-pid="'+hint.pid+'" data-productUrl="'+hint.productUrl+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
-					    +'<div class="_unbxd-hint unbxd-product-suggest" >'
-					         +'<div class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
-					         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
-					         +'</div>'
-					         +'<div class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
-					             +hint.name
-					         + '</div>'
-					          +'<div class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
-					             +hint.price
-					         + '</div>'
-					         +'<div class="_unbxd-autosuggest-clearfix"></div>'
-					    +'</div>'
-				    + '</li>');
-				}else{
-					var hint = this.buildElem('<li data-productUrl="'+hint.productUrl+'"  data-type="'+type+'" data-pid="'+hint.pid+'" data-type="'+type+'" data-value="'+value+'" data-price="'+hint.price+'" class="' + _CONST.autoCompltHintClass +" "+ _CONST.unbxdProductClass+'">'
-					    +'<div class="_unbxd-hint unbxd-product-suggest" >'
-					         +'<div class="' + _CONST.unbxdShowProductImg+' _unbxd-hint unbxd-product-img">'
-					         	+ '<img class="_unbxd-hint" value="'+value+'" src="'+hint.imgUrl+'">'
-					         +'</div>'
-					         +'<div class="' + _CONST.unbxdShowProductName+' _unbxd-hint unbxd-product-name" >'
-					             +hint.name
-					         + '</div>'
-					          +'<div class="' + _CONST.unbxdShowProductPrice+' _unbxd-hint unbxd-product-price" >'
-					             +hint.price
-					         + '</div>'
-					         +'<div class="_unbxd-autosuggest-clearfix"></div>'
-					    +'</div>'
-				    + '</li>');
-				}
-				
-				return hint;
-=======
-
 			if(typeof this.options.processResultsStyles == "function"){
 				fpos = this.options.processResultsStyles.call(this,fpos);
->>>>>>> jquery-unbxdautosuggest
 			}
 
 			this.$results.css(fpos).show();
@@ -738,106 +557,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				self.$results.hide();
 			});
 		}
-<<<<<<< HEAD
-		/*	Arg:
-				<ARR> hints = the array of hint texts
-			Return:
-				<NUM> the number of hints put
-		*/
-		_AutoCompltList.prototype.putHints = function ( result ) {
-			var count = 0;
-			if (result instanceof Object) {				
-				var i,
-					j,
-					k,
-					len,
-					hs = [],
-					hints = [],
-					hintObject = {},
-					product = {},
-                    isheaderset = false;
-				
-			  //build hints
-			  if(result && result.inFields && result.inFields.length > 0){
-			  	 hints = result.inFields
-			  	for(var k=0; k<hints.length;k++ ){
-			  		hintObject = hints[k];
-
-                    if(!isheaderset) {
-                            hs.push(_ui.buildHeader(' SEARCH SUGGESTIONS '));
-                            isheaderset = true;
-                    }
-
-			  		hs.push( _ui.buildHint(hintObject, this.styles, _CONST.types.infield ) );
-							if (!hs[hs.length - 1]) {
-								hs.pop();
-							}
-					
-	
-						for(var j= 0; j < _CONST.inFields.fields.length; j++){
-							var arr = [],
-								value = hintObject.name,
-								unbxdSrc = hintObject.unbxdSrc ? hintObject.unbxdSrc : "",
-								field = _CONST.inFields.fields[j],
-								propertyName = field.name+'_in';
-
-							if( hintObject[ propertyName ] && hintObject[ propertyName ].length > 0)
-								arr = hintObject[ propertyName ];
-
-								for (i = 0; i < arr.length; i++) {
-                                    hs.push( _ui.buildCategory( arr[i], this.styles, propertyName, "infield", hintObject ));
-									if (!hs[hs.length - 1]) {
-										hs.pop();
-									}
-								}
-						}
-
-			  	}
-			  }
-
-			  if(result.queries && result.queries.length > 0){
-			  	   	queries = result.queries
-				  	for(var k=0; k<queries.length;k++ ){
-				  		querie = queries[k];
-
-				  		hs.push( _ui.buildHint(querie, this.styles, _CONST.types.topquery ) );
-								if (!hs[hs.length - 1]) {
-									hs.pop();
-								}
-				  	}
-			  }
-
-			  if(result.suggestions && result.suggestions.length > 0){
-			  	   	suggestions = result.suggestions
-				  	for(var k=0; k<suggestions.length;k++ ){
-				  		suggestion = suggestions[k];
-
-				  		hs.push( _ui.buildHint(suggestion, this.styles, _CONST.types.suggestion) );
-								if (!hs[hs.length - 1]) {
-									hs.pop();
-								}
-				  	}
-			  }
-			  //build products with thunmbnails
-			  if(result.prods && result.prods.length > 0 && _CONST.productDetails === true){
-			  	  hs.push( _ui.buildHeader(' POPULAR PRODUCTS ') );
-			  	  prods = result.prods;
-			  	  for(var k=0; k < prods.length; k++){
-			  	  	product = prods[k];
-			  	  	hs.push( _ui.buildProduct(product, _CONST.types.product ) );
-							if (!hs[hs.length - 1]) {
-								hs.pop();
-							}
-			  	  }
-			  }
-
-			 
-				
-				if (hs.length > 0) {
-					var buf = document.createDocumentFragment();
-					for (i = 0, count = hs.length; i < count; i++) {
-						buf.appendChild(hs[i]);
-=======
 		,autosuggestUrl : function(){
 			var host_path = this.getHostNPath();
 
@@ -856,7 +575,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						if(this.params.filters[x].hasOwnProperty(y)){
 							a.push((x+':\"'+ encodeURIComponent(y.replace(/(^")|("$)/g, '')) +'\"').replace(/\"{2,}/g, '"'));
 						}
->>>>>>> jquery-unbxdautosuggest
 					}
 
 					url += '&filter='+a.join(' OR ');
@@ -1023,74 +741,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				+'{{/each}}'
 			+'{{/if}}';
 		}
-<<<<<<< HEAD
-	}
-
-	var publicProps = {
-		parseResponse :function(response) {
-				   if(_CONST.inputText !== response.searchMetaData.queryParams.q)
-				   	 return;
-
-				var products = response.response.products,
-					types = ["IN_FIELD", "POPULAR_PRODUCTS", "TOP_SEARCH_QUERIES", "KEYWORD_SUGGESTION"],
-					//categories = ['category_in', 'brand_in'],
-					result = {}, 
-					hints = [],
-					inFields=[], 
-					prods = [], 
-					queries = [], 
-					suggestions=[];
-
-			
-				for(var k=0; k<products.length; k++){
-		            var obj = {};
-					    obj = { "name":products[k].autosuggest };
-
-						if(products[k].doctype === 'IN_FIELD'  ){
-
-							var product = products[k],
-								fields = _CONST.inFields.fields;
-
-								if(product.unbxdAutosuggestSrc)
-									obj.unbxdSrc = product.unbxdAutosuggestSrc;
-
-							for(var j=0; j<fields.length; j++){
-
-								var propertyName = fields[j].name + '_in',
-									field = fields[j];
-
-
-								if(product[propertyName] && product[propertyName].length > 0 && product.unbxdAutosuggestSrc !== field.name ){
-									obj[propertyName] = product[propertyName];
-						    		if(obj[propertyName] && obj[propertyName].length > field.count)
-										obj[propertyName].length = field.count;
-								}
-
-							}
-							
-
-							inFields.push(obj);
-						}else if(products[k].doctype ===  "POPULAR_PRODUCTS" ){
-							var imageUrl 	= _CONST.popularProducts.imageUrl;  
-							obj.imgUrl 		= 	products[k][ imageUrl ] ? products[k][ imageUrl ] : products[k].image_url;
-                            obj.pid         =  products[k].uniqueId ? products[k].uniqueId : null;
-
-							if(_CONST.popularProducts.priceFunction){
-								 obj.price  = _CONST.popularProducts.priceFunction(products[k]);
-							}else{
-								obj.price 	= 	products[k].price ? products[k].price.toFixed(2) : "";
-							}
-							obj.uniqueId 	=  	products[k].uniqueId;
-							obj.isProduct 	= 	true;
-							obj.productUrl	=   products[k][_CONST.popularProducts.productUrl];
-							obj.price ? obj.price = _CONST.popularProducts.currency+obj.price:false ;
-							prods.push(obj);
-					    }else if( products[k].doctype ===  "TOP_SEARCH_QUERIES" ){
-					    	queries.push( obj );
-					    }else if( products[k].doctype ===  "KEYWORD_SUGGESTION" ){
-					    	suggestions.push( obj );
-					    }
-=======
 		,preparekeywordSuggestionsHTML: function (){
 			return '{{#if data.KEYWORD_SUGGESTION}}'
 				+ (this.options.keywordSuggestions.header ? '<li class="unbxd-as-header">'+ this.options.keywordSuggestions.header +'</li>' : '')
@@ -1129,7 +779,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.options.mainTpl.forEach(function(key){
 				if(key === "inFields"){
 					key = "IN_FIELD";
->>>>>>> jquery-unbxdautosuggest
 				}
 				else if(key === "popularProducts"){
 					key = "POPULAR_PRODUCTS";
