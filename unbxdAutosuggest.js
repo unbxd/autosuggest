@@ -202,7 +202,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.$results = $('<div/>', {'class' :this.options.resultsClass})
 				.css('position', this.options.position)
 				.hide();
-			
+			$(".unbxd-as-popular-product-cart-button").css("background-color",this.options.theme);
 			if(this.options.zIndex > 0)
 				this.$results.css('zIndex',this.options.zIndex);
 

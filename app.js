@@ -1,14 +1,8 @@
 var ractive = new Ractive({
 	el: 'container',
 	template: '#template',
-	data: { 
-      	keycount: 2,
-      	topcount: 2,
-     	incount: 2,
-      	prodcount: 2,
-      	siteName : 'demosite-u1407617955968',
-      	widthSide: 180,
-      	APIKey : '64a4a2592a648ac8415e13c561e44991',
+	data: {
+		
       	themes: [
             { id: '#ff8400', name: 'Orange' },
             { id: '#19af91', name: 'Green' },
@@ -51,11 +45,6 @@ var ractive = new Ractive({
 			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
-			,mainTpl: []
-			,sideTpl: []
-			,mainWidth: 0
-			,sideWidth: 180
-			,theme: "#ff8400"
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
@@ -95,147 +84,190 @@ var ractive = new Ractive({
 
 		/*counts start*/
 		ractive.observe( 'keycount', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("keywordSuggestions.count", isNaN(newValue)?0:newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("keywordSuggestions.count", isNaN(newValue)?0:parseInt(newValue));
+			}
 		});
 		ractive.observe( 'topcount', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("topQueries.count", isNaN(newValue)?0:newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("topQueries.count", isNaN(newValue)?0:parseInt(newValue));
+			}
 		});
 		ractive.observe( 'incount', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("inFields.count", isNaN(newValue)?0:newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("inFields.count", isNaN(newValue)?0:parseInt(newValue));
+			}
 		});
 		ractive.observe( 'prodcount', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("popularProducts.count", isNaN(newValue)?0:newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("popularProducts.count", isNaN(newValue)?0:parseInt(newValue));
+			}
 		});
 		/*counts end*/
 
 		
 		/*header starts*/
 		ractive.observe( 'keyheader', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("keywordSuggestions.header", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("keywordSuggestions.header", newValue);
+			}
 		});
 		ractive.observe( 'topheader', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("topQueries.header", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("topQueries.header", newValue);
+			}
 		});
 		ractive.observe( 'inheader', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("inFields.header", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("inFields.header", newValue);
+			}
 		});
 		ractive.observe( 'prodheader', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("popularProducts.header", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("popularProducts.header", newValue);
+			}
 		});
 		/*header ends*/
 
 		ractive.observe( 'widthMain', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("mainWidth", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("mainWidth", isNaN(newValue)?0:parseInt(newValue));
+			}
 		});
 		ractive.observe( 'widthSide', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("sideWidth", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("sideWidth", isNaN(newValue)?0:parseInt(newValue));
+			}
 		});
 		ractive.observe( 'siteName', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("siteName", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("siteName", newValue);
+			}
 		});
 		ractive.observe( 'APIKey', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("APIKey", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("APIKey", newValue);
+			}
 		});
 		ractive.observe( 'on', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("showCarts",newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("showCarts",newValue);
+			}
 		});
 		ractive.observe( 'cartType', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("cartType", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("cartType", newValue);
+			}
 		});
 		ractive.observe( 'sideContent', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("sideContentOn", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("sideContentOn", newValue);
+			}
 		});
 		ractive.observe( 'template', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("template", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("template", newValue);
+			}
 		});
 		ractive.observe( 'selectedTheme', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("theme", newValue);
+			if(newValue||oldValue){
+				auto[0].auto.setOption("theme", newValue);
+			}
 		});
 		ractive.observe( 'selectedconfig', function ( newValue, oldValue, keypath ) {
-			if(newValue === "0"){
-				$("#MainTpl, #SideTpl, .content").prop("disabled",false);
-				$('#MainTpl,#SideTpl').trigger('chosen:updated');
-				ractive.set('selectedmain', []);
-				ractive.set('selectedside', []);
-				values=[];
-				$("#MainTpl option").each(function(){
-    				$(this).attr('disabled',false);
-    				$('#MainTpl').trigger('chosen:updated');
-				});
-				$('#SideTpl :selected').each(function(i, selectedElement) {
- 					values[i] = $(selectedElement).val();
- 					$("#MainTpl option[value='"+ values[i] + "']").attr('disabled', true );
- 					$('#MainTpl').trigger('chosen:updated');
-				});
-				$("#SideTpl option").each(function(){
-    				$(this).attr('disabled',false);
-    				$('#SideTpl').trigger('chosen:updated');
-				});
-				$('#MainTpl :selected').each(function(i, selectedElement) {
- 					values[i] = $(selectedElement).val();
- 					$("#SideTpl option[value='"+ values[i] + "']").attr('disabled', true ); 
- 					$('#SideTpl').trigger('chosen:updated');
-				});
-			}
-			else{
-				$("#MainTpl, #SideTpl, .content").prop("disabled",true);
-				$('#MainTpl, #SideTpl').trigger('chosen:updated');
-				if(newValue === "1"){
-					ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
-					ractive.set('selectedside', []);
-					ractive.set('on',true);
+			if(oldValue){
+					if(newValue === "0"){
+					$("#MainTpl, #SideTpl, .content").prop("disabled",false);
 					$('#MainTpl,#SideTpl').trigger('chosen:updated');
-				}
-				else if(newValue === "2"){
-					ractive.set('selectedmain', ['inFields','popularProducts']);
-					ractive.set('selectedside', ['topQueries','keywordSuggestions']);
-					ractive.set('template','2column');
-					ractive.set('sideContent', 'right');
-					ractive.set('on',true);
-				}
-				else if(newValue === "3"){
-					ractive.set('selectedmain', ['inFields','popularProducts']);
-					ractive.set('selectedside', ['topQueries','keywordSuggestions']);
-					ractive.set('template','2column');
-					ractive.set('sideContent', 'left');
-					ractive.set('on',true);
-				}
-				else if(newValue === "4"){
-					ractive.set('selectedmain', ['popularProducts']);
+					ractive.set('selectedmain', []);
 					ractive.set('selectedside', []);
-					ractive.set('on',true);
+					values=[];
+					$("#MainTpl option").each(function(){
+    					$(this).attr('disabled',false);
+    					$('#MainTpl').trigger('chosen:updated');
+					});
+					$('#SideTpl :selected').each(function(i, selectedElement) {
+ 						values[i] = $(selectedElement).val();
+ 						$("#MainTpl option[value='"+ values[i] + "']").attr('disabled', true );
+ 						$('#MainTpl').trigger('chosen:updated');
+					});
+					$("#SideTpl option").each(function(){
+    					$(this).attr('disabled',false);
+    					$('#SideTpl').trigger('chosen:updated');
+					});
+					$('#MainTpl :selected').each(function(i, selectedElement) {
+ 						values[i] = $(selectedElement).val();
+ 						$("#SideTpl option[value='"+ values[i] + "']").attr('disabled', true ); 
+ 						$('#SideTpl').trigger('chosen:updated');
+					});
+				}
+				else{
+					$("#MainTpl, #SideTpl, .content").prop("disabled",true);
+					$('#MainTpl, #SideTpl').trigger('chosen:updated');
+					if(newValue === "1"){
+						ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
+						ractive.set('selectedside', []);
+						ractive.set('on',true);
+						$('#MainTpl,#SideTpl').trigger('chosen:updated');
+					}
+					else if(newValue === "2"){
+						ractive.set('selectedmain', ['inFields','popularProducts']);
+						ractive.set('selectedside', ['topQueries','keywordSuggestions']);
+						ractive.set('template','2column');
+						ractive.set('sideContent', 'right');
+						ractive.set('on',true);
+					}
+					else if(newValue === "3"){
+						ractive.set('selectedmain', ['inFields','popularProducts']);
+						ractive.set('selectedside', ['topQueries','keywordSuggestions']);
+						ractive.set('template','2column');
+						ractive.set('sideContent', 'left');
+						ractive.set('on',true);
+					}
+					else if(newValue === "4"){
+						ractive.set('selectedmain', ['popularProducts']);
+						ractive.set('selectedside', []);
+						ractive.set('on',true);
+					}
 				}
 			}
 
 		});
 		var values=[];
 		ractive.observe( 'selectedmain', function ( newValue, oldValue, keypath ) {
-			values=[];
-			auto[0].auto.setOption("mainTpl", newValue);
-			$("#SideTpl option").each(function(){
-    			$(this).attr('disabled',false);
-    			$('#SideTpl').trigger('chosen:updated');
+			if(oldValue){
+				auto[0].auto.setOption("mainTpl", newValue);
+				values=[];
+				$("#SideTpl option").each(function(){
+    				$(this).attr('disabled',false);
+    				$('#SideTpl').trigger('liszt:updated');
 
-			});
-			$('#MainTpl :selected').each(function(i, selectedElement) {
- 				values[i] = $(selectedElement).val();
- 				$("#SideTpl option[value='"+ values[i] + "']").attr('disabled', true ); 
- 				$('#SideTpl').trigger('chosen:updated');
-			});
+				});
+				$('#MainTpl :selected').each(function(i, selectedElement) {
+ 					values[i] = $(selectedElement).val();
+ 					$("#SideTpl option[value='"+ values[i] + "']").attr('disabled', true ); 
+ 					$('#SideTpl').trigger('liszt:updated');
+				});
+		
+			}
 		});
 
 		ractive.observe( 'selectedside', function ( newValue, oldValue, keypath ) {
-			auto[0].auto.setOption("sideTpl", newValue);
-			values=[];
-			$("#MainTpl option").each(function(){
-    			$(this).attr('disabled',false);
-    			$('#MainTpl').trigger('chosen:updated');
-			});
-			$('#SideTpl :selected').each(function(i, selectedElement) {
- 				values[i] = $(selectedElement).val();
- 				$("#MainTpl option[value='"+ values[i] + "']").attr('disabled', true );
- 				$('#MainTpl').trigger('chosen:updated');
-			});
+			if(oldValue){
+				auto[0].auto.setOption("sideTpl", newValue);
+				values=[];
+				$("#MainTpl option").each(function(){
+    				$(this).attr('disabled',false);
+    				$('#MainTpl').trigger('liszt:updated');
+				});
+				$('#SideTpl :selected').each(function(i, selectedElement) {
+ 					values[i] = $(selectedElement).val();
+ 					$("#MainTpl option[value='"+ values[i] + "']").attr('disabled', true);
+ 					$('#MainTpl').trigger('liszt:updated');
+				});
+				
+ 				
+			}
 		});
 	
 		$('button#copy-description').zclip({
