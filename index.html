@@ -58,61 +58,8 @@
 	<div id="container"></div>
 	<script id='template' type='text/ractive'>
 	<div id="inputField">
-		
-
 		<div class="clearfix" >
 			<div >
-				
-				<div style="padding:5px 20px;">
-					
-					max no of keywords<br>
-					<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
-				</div>
-
-				<div style="padding:5px 20px;">
-					
-					keywords Header<br>
-					<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
-				</div>
-				<div style="padding:5px 20px;">
-					max no of topqueries<br>
-					<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
-				</div>
-				<div style="padding:5px 20px;">
-					
-					topqueries Header<br>
-					<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
-				</div>
-			</div>
-			<div >
-				<div style="padding:5px 20px;">
-					max no of in-fields<br>
-					<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
-				</div>
-				<div style="padding:5px 20px;">
-					
-					in-fields Header<br>
-					<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
-				</div>
-				<div style="padding:5px 20px;">
-					max no of products<br>
-					<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
-				</div>
-				<div style="padding:5px 20px;">
-					
-					products Header<br>
-					<input class="form-control" type="text" name="headerProducts" value={{prodheader}}>
-				</div>
-				<div style="padding:5px 20px;">
-					
-					Main Width<br>
-					<input class="form-control" type="text" name="widthMain" style="width:60px" value={{widthMain}}>
-				</div>
-				<div style="padding:5px 20px;">
-					
-					Side Width<br>
-					<input class="form-control" type="text" name="widthSide" style="width:60px" value={{widthSide}} >
-				</div>
 				<div style="padding:5px 20px;">
 					
 					Site Name<br>
@@ -123,10 +70,68 @@
 					API Key<br>
 					<input class="form-control" type="text" name="APIKey" value={{APIKey}} >
 				</div>
+				<div style="padding:5px 20px;">
+					max no of Keywords<br>
+					<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
+				</div>
+				<div style="padding:5px 20px;">
+					max no of Topqueries<br>
+					<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
+				</div>
+				<div style="padding:5px 20px;">
+					max no of In-fields<br>
+					<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
+				</div>
+				<div style="padding:5px 20px;">
+					max no of Popular-Products<br>
+					<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
+				</div>
+
+				<div style="padding:5px 20px;">
+					Keywords Header<br>
+					<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
+				</div>
+				<div style="padding:5px 20px;">
+					Topqueries Header<br>
+					<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
+				</div>
+				<div style="padding:5px 20px;">
+					In-fields Header<br>
+					<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
+				</div>
+				<div style="padding:5px 20px;">
+					Popular-Products Header<br>
+					<input class="form-control" type="text" name="headerProducts" value={{prodheader}}>
+				</div>
+
+				<div style="padding:5px 20px;">
+					Main Width<br>
+					<input class="form-control" type="text" name="widthMain" style="width:60px" value={{widthMain}}>
+				</div>
+				<div style="padding:5px 20px;">
+					Side Width<br>
+					<input class="form-control" type="text" name="widthSide" style="width:60px" value={{widthSide}} >
+				</div>
+
+				<div style="padding:5px 20px;">
+					<input class="content" type="radio" name={{template}} value="1column"> 1-Column &nbsp;
+					<input class="content" type="radio" name={{template}} value="2column"> 2-Column 
+				</div>
+				<div style="padding:5px 20px;">
+					<input class="content" type="radio" name={{sideContent}} value="left"> Left &nbsp;
+					<input class="content" type="radio" name={{sideContent}} value="right"> Right
+				</div>
+				<div style="padding:5px 20px;">
+					<input class="content" type="checkbox" checked='{{on}}'> Show Add-to-carts
+				</div>
+				<div style="padding:5px 20px;">
+					<input class="content" type="radio" name={{cartType}} value="inline" > Inline &nbsp;
+					<input class="content" type="radio" name={{cartType}} value="separate"> Separate
+				</div>
 			</div>
 		
 				
-			<div style="padding:5px 20px;">MainTpl
+			<div style="padding:5px 20px;">Main template
 				<select decorator='chosen' id="MainTpl" value='{{selectedmain}}' multiple style="width:200px;">
     				{{#mainfields}}
         				<option value='{{id}}'>{{name}}</option>
@@ -134,42 +139,29 @@
 				</select>
 			</div>
 
-			<div style="padding:5px 20px;">SideTpl
+			<div style="padding:5px 20px;">Side template
 				<select decorator='chosen' id="SideTpl" value='{{selectedside}}' multiple style="width:200px;">
     				{{#sidefields}}
         				<option value='{{id}}'>{{name}}</option>
     				{{/sidefields}}
 				</select>	
 			</div>
-		<div style="padding:5px 20px;">Theme
-			<select class="form-control" value='{{selectedTheme}}'>
-    			<option selected disabled>Select a Theme</option>
-    			{{#themes}}
-        			<option value='{{id}}'>{{name}}</option>
-    			{{/themes}}
-			</select>
-  		</div>
-  		<div style="padding:5px 20px;">Config
-  			<select class="form-control" value='{{selectedconfig}}'>
-    			{{#config}}
-        			<option value='{{id}}'>{{name}}</option>
-    			{{/config}}
-			</select>
-  		</div>
-			<div style="padding:5px 20px;">
-				<input class="content" type="radio" name={{template}} value="1column"> 1column &nbsp;
-				<input class="content" type="radio" name={{template}} value="2column"> 2column 
-			</div>
-			<div style="padding:5px 20px;">
-				<input class="content" type="radio" name={{sideContent}} value="left"> left &nbsp;
-				<input class="content" type="radio" name={{sideContent}} value="right"> right
-			</div>
-			<div style="padding:5px 20px;">
-				<input class="content" type="checkbox" checked='{{on}}'> Show add-to-carts
-				<br>
-				<input class="content" type="radio" name={{cartType}} value="inline" > inline &nbsp;
-				<input class="content" type="radio" name={{cartType}} value="separate"> separate
-			</div>
+			<div style="padding:5px 20px;">Theme
+				<select class="form-control" value='{{selectedTheme}}'>
+    				<option selected disabled>Select a Theme</option>
+    				{{#themes}}
+        				<option value='{{id}}'>{{name}}</option>
+    				{{/themes}}
+				</select>
+  			</div>
+  			<div style="padding:5px 20px;">Config
+  				<select class="form-control" value='{{selectedconfig}}'>
+    				{{#config}}
+        				<option value='{{id}}'>{{name}}</option>
+    				{{/config}}
+				</select>
+  			</div>
+			
 			
 		</div>
 	</div>
@@ -177,6 +169,7 @@
 	<div>
 		<input id="input"  class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
 		<div class="clip">
+			<label>Usage</label>
 			<pre><code id="description" rows="6" cols="50">{{content}}</code></pre>
 			<button id="copy-description">copy to clipboard</button>
 		</div>
@@ -189,7 +182,7 @@
 	<script type="text/javascript" src="bower_components/handlebars/handlebars.min.js"></script>
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="unbxdAutosuggest.js"></script>
-	<!--<script src="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.js"></script> -->
+	<!--<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script> -->
 	<script type="text/javascript" src="bower_components/chosen/chosen.jquery.min.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
  	<script type="text/javascript" src="bower_components/jquery-zclip/jquery.zclip.js"></script>
@@ -200,7 +193,7 @@
 	<script type="text/javascript">
 		var UnbxdSiteName = "demosite-u1407617955968",UnbxdAPIKey = "64a4a2592a648ac8415e13c561e44991";
 		var s=document.createElement("script");
-		s.src="//unbxd.s3.amazonaws.com/unbxdAnalytics.js";
+		s.src="//d21gpk1vhmjuf5.cloudfront.net/unbxdAnalytics.js";
 		s.type="text/javascript";
 		s.async=true;
 		document.getElementsByTagName('head').item(0).appendChild(s);
