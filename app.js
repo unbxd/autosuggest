@@ -287,7 +287,8 @@ var ractive = new Ractive({
 			jscode = jscode.replace(/\\n/g,"\n");
 			jscode = jscode.replace(/\\t/g,"\t");
 			jscode = jscode.replace(/\\"/g,"\"");
-			jscode = 'var config = '+jscode+';\n$("#input").unbxdautocomplete(config);';
+			jscode = jscode.replace(/\n/g,"\n\t");
+			jscode = '<link rel="stylesheet" href="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.css">\n<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>\n<script src="//code.jquery.com/jquery-1.10.2.js"></script>\n<script src="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.js"></script>\n<script type = "text/javascript">\n\tunbxdAutoSuggestFunction(jQuery, Handlebars);\n\tvar config = '+jscode+';\n\t$(function(){\n\t\t$("#input").unbxdautocomplete(config);\n\t});\n</script>';
 			ractive.set('content',jscode);
 
 			$('button#copy-description').zclip({
