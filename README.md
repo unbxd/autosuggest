@@ -19,7 +19,7 @@ Default css can be applied by including unbxdAutosuggest.css in your html.
 <link rel="stylesheet" href="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.css">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.js"></script> 
+<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script> 
 ```
 ###### PS - please include these script tags before the ending `</head>` tag in your html page.
 
