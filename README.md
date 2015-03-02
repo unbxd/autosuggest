@@ -16,7 +16,7 @@ Default css can be applied by including unbxdAutosuggest.css in your html.
 
 #####Include **unbxdAutosuggest.js** and **unbxdAutosuggest.css** after downloading this repo by including this in head of your html page
 ```javascript
-<link rel="stylesheet" href="//unbxd.s3.amazonaws.com/jquery-unbxdautosuggest.css">
+<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script> 
