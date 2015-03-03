@@ -31,6 +31,7 @@ var ractive = new Ractive({
          }
     });
 
+
 	Ractive.decorators.chosen.type.demo = {
     	width: '25%',
 	};
