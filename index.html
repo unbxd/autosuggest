@@ -3,13 +3,23 @@
 <head>
 	<link rel="stylesheet" href="unbxdAutosuggest.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/chosen/chosen.min.css">
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
+	<link href="bower_components/charisma-master/css/uploadify.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/animate.min.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/charisma-app.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/elfinder.min.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/elfinder.theme.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/jquery-ui-1.8.21.custom.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/jquery.iphone.toggle.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/jquery.noty.css" rel="stylesheet">
+	<link href="bower_components/charisma-master/css/noty_theme_default.css" rel="stylesheet">
+	<link href="bootstrap-journal.css" rel="stylesheet">
+	<link href="bower_components/bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="bower_components/bootstrap/docs/assets/css/bootstrap.css">
 	<style type="text/css">
 		*{
 			font-family: proxima-nova,Arial, sans-serif;
 		}
-.rt{
+/*.rt{
 	float:right;
 }
 
@@ -42,7 +52,7 @@
 	height: 0px;
 	visibilty: hidden;
 
-}
+}*/
 .form-control{
 	width: auto;
 }
@@ -55,136 +65,186 @@
 	</style>
 </head>
 <body>
+	<div class="navbar">
+    	<div class="navbar-inner">
+        	<div class="container-fluid">
+            	<a class="brand" href="/"> <img alt="Unbxd Logo" src="http://unbxd.com/signature/signature.png" /></a>
+        	</div>
+   		</div>
+	</div>
+
 	<div id="container"></div>
+	<!-- start -->
 	<script id='template' type='text/ractive'>
-	<div id="inputField">
-		<div class="clearfix" >
-			<div >
-				<div style="padding:5px 20px;">
-					
-					Site Name<br>
-					<input class="form-control" type="text" name="siteName" value={{siteName}} >
-				</div>
-				<div style="padding:5px 20px;">
-					
-					API Key<br>
-					<input class="form-control" type="text" name="APIKey" value={{APIKey}} >
-				</div>
-				<div style="padding:5px 20px;">
-					max no of Keywords<br>
-					<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
-				</div>
-				<div style="padding:5px 20px;">
-					max no of Topqueries<br>
-					<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
-				</div>
-				<div style="padding:5px 20px;">
-					max no of In-fields<br>
-					<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
-				</div>
-				<div style="padding:5px 20px;">
-					max no of Popular-Products<br>
-					<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
-				</div>
 
-				<div style="padding:5px 20px;">
-					Keywords Header<br>
-					<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
-				</div>
-				<div style="padding:5px 20px;">
-					Topqueries Header<br>
-					<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
-				</div>
-				<div style="padding:5px 20px;">
-					In-fields Header<br>
-					<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
-				</div>
-				<div style="padding:5px 20px;">
-					Popular-Products Header<br>
-					<input class="form-control" type="text" name="headerProducts" value={{prodheader}}>
-				</div>
+		<div class="container-fluid">
+    		<div class="row-fluid">
 
-				<div style="padding:5px 20px;">
-					Main Width<br>
-					<input class="form-control" type="text" name="widthMain" style="width:60px" value={{widthMain}}>
-				</div>
-				<div style="padding:5px 20px;">
-					Side Width<br>
-					<input class="form-control" type="text" name="widthSide" style="width:60px" value={{widthSide}} >
-				</div>
+    		<!-- left menu starts -->
+        	<div class="span3 main-menu-span">
+            	<div class="well nav-collapse sidebar-nav">
+                
+            		<div id="inputField">
+            			<div class="clearfix" >
+            				<div >
+            					<div style="padding:5px 20px;">
 
-				<div style="padding:5px 20px;">
-					<input class="content" type="radio" name={{template}} value="1column"> 1-Column &nbsp;
-					<input class="content" type="radio" name={{template}} value="2column"> 2-Column 
+            						Site Name<br>
+            						<input class="form-control" type="text" name="siteName" value={{siteName}} >
+            					</div>
+            					<div style="padding:5px 20px;">
+
+            						API Key<br>
+            						<input class="form-control" type="text" name="APIKey" value={{APIKey}} >
+            					</div>
+            					<div style="padding:5px 20px;">
+            						max no of Keywords<br>
+            						<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
+            					</div>
+            					<div style="padding:5px 20px;">
+            						max no of Topqueries<br>
+            						<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
+            					</div>
+            					<div style="padding:5px 20px;">
+            						max no of In-fields<br>
+            						<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
+            					</div>
+            					<div style="padding:5px 20px;">
+            						max no of Popular-Products<br>
+            						<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
+            					</div>
+
+            					<div style="padding:5px 20px;">
+            						Keywords Header<br>
+            						<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
+            					</div>
+            					<div style="padding:5px 20px;">
+            						Topqueries Header<br>
+            						<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
+            					</div>
+            					<div style="padding:5px 20px;">
+            						In-fields Header<br>
+            						<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
+            					</div>
+            					<div style="padding:5px 20px;">
+            						Popular-Products Header<br>
+            						<input class="form-control" type="text" name="headerProducts" value={{prodheader}}>
+            					</div>
+
+            					<div style="padding:5px 20px;">
+            						Main Width<br>
+            						<input class="form-control" type="text" name="widthMain" style="width:60px" value={{widthMain}}>
+            					</div>
+            					<div style="padding:5px 20px;">
+            						Side Width<br>
+            						<input class="form-control" type="text" name="widthSide" style="width:60px" value={{widthSide}} >
+            					</div>
+
+            					<div style="padding:5px 20px;">
+            						<input class="content" type="radio" name={{template}} value="1column"> 1-Column &nbsp;
+            						<input class="content" type="radio" name={{template}} value="2column"> 2-Column 
+            					</div>
+            					<div style="padding:5px 20px;">
+            						<input class="content" type="radio" name={{sideContent}} value="left"> Left &nbsp;
+            						<input class="content" type="radio" name={{sideContent}} value="right"> Right
+            					</div>
+            					<div style="padding:5px 20px;">
+            						<input class="content" type="checkbox" checked='{{on}}'> Show Add-to-carts
+            					</div>
+            					<div style="padding:5px 20px;">
+            						<input class="content" type="radio" name={{cartType}} value="inline" > Inline &nbsp;
+            						<input class="content" type="radio" name={{cartType}} value="separate"> Separate
+            					</div>
+            				</div>
+
+
+            				<div style="padding:5px 20px;">Main template
+            					<select decorator='chosen' id="MainTpl" value='{{selectedmain}}' multiple style="width:200px;">
+            						{{#mainfields}}
+            						<option value='{{id}}'>{{name}}</option>
+            						{{/mainfields}}
+            					</select>
+            				</div>
+
+            				<div style="padding:5px 20px;">Side template
+            					<select decorator='chosen' id="SideTpl" value='{{selectedside}}' multiple style="width:200px;">
+            						{{#sidefields}}
+            						<option value='{{id}}'>{{name}}</option>
+            						{{/sidefields}}
+            					</select>	
+            				</div>
+            				<div style="padding:5px 20px;">Theme
+            					<select class="form-control" value='{{selectedTheme}}'>
+            						<option selected disabled>Select a Theme</option>
+            						{{#themes}}
+            						<option value='{{id}}'>{{name}}</option>
+            						{{/themes}}
+            					</select>
+            				</div>
+            				<div style="padding:5px 20px;">Config
+            					<select class="form-control" value='{{selectedconfig}}'>
+            						{{#config}}
+            						<option value='{{id}}'>{{name}}</option>
+            						{{/config}}
+            					</select>
+            				</div>
+						</div>
+            		</div>
 				</div>
-				<div style="padding:5px 20px;">
-					<input class="content" type="radio" name={{sideContent}} value="left"> Left &nbsp;
-					<input class="content" type="radio" name={{sideContent}} value="right"> Right
-				</div>
-				<div style="padding:5px 20px;">
-					<input class="content" type="checkbox" checked='{{on}}'> Show Add-to-carts
-				</div>
-				<div style="padding:5px 20px;">
-					<input class="content" type="radio" name={{cartType}} value="inline" > Inline &nbsp;
-					<input class="content" type="radio" name={{cartType}} value="separate"> Separate
+        	</div>
+        		<!--/span-->
+       			 <!-- left menu ends -->
+			<div id="content" class="span9">
+    			<!-- content starts -->
+    			<div class="row-fluid sortable">
+                	<div class="box span12">
+                		<div class="box-header well" data-original-title>
+    						<h2>Demo</h2>
+						</div>
+
+						<style type="text/css" media="screen">
+
+						</style>
+
+						<div class="box-content">
+							<div class="box-content">
+								<fieldset>
+									<div>
+										<input id="input"  class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
+										<div class="clip">
+											<label>Usage</label>
+											<pre><code id="description" rows="6" cols="50">{{content}}</code></pre>
+											<button id="copy-description">copy to clipboard</button>
+										</div>
+									</div>
+								</fieldset>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
-		
-				
-			<div style="padding:5px 20px;">Main template
-				<select decorator='chosen' id="MainTpl" value='{{selectedmain}}' multiple style="width:200px;">
-    				{{#mainfields}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/mainfields}}
-				</select>
-			</div>
-
-			<div style="padding:5px 20px;">Side template
-				<select decorator='chosen' id="SideTpl" value='{{selectedside}}' multiple style="width:200px;">
-    				{{#sidefields}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/sidefields}}
-				</select>	
-			</div>
-			<div style="padding:5px 20px;">Theme
-				<select class="form-control" value='{{selectedTheme}}'>
-    				<option selected disabled>Select a Theme</option>
-    				{{#themes}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/themes}}
-				</select>
-  			</div>
-  			<div style="padding:5px 20px;">Config
-  				<select class="form-control" value='{{selectedconfig}}'>
-    				{{#config}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/config}}
-				</select>
-  			</div>
-			
-			
 		</div>
-	</div>
-	
-	<div>
-		<input id="input"  class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
-		<div class="clip">
-			<label>Usage</label>
-			<pre><code id="description" rows="6" cols="50">{{content}}</code></pre>
-			<button id="copy-description">copy to clipboard</button>
-		</div>
-		<div id="custombody">
-
-			
-		</div>
-	</div>
+		<footer>
+        	<p class="pull-left">&copy; <a href="http://unbxd.com" target="_blank">Unbxd Inc.</a> 2014</p>
+        	<!--<p class="pull-right">Powered by: <a href="http://usman.it/free-responsive-admin-template">Charisma</a></p>-->
+    	</footer>
 	</script>
+	<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="bower_components/charisma-master/js/init-chart.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.autogrow-textarea.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.cookie.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.dataTables.min.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.history.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.iphone.toggle.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.noty.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.raty.min.js"></script>
+	<script src="bower_components/charisma-master/js/jquery.uploadify-3.1.min.js"></script>
 	<script type="text/javascript" src="bower_components/handlebars/handlebars.min.js"></script>
 	<script src="bower_components/jquery/dist/jquery.js"></script>
 	<script src="unbxdAutosuggest.js"></script>
 	<!--<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script> -->
 	<script type="text/javascript" src="bower_components/chosen/chosen.jquery.min.js"></script>
-	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/bootstrap/docs/assets/js/bootstrap.min.js"></script>
  	<script type="text/javascript" src="bower_components/jquery-zclip/jquery.zclip.js"></script>
  	<script src='bower_components/ractive/ractive.min.js'></script>
  	<script src='bower_components/ractive-decorators-chosen/ractive-decorators-chosen.js'></script>
