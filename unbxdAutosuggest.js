@@ -433,7 +433,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px', left: pos.left + "px"};
 			
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
-			
+			this.$results.find("li.unbxd-as-insuggestion").css("color", this.options.theme);
 			if(this.scrollbarWidth == null){
 				this.setScrollWidth();
 			}
@@ -734,7 +734,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
 					+'</li>'
 					+'{{else}}'
-					+'<li class="unbxd-as-insuggestion" style="color:'+this.options.theme+'" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+'<li class="unbxd-as-insuggestion" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 						+'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
 					+'</li>'
 					+'{{/unbxdIf}}'

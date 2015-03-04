@@ -253,6 +253,7 @@ var ractive = new Ractive({
 		});
 
 		ractive.observe( 'selectedside', function ( newValue, oldValue, keypath ) {
+
 			if(oldValue){
 				auto[0].auto.setOption("sideTpl", newValue);
 				values=[];
