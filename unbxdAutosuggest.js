@@ -1,4 +1,9 @@
-
+/*
+ * Unbxd Autosuggest JS 0.0.1
+ *
+ * Copyright 2015, Unbxd
+ *
+*/
 var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	var isMobile = {
 	    Android: function() {
