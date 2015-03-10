@@ -82,6 +82,8 @@ var ractive = new Ractive({
 				,header:''
 			}
 		});
+		ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
+		$('#MainTpl').trigger('liszt:updated');
 
 		/*counts start*/
 		ractive.observe( 'keycount', function ( newValue, oldValue, keypath ) {
@@ -251,7 +253,7 @@ var ractive = new Ractive({
 		});
 		var values=[];
 		ractive.observe( 'selectedmain', function ( newValue, oldValue, keypath ) {
-			if(oldValue){
+			//if(oldValue){
 				auto[0].auto.setOption("mainTpl", newValue);
 				values=[];
 				$("#SideTpl option").each(function(){
@@ -265,7 +267,7 @@ var ractive = new Ractive({
  					$('#SideTpl').trigger('liszt:updated');
 				});
 		
-			}
+			//}
 		});
 
 		ractive.observe( 'selectedside', function ( newValue, oldValue, keypath ) {
