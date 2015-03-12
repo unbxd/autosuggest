@@ -41,6 +41,7 @@ var ractive = new Ractive({
 		window.auto = $("#input").unbxdautocomplete({
 			siteName : 'demosite-u1407617955968'
 			,APIKey : '64a4a2592a648ac8415e13c561e44991'
+			,inputID : '#input'
 			,minChars : 2
 			,showCarts : false
 			,template : "1column" // "2column"
@@ -81,6 +82,8 @@ var ractive = new Ractive({
 				,header:''
 			}
 		});
+		ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
+		$('#MainTpl').trigger('liszt:updated');
 
 		/*counts start*/
 		ractive.observe( 'keycount', function ( newValue, oldValue, keypath ) {
@@ -149,6 +152,11 @@ var ractive = new Ractive({
 				auto[0].auto.setOption("APIKey", newValue);
 			}
 		});
+		ractive.observe( 'inputID', function ( newValue, oldValue, keypath ) {
+			if(newValue||oldValue){
+				auto[0].auto.setOption("inputID", '#'+newValue);
+			}
+		});
 		ractive.observe( 'on', function ( newValue, oldValue, keypath ) {
 			if(newValue||oldValue){
 				auto[0].auto.setOption("showCarts",newValue);
@@ -205,28 +213,38 @@ var ractive = new Ractive({
 					$("#MainTpl, #SideTpl, .content").prop("disabled",true);
 					$('#MainTpl, #SideTpl').trigger('chosen:updated');
 					if(newValue === "1"){
-						ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
 						ractive.set('selectedside', []);
+						$('#SideTpl').trigger('liszt:updated');
+						ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
+						$('#MainTpl').trigger('liszt:updated');
+						ractive.set('template', '1column');
 						ractive.set('on',true);
 						$('#MainTpl,#SideTpl').trigger('chosen:updated');
 					}
 					else if(newValue === "2"){
 						ractive.set('selectedmain', ['inFields','popularProducts']);
+						$('#MainTpl').trigger('liszt:updated');
 						ractive.set('selectedside', ['topQueries','keywordSuggestions']);
+						$('#SideTpl').trigger('liszt:updated');
 						ractive.set('template','2column');
 						ractive.set('sideContent', 'right');
 						ractive.set('on',true);
 					}
 					else if(newValue === "3"){
 						ractive.set('selectedmain', ['inFields','popularProducts']);
+						$('#MainTpl').trigger('liszt:updated');
 						ractive.set('selectedside', ['topQueries','keywordSuggestions']);
+						$('#SideTpl').trigger('liszt:updated');
 						ractive.set('template','2column');
 						ractive.set('sideContent', 'left');
 						ractive.set('on',true);
 					}
 					else if(newValue === "4"){
 						ractive.set('selectedmain', ['popularProducts']);
+						$('#MainTpl').trigger('liszt:updated');
+						ractive.set('template', '1column');
 						ractive.set('selectedside', []);
+						$('#SideTpl').trigger('liszt:updated');
 						ractive.set('on',true);
 					}
 				}
@@ -235,7 +253,7 @@ var ractive = new Ractive({
 		});
 		var values=[];
 		ractive.observe( 'selectedmain', function ( newValue, oldValue, keypath ) {
-			if(oldValue){
+			//if(oldValue){
 				auto[0].auto.setOption("mainTpl", newValue);
 				values=[];
 				$("#SideTpl option").each(function(){
@@ -249,10 +267,11 @@ var ractive = new Ractive({
  					$('#SideTpl').trigger('liszt:updated');
 				});
 		
-			}
+			//}
 		});
 
 		ractive.observe( 'selectedside', function ( newValue, oldValue, keypath ) {
+
 			if(oldValue){
 				auto[0].auto.setOption("sideTpl", newValue);
 				values=[];
@@ -280,7 +299,7 @@ var ractive = new Ractive({
             setTimeout(function(){$('button#copy-description').html('copy to clipboard')},2000);
         });
 		
-		ractive.observe( 'keycount topcount incount prodcount inheader keyheader topheader prodheader widthMain widthSide siteName APIKey on cartType sideContent template selectedTheme selectedmain selectedside selectedconfig', function ( newValue, oldValue, keypath ) {
+		ractive.observe( 'keycount topcount incount prodcount inheader keyheader topheader prodheader widthMain widthSide siteName APIKey on cartType sideContent template selectedTheme selectedmain selectedside selectedconfig inputID', function ( newValue, oldValue, keypath ) {
 			var jscode = JSON.stringify(auto[0].auto.options, replace, "\t");
 			jscode = jscode.replace(/\"function/g,"function");
 			jscode = jscode.replace(/\}\"/g,"}");
@@ -288,7 +307,7 @@ var ractive = new Ractive({
 			jscode = jscode.replace(/\\t/g,"\t");
 			jscode = jscode.replace(/\\"/g,"\"");
 			jscode = jscode.replace(/\n/g,"\n\t");
-			jscode = '<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">\n<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>\n<script src="//code.jquery.com/jquery-1.10.2.js"></script>\n<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>\n<script type = "text/javascript">\n\tunbxdAutoSuggestFunction(jQuery, Handlebars);\n\tvar config = '+jscode+';\n\t$(function(){\n\t\t$("#input").unbxdautocomplete(config);\n\t});\n</script>';
+			jscode = '<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">\n<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>\n<script src="//code.jquery.com/jquery-1.10.2.js"></script>\n<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>\n<script type = "text/javascript">\n\tunbxdAutoSuggestFunction(jQuery, Handlebars);\n\tvar config = '+jscode+';\n\t$(function(){\n\t\t$('+auto[0].auto.options.inputID+').unbxdautocomplete(config);\n\t});\n</script>';
 			ractive.set('content',jscode);
 
 			$('button#copy-description').zclip({
