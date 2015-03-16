@@ -106,79 +106,79 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				,imageUrlOrFunction: "imageUrl"
 				,currency : "Rs."
 				,header: ""
-				,tpl: '{{#if ../showCarts}}'
-						+'{{#unbxdIf ../../cartType "inline"}}'//"inline" || "separate"
-							+'<div class="unbxd-as-popular-product-inlinecart">'
-								+'<div class="unbxd-as-popular-product-image-container">'
-									+'{{#if image}}'
-									+'<img src="{{image}}"/>'
-									+'{{/if}}'
-								+'</div>'
-								+'<div  class="unbxd-as-popular-product-name">'
-									+'<div style="table-layout:fixed;width:100%;display:table;">'
-										+'<div style="display:table-row">'
-											+'<div style="display:table-cell;text-overflow:ellipsis;overflow: hidden;white-space: nowrap;">'
-												+'{{{safestring highlighted}}}'
-											+'</div>'
-										+'</div>'
-									+'</div>'
-								+'</div>'
-								+'{{#if price}}'
-									+'<div class="unbxd-as-popular-product-price">'
-										+'{{currency}}{{price}}'
-									+'</div>'
-								+'{{/if}}'
-								+'<div class="unbxd-as-popular-product-quantity">'
-									+'<div class="unbxd-as-popular-product-quantity-container">'
-										+'<span>Qty</span>'
-										+'<input class="unbxd-popular-product-qty-input" value="1"/>'
-									+'</div>'
-								+'</div>'
-								+'<div class="unbxd-as-popular-product-cart-action">'
-									+'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
-								+'</div>'
-							+'</div>'
-						+'{{else}}'
-							+'<div class="unbxd-as-popular-product-info">'
-								+'<div class="unbxd-as-popular-product-image-container">'
-									+'{{#if image}}'
-									+'<img src="{{image}}"/>'
-									+'{{/if}}'
-								+'</div>'
-								+'<div  class="unbxd-as-popular-product-name">'
-									+'{{{safestring highlighted}}}'
-								+'</div>'
-							+'</div>'
-							+'<div class="unbxd-as-popular-product-cart">'
-								+'<div class="unbxd-as-popular-product-cart-action">'
-									+'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
-								+'</div>'
-								+'<div class="unbxd-as-popular-product-quantity">'
-									+'<div class="unbxd-as-popular-product-quantity-container">'
-										+'<span>Qty</span>'
-										+'<input class="unbxd-popular-product-qty-input" value="1"/>'
-									+'</div>'
-								+'</div>'
-								+'{{#if price}}'
-								+'<div class="unbxd-as-popular-product-price">'
-									+'{{currency}}{{price}}'
-								+'</div>'
-								+'{{/if}}'
-							+'</div>'
-						+'{{/unbxdIf}}'
-					+'{{else}}'
-						+'<div class="unbxd-as-popular-product-info">'
-							+'<div class="unbxd-as-popular-product-image-container">'
-								+'{{#if image}}'
-								+'<img src="{{image}}"/>'
-								+'{{/if}}'
-							+'</div>'
-							+'<div  class="unbxd-as-popular-product-name">'
-								+'{{{safestring highlighted}}}'
-							+'</div>'
-						+'</div>'
-					+'{{/if}}'
-				+'</li>'
+				,tpl: ['{{#if ../showCarts}}'
+						,'{{#unbxdIf ../../cartType "inline"}}'//"inline" || "separate"
+							,'<div class="unbxd-as-popular-product-inlinecart">'
+								,'<div class="unbxd-as-popular-product-image-container">'
+									,'{{#if image}}'
+									,'<img src="{{image}}"/>'
+									,'{{/if}}'
+								,'</div>'
+								,'<div  class="unbxd-as-popular-product-name">'
+									,'<div style="table-layout:fixed;width:100%;display:table;">'
+										,'<div style="display:table-row">'
+											,'<div style="display:table-cell;text-overflow:ellipsis;overflow: hidden;white-space: nowrap;">'
+												,'{{{safestring highlighted}}}'
+											,'</div>'
+										,'</div>'
+									,'</div>'
+								,'</div>'
+								,'{{#if price}}'
+									,'<div class="unbxd-as-popular-product-price">'
+										,'{{currency}}{{price}}'
+									,'</div>'
+								,'{{/if}}'
+								,'<div class="unbxd-as-popular-product-quantity">'
+									,'<div class="unbxd-as-popular-product-quantity-container">'
+										,'<span>Qty</span>'
+										,'<input class="unbxd-popular-product-qty-input" value="1"/>'
+									,'</div>'
+								,'</div>'
+								,'<div class="unbxd-as-popular-product-cart-action">'
+									,'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
+								,'</div>'
+							,'</div>'
+						,'{{else}}'
+							,'<div class="unbxd-as-popular-product-info">'
+								,'<div class="unbxd-as-popular-product-image-container">'
+									,'{{#if image}}'
+									,'<img src="{{image}}"/>'
+									,'{{/if}}'
+								,'</div>'
+								,'<div  class="unbxd-as-popular-product-name">'
+									,'{{{safestring highlighted}}}'
+								,'</div>'
+							,'</div>'
+							,'<div class="unbxd-as-popular-product-cart">'
+								,'<div class="unbxd-as-popular-product-cart-action">'
+									,'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
+								,'</div>'
+								,'<div class="unbxd-as-popular-product-quantity">'
+									,'<div class="unbxd-as-popular-product-quantity-container">'
+										,'<span>Qty</span>'
+										,'<input class="unbxd-popular-product-qty-input" value="1"/>'
+									,'</div>'
+								,'</div>'
+								,'{{#if price}}'
+								,'<div class="unbxd-as-popular-product-price">'
+									,'{{currency}}{{price}}'
+								,'</div>'
+								,'{{/if}}'
+							,'</div>'
+						,'{{/unbxdIf}}'
+					,'{{else}}'
+						,'<div class="unbxd-as-popular-product-info">'
+							,'<div class="unbxd-as-popular-product-image-container">'
+								,'{{#if image}}'
+								,'<img src="{{image}}"/>'
+								,'{{/if}}'
+							,'</div>'
+							,'<div  class="unbxd-as-popular-product-name">'
+								,'{{{safestring highlighted}}}'
+							,'</div>'
+						,'</div>'
+					,'{{/if}}'
+				,'</li>'].join('')
 			}
 			,resultsContainerSelector : null
 			,processResultsStyles : null
@@ -205,9 +205,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.options = $.extend({}, this.default_options, options);
 			this.$input = $(input).attr('autocomplete', 'off');
 			this.$results = $('<div/>', {'class' :this.options.resultsClass})
-				.css('position', this.options.position)
+				.css('position', this.options.position === 'relative' ? 'absolute': this.options.position )
 				.hide();
-			$(".unbxd-as-popular-product-cart-button").css("background-color",this.options.theme);
+			
 			if(this.options.zIndex > 0)
 				this.$results.css('zIndex',this.options.zIndex);
 
@@ -438,7 +438,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px', left: pos.left + "px"};
 			
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
-			this.$results.find("li.unbxd-as-insuggestion").css("color", this.options.theme);
+			
 			if(this.scrollbarWidth == null){
 				this.setScrollWidth();
 			}
@@ -452,6 +452,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					fpos.left = pos.left - this.options.sideWidth + "px";
 				}
 			}
+
+			if(this.options.showCarts)
+				this.$results.find(".unbxd-as-popular-product-cart-button").css("background-color",this.options.theme);
 
 			if(typeof this.options.processResultsStyles == "function"){
 				fpos = this.options.processResultsStyles.call(this,fpos);
@@ -558,7 +561,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				self.receiveData(d);
 			})
 			.fail(function(f) {	
-				self.$input.removeClass(self.options.asLoadingClass);
+				self.$input.removeClass(self.options.loadingClass);
 				self.$results.hide();
 			});
 		}
@@ -739,7 +742,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
 					+'</li>'
 					+'{{else}}'
-					+'<li class="unbxd-as-insuggestion" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+'<li class="unbxd-as-insuggestion" style="color:'+ this.options.theme +';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 						+'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
 					+'</li>'
 					+'{{/unbxdIf}}'
@@ -776,11 +779,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			+'{{/if}}';
 		}
 		,prepareHTML: function (){
-			var html = '<style> .unbxd-as-popular-product-cart-button{background-color:'+this.options.theme+';}</style><ul class="unbxd-as-maincontent">',
+			var html = '<ul class="unbxd-as-maincontent">',
 				self = this ,
 				mainlen = 0 ,
 				sidelen = 0 ;
-				//$(".unbxd-as-insuggestion").css("color:",this.options.theme);
+
 			this.options.mainTpl.forEach(function(key){
 				if(key === "inFields"){
 					key = "IN_FIELD";
@@ -827,14 +830,13 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
 					});
-				//html = html + '</ul><ul class="unbxd-as-maincontent">';
 				}
 				else{
 					if(sidelen == 0){
 						html = html + '<ul class="unbxd-as-maincontent">';
 					}
 					else{
-						html = '<style> .unbxd-as-popular-product-cart-button{background-color:'+this.options.theme+';}</style><ul class="unbxd-as-sidecontent">';
+						html = '<ul class="unbxd-as-sidecontent">';
 						this.options.sideTpl.forEach(function(key){
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
@@ -906,7 +908,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			var self = this;
 			
 			try{
-				this.auto = new autocomplete(self, options);
+				this.auto = new autocomplete(this, options);
 			}catch(e){
 				//console.log('autocomplete error',e);
 			}

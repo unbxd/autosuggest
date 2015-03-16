@@ -35,7 +35,7 @@ var ractive = new Ractive({
     	width: '25%',
 	};
 
-	$(function(){
+	// $(function(){
 		unbxdAutoSuggestFunction($, Handlebars);
 
 		window.auto = $("#input").unbxdautocomplete({
@@ -307,7 +307,7 @@ var ractive = new Ractive({
 			jscode = jscode.replace(/\\t/g,"\t");
 			jscode = jscode.replace(/\\"/g,"\"");
 			jscode = jscode.replace(/\n/g,"\n\t");
-			jscode = '<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">\n<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>\n<script src="//code.jquery.com/jquery-1.10.2.js"></script>\n<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>\n<script type = "text/javascript">\n\tunbxdAutoSuggestFunction(jQuery, Handlebars);\n\tvar config = '+jscode+';\n\t$(function(){\n\t\t$('+auto[0].auto.options.inputID+').unbxdautocomplete(config);\n\t});\n</script>';
+			jscode = '<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">\n<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>\n<script src="//code.jquery.com/jquery-1.10.2.js"></script>\n<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>\n<script type = "text/javascript">\n\tunbxdAutoSuggestFunction(jQuery, Handlebars);\n\tvar config = '+jscode+';\n\tjQuery(function(){\n\t\tjQuery("'+auto[0].auto.options.inputID+'").unbxdautocomplete(config);\n\t});\n</script>';
 			ractive.set('content',jscode);
 
 			$('button#copy-description').zclip({
@@ -316,7 +316,7 @@ var ractive = new Ractive({
    			});
 		});
 		
-	});
+	// });
 
 	function replace(key, value){
       	if (value instanceof Function || typeof value == 'function') {

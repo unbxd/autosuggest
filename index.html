@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<title>Unbxd Autocomplete</title>
+	<link rel="shortcut icon" href="favicon.png" type="image/icon">
+  <link rel="icon" href="favicon.png" type="image/icon">
 	<link rel="stylesheet" href="unbxdAutosuggest.css">
 	<link rel="stylesheet" type="text/css" href="bower_components/chosen/chosen.min.css">
 	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
@@ -16,23 +19,21 @@
 .lt{
 	float: left;
 }
-
-.clearfix{
-	
-  box-sizing: content-box;
-  width: 250px;
-  height: 730px;
-
+body {
+	padding: 20px;
 }
 .searchBar{
-	position: absolute;
+	/*position: absolute;
   	left: 300px;
-  	top: 50px;
+  	top: 50px;*/
 }
 .clip{
-	position: absolute;
+	/*position: absolute;
   	left: 300px;
-  	top: 200px;
+  	top: 200px;*/
+}
+.pad-5-20{
+	padding:5px 20px;
 }
 .clearfix:after{
 	clear: both;
@@ -43,9 +44,7 @@
 	visibilty: hidden;
 
 }
-.form-control{
-	width: auto;
-}
+
 .chosen-container-multi .chosen-choices{
 	width:80%;
 }
@@ -55,88 +54,89 @@
 	</style>
 </head>
 <body>
-	<div id="container"></div>
+	<div id="container" style="width: 100%;"></div>
 	<script id='template' type='text/ractive'>
-	<div id="inputField">
+	<div id="config" style="width: 25%;" class="lt">
 		<div class="clearfix" >
-			<div >
-				<div style="padding:5px 20px;">
+			<div>
+				<label>Configuration</label>
+				<div class="pad-5-20">
 					
 					Site Name<br>
 					<input class="form-control" type="text" name="siteName" value={{siteName}} >
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					
 					API Key<br>
 					<input class="form-control" type="text" name="APIKey" value={{APIKey}} >
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					
 					Input ID selector<br>
 					<input class="form-control" type="text" name="inputID" value={{inputID}} >
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					max no of Keywords<br>
 					<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					max no of Topqueries<br>
 					<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					max no of In-fields<br>
 					<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					max no of Popular-Products<br>
 					<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
 				</div>
 
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					Keywords Header<br>
 					<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					Topqueries Header<br>
 					<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					In-fields Header<br>
 					<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					Popular-Products Header<br>
 					<input class="form-control" type="text" name="headerProducts" value={{prodheader}}>
 				</div>
 
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					Main Width<br>
 					<input class="form-control" type="text" name="widthMain" style="width:60px" value={{widthMain}}>
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					Side Width<br>
 					<input class="form-control" type="text" name="widthSide" style="width:60px" value={{widthSide}} >
 				</div>
 
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					<input class="content" type="radio" name={{template}} value="1column"> 1-Column &nbsp;
 					<input class="content" type="radio" name={{template}} value="2column"> 2-Column 
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					<input class="content" type="radio" name={{sideContent}} value="left"> Left &nbsp;
 					<input class="content" type="radio" name={{sideContent}} value="right"> Right
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					<input class="content" type="checkbox" checked='{{on}}'> Show Add-to-carts
 				</div>
-				<div style="padding:5px 20px;">
+				<div class="pad-5-20">
 					<input class="content" type="radio" name={{cartType}} value="inline" > Inline &nbsp;
 					<input class="content" type="radio" name={{cartType}} value="separate"> Separate
 				</div>
 			</div>
 		
 				
-			<div style="padding:5px 20px;">Main template
+			<div class="pad-5-20">Main template
 				<select decorator='chosen' id="MainTpl" value='{{selectedmain}}' multiple style="width:200px;">
     				{{#mainfields}}
         				<option value='{{id}}'>{{name}}</option>
@@ -144,14 +144,14 @@
 				</select>
 			</div>
 
-			<div style="padding:5px 20px;">Side template
+			<div class="pad-5-20">Side template
 				<select decorator='chosen' id="SideTpl" value='{{selectedside}}' multiple style="width:200px;">
     				{{#sidefields}}
         				<option value='{{id}}'>{{name}}</option>
     				{{/sidefields}}
 				</select>	
 			</div>
-			<div style="padding:5px 20px;">Theme
+			<div class="pad-5-20">Theme
 				<select class="form-control" value='{{selectedTheme}}'>
     				<option selected disabled>Select a Theme</option>
     				{{#themes}}
@@ -159,7 +159,7 @@
     				{{/themes}}
 				</select>
   			</div>
-  			<div style="padding:5px 20px;">Config
+  			<div class="pad-5-20">Config
   				<select class="form-control" value='{{selectedconfig}}'>
     				{{#config}}
         				<option value='{{id}}'>{{name}}</option>
@@ -171,16 +171,12 @@
 		</div>
 	</div>
 	
-	<div>
-		<input id="input"  class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text"  size="75" style="padding:4px;"/>
+	<div id="play-arena" class="rt" style="width: 75%;">
+		<input id="input" class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text" style="padding:4px; width: 300px;"/>
 		<div class="clip">
 			<label>Usage</label>
 			<pre><code id="description" rows="6" cols="50">{{content}}</code></pre>
 			<button id="copy-description">copy to clipboard</button>
-		</div>
-		<div id="custombody">
-
-			
 		</div>
 	</div>
 	</script>
