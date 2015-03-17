@@ -214,7 +214,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if(typeof this.options.resultsContainerSelector == "string" && this.options.resultsContainerSelector.length)
 				$(this.options.resultsContainerSelector).append(this.$results);
 			else
-				$("body").append(this.$results);
+				$(".unbxd-as-container").append(this.$results);// $("body").append(this.$results);
 
 			if(typeof this.options.hbsHelpers === 'function')
 				this.options.hbsHelpers.call(this)
@@ -427,7 +427,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if(this.options.width){
 				this.options.mainWidth = this.options.width;
 			}
-			var pos = this.$input.offset()
+			var pos = this.$input.position()
 			// either use the specified width or calculate based on form element
 			,iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
 			,bt = parseInt(this.$input.css("border-top-width"),10)
@@ -435,23 +435,39 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,br = parseInt(this.$input.css("border-right-width"),10)
 			,pb = parseInt(this.$input.css("padding-bottom"),10)
 			,fwidth = (parseInt(iWidth)-2+bl+br)
-			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px', left: pos.left + "px"};
+			,fpos = {top : bt + this.$input.innerHeight() + 'px', left: pos.left + "px", width: 0};
 			
-			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
-			
+			console.log(iWidth, bt, bl, br, pb);
+			console.log(this.$input.offset(), this.$input.position());
+			if(this.$results.find("ul.unbxd-as-maincontent").length > 0 ){
+				this.$results.find("ul.unbxd-as-maincontent").css("width", (fwidth - 1 )+"px");
+				fpos.width += fwidth;
+			} else {
+				fwidth = 0;
+				this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
+				fpos.width += fwidth;
+			}
+
 			if(this.scrollbarWidth == null){
 				this.setScrollWidth();
 			}
+			console.log(fpos.width);
 
 			//set column direction
-			if(this.options.template == "2column"){
-				this.$results.find("ul.unbxd-as-sidecontent").css("width", this.options.sideWidth+"px");
-				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
-				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
-				if(this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left"){
-					fpos.left = pos.left - this.options.sideWidth + "px";
-				}
+			if(this.options.template == "2column" && this.$results.find("ul.unbxd-as-sidecontent").length > 0){
+				this.$results.find("ul.unbxd-as-sidecontent").css("width", (this.options.sideWidth + 1 )+"px");
+
+				if(this.options.sideContentOn == "left") fpos.left = pos.left - this.options.sideWidth + "px";
+
+				fpos.width += this.options.sideWidth;
 			}
+			this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
+			this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
+			fpos.width += 'px';
+			console.log(fpos.width);
+
+			if(this.options.showCarts)
+				this.$results.find(".unbxd-as-popular-product-cart-button").css("background-color",this.options.theme);
 
 			if(this.options.showCarts)
 				this.$results.find(".unbxd-as-popular-product-cart-button").css("background-color",this.options.theme);
@@ -459,6 +475,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if(typeof this.options.processResultsStyles == "function"){
 				fpos = this.options.processResultsStyles.call(this,fpos);
 			}
+			console.log(fpos);
 
 			this.$results.css(fpos).show();
 		}
@@ -905,10 +922,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 	$.fn.unbxdautocomplete = function(options) {
 		return this.each(function() {
-			var self = this;
-			
+			// var self = this;
+			var cloneNode = $(this).clone();
+			$(this).hide().after(cloneNode);
+			cloneNode.wrap('<div class="unbxd-as-container"></div>');
 			try{
-				this.auto = new autocomplete(this, options);
+				this.auto = new autocomplete(cloneNode, options);
 			}catch(e){
 				//console.log('autocomplete error',e);
 			}

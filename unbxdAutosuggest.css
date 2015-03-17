@@ -4,6 +4,9 @@
  * Copyright 2015, Unbxd
  *
 */
+.unbxd-as-container{
+    position: relative;
+}
 .unbxd-as-wrapper{
     border: 1px solid #dedede;
     border-top: none;
@@ -29,21 +32,23 @@
     height: 0px;
     visibilty: hidden;
 }
-
+/*
 .unbxd-as-extra-left .unbxd-as-maincontent{
     float: right;
+    border-left: 1px solid #dedede;
 }
-
-.unbxd-as-extra-right .unbxd-as-maincontent{
+.unbxd-as-extra-right .unbxd-as-maincontent
+{
     float: left;
+    border-right: 1px solid #dedede;
 }
-
-.unbxd-as-extra-left .unbxd-as-sidecontent{
+*/
+.unbxd-as-extra-right .unbxd-as-maincontent, .unbxd-as-extra-left .unbxd-as-sidecontent{
     float: left;
     border-right: 1px solid #dedede;
 }
 
-.unbxd-as-extra-right .unbxd-as-sidecontent{
+.unbxd-as-extra-left .unbxd-as-maincontent, .unbxd-as-extra-right .unbxd-as-sidecontent{
     float: right;
     border-left: 1px solid #dedede;
 }
