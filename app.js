@@ -85,6 +85,15 @@ var ractive = new Ractive({
 		ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
 		$('#MainTpl').trigger('liszt:updated');
 
+
+		ractive.observe( 'suggest', function ( newValue, oldValue, keypath ) {
+			if(newValue||oldValue){
+				auto[0].auto.setOption("suggest", isNaN(newValue)?0:parseInt(newValue));
+				auto[0].auto.setOption("inFields.count", isNaN(newValue)?0:parseInt(newValue));
+				auto[0].auto.setOption("keywordSuggestions.count", isNaN(newValue)?0:parseInt(newValue));
+				auto[0].auto.setOption("topQueries.count", isNaN(newValue)?0:parseInt(newValue));
+			}
+		});
 		/*counts start*/
 		ractive.observe( 'keycount', function ( newValue, oldValue, keypath ) {
 			if(newValue||oldValue){

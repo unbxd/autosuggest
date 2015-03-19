@@ -60,6 +60,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
       		,APIKey : '64a4a2592a648ac8415e13c561e44991'
 			,resultsClass : 'unbxd-as-wrapper'
 			,minChars : 3
+			,suggest : 10
 			,delay : 100
 			,loadingClass : 'unbxd-as-loading'
 			,mainWidth:0
@@ -613,7 +614,168 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				this.hideResultsNow(this);
 			}
 		}
+		,max_suggest: function(data){
+			var infield_result = 0, topquery_result = 0, keyword_result = 0;
+			var infield_sugg = Math.floor(this.options.suggest * 0.2);
+			var keyword_sugg = Math.ceil(this.options.suggest * 0.4);
+			var topquery_sugg = Math.floor(this.options.suggest * 0.4);
+			for(var x = 0; x < data.response.products.length; x++){
+				if(data.response.products[x].doctype == "IN_FIELD"){
+					infield_result++;
+				}
+				else if(data.response.products[x].doctype == "KEYWORD_SUGGESTION"){
+					keyword_result++;
+				}
+				else if(data.response.products[x].doctype == "TOP_SEARCH_QUERIES"){
+					topquery_result++;
+				}
+			}
+
+			// if(infield_result < infield_sugg){
+			// 	var infield_rem = infield_sugg - infield_result;
+			// 	infield_sugg = infield_result;
+			// 	if(keyword_result >= (infield_rem + keyword_sugg)){
+			// 		keyword_sugg = keyword_sugg + infield_rem;
+			// 	}
+			// 	else if(topquery_result >= (keyword_sugg + infield_rem - keyword_result + topquery_sugg)){
+			// 		topquery_sugg = topquery_sugg + keyword_sugg -keyword_result;
+			// 		keyword_sugg = keyword_result;
+			// 	}
+			// 	else
+			// 		topquery_sugg = topquery_result;
+			// }
+			// console.log("1  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
+			// if(keyword_result < keyword_sugg){
+			// 	var keyword_rem = keyword_sugg - keyword_result;
+			// 	keyword_sugg = keyword_result;
+			// 	if(topquery_result >= (keyword_rem + topquery_sugg)){
+			// 		topquery_sugg = topquery_sugg + keyword_rem;
+			// 	}
+			// 	else if(infield_result >=  keyword_rem + infield_sugg){
+			// 		console.log("debug");
+			// 		infield_sugg = infield_sugg + topquery_sugg - topquery_result;
+			// 		topquery_sugg = topquery_result;
+			// 	}
+			// 	else
+			// 		topquery_sugg = topquery_result;
+			// }
+			// console.log("2  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
+			// if(topquery_result < topquery_sugg){
+			// 	var topquery_rem = topquery_sugg - topquery_result;
+			// 	topquery_sugg = topquery_result;
+			// 	if(keyword_result >= (topquery_rem + keyword_sugg)){
+			// 		keyword_sugg = keyword_sugg + topquery_rem;
+			// 	}
+			// 	else if(infield_result >= topquery_rem + infield_sugg){
+			// 		infield_sugg = infield_sugg + keyword_sugg - keyword_result;
+			// 		keyword_sugg = keyword_result;
+			// 	}
+			// 	else
+			// 		keyword_sugg = keyword_result;
+			// }
+
+			// console.log("3  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
+			// infield_result = 30;
+			// keyword_result = 30;
+			// topquery_result = 45;
+			if(infield_result < infield_sugg){
+				var infield_rem = infield_sugg - infield_result;
+				while(infield_rem > 0){
+					if(keyword_result > keyword_sugg){
+						if((keyword_result - keyword_sugg) >= infield_rem){
+							keyword_sugg = keyword_sugg + infield_rem;
+							infield_rem = 0;
+						}
+						else{
+							infield_rem = infield_rem - keyword_result + keyword_sugg;
+							keyword_sugg = keyword_result;
+
+						}
+					}
+					else if(topquery_result > topquery_sugg){
+						if((topquery_result - topquery_sugg) >= infield_rem){
+							topquery_sugg = topquery_sugg + infield_rem;
+							infield_rem = 0;
+						}
+						else{
+							infield_rem = infield_rem - topquery_result + topquery_sugg;
+							topquery_sugg = topquery_result;
+						}
+					}
+					else
+						infield_rem = 0;
+				
+				}
+				infield_sugg = infield_result;
+			}
+			console.log("1  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
+
+			if(topquery_result < topquery_sugg){
+				var topquery_rem = topquery_sugg - topquery_result;
+				while(topquery_rem > 0){
+					if(keyword_result >keyword_sugg){
+						if((keyword_result - keyword_sugg) >= topquery_rem){
+							keyword_sugg = keyword_sugg + topquery_rem;
+							topquery_rem = 0;
+						}
+						else{
+							topquery_rem = topquery_rem - keyword_result +keyword_sugg;
+							keyword_sugg =keyword_result;
+						}
+					}
+					else if(infield_result > infield_sugg){
+						if((infield_result - infield_sugg) >= topquery_rem){
+							infield_sugg = infield_sugg + topquery_rem;
+							topquery_rem = 0;
+						}
+						else{
+							topquery_rem = topquery_rem - infield_result + infield_sugg;
+							topquery_sugg = topquery_result;
+						}
+					}
+					else
+						topquery_rem = 0;
+				}
+				topquery_sugg = topquery_result;
+			}
+			console.log("2  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
+
+			if(keyword_result < keyword_sugg){
+				var keyword_rem = keyword_sugg - keyword_result;
+				while(keyword_rem > 0){
+					if(topquery_result > topquery_sugg){
+						if((topquery_result - topquery_sugg) >= keyword_rem){
+							topquery_sugg = topquery_sugg + keyword_rem;
+							keyword_rem = 0;
+						}
+						else{
+							keyword_rem = keyword_rem - topquery_result + topquery_sugg;
+							topquery_sugg = topquery_result;
+						}
+					}
+					else if(infield_result > infield_sugg){
+						if((infield_result - infield_sugg) >= keyword_rem){
+							infield_sugg = infield_sugg + keyword_rem;
+							keyword_rem = 0;
+						}
+						else{
+							keyword_rem = keyword_rem -infield_result + infield_sugg;
+							keyword_sugg = keyword_result;
+						}
+					}
+					else
+						keyword_rem = 0;
+				}
+				keyword_sugg = keyword_result;
+			}
+			console.log("3  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
+			this.options.inFields.count = infield_sugg;
+			this.options.topQueries.count = topquery_sugg;
+			this.options.keywordSuggestions.count = keyword_sugg;
+
+		}
 		,processData: function(data){
+			this.max_suggest(data);
 			this.currentResults = {
 				KEYWORD_SUGGESTION : []
 				,TOP_SEARCH_QUERIES : []
