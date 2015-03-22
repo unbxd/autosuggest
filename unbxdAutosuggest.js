@@ -549,10 +549,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,getClass : function(object){return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];}
 		,requestData: function (q) {
-			if(this.options.suggest){
-				this.options.inFields.count = this.options.suggest;
-				this.options.topQueries.count = this.options.suggest;
-				this.options.keywordSuggestions.count = this.options.suggest;
+			if(this.options.maxSuggestions){
+				this.options.inFields.count = this.options.maxSuggestions;
+				this.options.topQueries.count = this.options.maxSuggestions;
+				this.options.keywordSuggestions.count = this.options.maxSuggestions;
 			}
 			var self = this,url = self.autosuggestUrl();
 			this.log("requestData", url);
@@ -619,9 +619,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,max_suggest: function(data){
 			var infield_result = 0, topquery_result = 0, keyword_result = 0;
-			var infield_sugg = Math.floor(this.options.suggest * 0.2);
-			var keyword_sugg = Math.ceil(this.options.suggest * 0.4);
-			var topquery_sugg = Math.floor(this.options.suggest * 0.4);
+			var infield_sugg = Math.floor(this.options.maxSuggestions * 0.2);
+			var keyword_sugg = Math.ceil(this.options.maxSuggestions * 0.4);
+			var topquery_sugg = Math.floor(this.options.maxSuggestions * 0.4);
 			for(var x = 0; x < data.response.products.length; x++){
 				if(data.response.products[x].doctype == "IN_FIELD"){
 					infield_result++;
@@ -732,7 +732,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			
 		}
 		,processData: function(data){
-			if(this.options.suggest){
+			if(this.options.maxSuggestions){
 				this.max_suggest(data);
 			}
 			
