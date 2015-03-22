@@ -60,7 +60,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
       		,APIKey : '64a4a2592a648ac8415e13c561e44991'
 			,resultsClass : 'unbxd-as-wrapper'
 			,minChars : 3
-			,suggest : 10
 			,delay : 100
 			,loadingClass : 'unbxd-as-loading'
 			,mainWidth:0
@@ -208,7 +207,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.$results = $('<div/>', {'class' :this.options.resultsClass})
 				.css('position', this.options.position === 'relative' ? 'absolute': this.options.position )
 				.hide();
-			
 			if(this.options.zIndex > 0)
 				this.$results.css('zIndex',this.options.zIndex);
 
@@ -551,6 +549,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,getClass : function(object){return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];}
 		,requestData: function (q) {
+			if(this.options.suggest){
+				this.options.inFields.count = this.options.suggest;
+				this.options.topQueries.count = this.options.suggest;
+				this.options.keywordSuggestions.count = this.options.suggest;
+			}
 			var self = this,url = self.autosuggestUrl();
 			this.log("requestData", url);
 			this.ajaxCall = $.ajax({
@@ -631,53 +634,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}
 			}
 
-			// if(infield_result < infield_sugg){
-			// 	var infield_rem = infield_sugg - infield_result;
-			// 	infield_sugg = infield_result;
-			// 	if(keyword_result >= (infield_rem + keyword_sugg)){
-			// 		keyword_sugg = keyword_sugg + infield_rem;
-			// 	}
-			// 	else if(topquery_result >= (keyword_sugg + infield_rem - keyword_result + topquery_sugg)){
-			// 		topquery_sugg = topquery_sugg + keyword_sugg -keyword_result;
-			// 		keyword_sugg = keyword_result;
-			// 	}
-			// 	else
-			// 		topquery_sugg = topquery_result;
-			// }
-			// console.log("1  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
-			// if(keyword_result < keyword_sugg){
-			// 	var keyword_rem = keyword_sugg - keyword_result;
-			// 	keyword_sugg = keyword_result;
-			// 	if(topquery_result >= (keyword_rem + topquery_sugg)){
-			// 		topquery_sugg = topquery_sugg + keyword_rem;
-			// 	}
-			// 	else if(infield_result >=  keyword_rem + infield_sugg){
-			// 		console.log("debug");
-			// 		infield_sugg = infield_sugg + topquery_sugg - topquery_result;
-			// 		topquery_sugg = topquery_result;
-			// 	}
-			// 	else
-			// 		topquery_sugg = topquery_result;
-			// }
-			// console.log("2  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
-			// if(topquery_result < topquery_sugg){
-			// 	var topquery_rem = topquery_sugg - topquery_result;
-			// 	topquery_sugg = topquery_result;
-			// 	if(keyword_result >= (topquery_rem + keyword_sugg)){
-			// 		keyword_sugg = keyword_sugg + topquery_rem;
-			// 	}
-			// 	else if(infield_result >= topquery_rem + infield_sugg){
-			// 		infield_sugg = infield_sugg + keyword_sugg - keyword_result;
-			// 		keyword_sugg = keyword_result;
-			// 	}
-			// 	else
-			// 		keyword_sugg = keyword_result;
-			// }
-
-			// console.log("3  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
-			// infield_result = 30;
-			// keyword_result = 30;
-			// topquery_result = 45;
+			
 			if(infield_result < infield_sugg){
 				var infield_rem = infield_sugg - infield_result;
 				while(infield_rem > 0){
@@ -772,10 +729,13 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.options.inFields.count = infield_sugg;
 			this.options.topQueries.count = topquery_sugg;
 			this.options.keywordSuggestions.count = keyword_sugg;
-
+			
 		}
 		,processData: function(data){
-			this.max_suggest(data);
+			if(this.options.suggest){
+				this.max_suggest(data);
+			}
+			
 			this.currentResults = {
 				KEYWORD_SUGGESTION : []
 				,TOP_SEARCH_QUERIES : []
@@ -787,7 +747,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			for(var x = 0; x < data.response.products.length; x++){
 				var doc = data.response.products[x]
 					,o = {};
-				if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length){
+				if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length ){
 					o = {
 						autosuggest : doc.autosuggest
 						,highlighted : this.highlightStr(doc.autosuggest)
@@ -795,7 +755,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						,_original : doc.doctype
 					};
 					this.currentResults.TOP_SEARCH_QUERIES.push(o);
-				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount){
+				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount ){
 					var ins = {}
 						,asrc = " " + doc.unbxdAutosuggestSrc + " "
 						,highlightedtext = this.highlightStr(doc.autosuggest);
@@ -827,7 +787,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 								,source : doc.unbxdAutosuggestSrc
 							})
 					}
-				}else if("KEYWORD_SUGGESTION" == doc.doctype  && this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length){
+				}else if("KEYWORD_SUGGESTION" == doc.doctype  && (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length) ){
 					o = {
 						autosuggest : doc.autosuggest
 						,highlighted : this.highlightStr(doc.autosuggest)

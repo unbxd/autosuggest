@@ -308,7 +308,7 @@ var ractive = new Ractive({
             setTimeout(function(){$('button#copy-description').html('copy to clipboard')},2000);
         });
 		
-		ractive.observe( 'keycount topcount incount prodcount inheader keyheader topheader prodheader widthMain widthSide siteName APIKey on cartType sideContent template selectedTheme selectedmain selectedside selectedconfig inputID', function ( newValue, oldValue, keypath ) {
+		ractive.observe( 'keycount topcount incount prodcount inheader keyheader topheader prodheader widthMain widthSide siteName APIKey on cartType sideContent template selectedTheme selectedmain selectedside selectedconfig inputID suggest', function ( newValue, oldValue, keypath ) {
 			var jscode = JSON.stringify(auto[0].auto.options, replace, "\t");
 			jscode = jscode.replace(/\"function/g,"function");
 			jscode = jscode.replace(/\}\"/g,"}");
