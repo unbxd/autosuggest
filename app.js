@@ -85,6 +85,15 @@ var ractive = new Ractive({
 		ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
 		$('#MainTpl').trigger('liszt:updated');
 
+
+		ractive.observe( 'maxSuggestions', function ( newValue, oldValue, keypath ) {
+			if(newValue||oldValue){
+				auto[0].auto.setOption("suggest", isNaN(newValue)?0:parseInt(newValue));
+				auto[0].auto.setOption("inFields.count", isNaN(newValue)?0:parseInt(newValue));
+				auto[0].auto.setOption("keywordSuggestions.count", isNaN(newValue)?0:parseInt(newValue));
+				auto[0].auto.setOption("topQueries.count", isNaN(newValue)?0:parseInt(newValue));
+			}
+		});
 		/*counts start*/
 		ractive.observe( 'keycount', function ( newValue, oldValue, keypath ) {
 			if(newValue||oldValue){
@@ -299,7 +308,7 @@ var ractive = new Ractive({
             setTimeout(function(){$('button#copy-description').html('copy to clipboard')},2000);
         });
 		
-		ractive.observe( 'keycount topcount incount prodcount inheader keyheader topheader prodheader widthMain widthSide siteName APIKey on cartType sideContent template selectedTheme selectedmain selectedside selectedconfig inputID', function ( newValue, oldValue, keypath ) {
+		ractive.observe( 'keycount topcount incount prodcount inheader keyheader topheader prodheader widthMain widthSide siteName APIKey on cartType sideContent template selectedTheme selectedmain selectedside selectedconfig inputID maxSuggestions', function ( newValue, oldValue, keypath ) {
 			var jscode = JSON.stringify(auto[0].auto.options, replace, "\t");
 			jscode = jscode.replace(/\"function/g,"function");
 			jscode = jscode.replace(/\}\"/g,"}");
