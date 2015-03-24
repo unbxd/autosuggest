@@ -665,7 +665,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}
 				infield_sugg = infield_result;
 			}
-			console.log("1  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
 
 			if(topquery_result < topquery_sugg){
 				var topquery_rem = topquery_sugg - topquery_result;
@@ -695,7 +694,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}
 				topquery_sugg = topquery_result;
 			}
-			console.log("2  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
 
 			if(keyword_result < keyword_sugg){
 				var keyword_rem = keyword_sugg - keyword_result;
@@ -725,11 +723,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}
 				keyword_sugg = keyword_result;
 			}
-			console.log("3  in:",infield_sugg,"key:",keyword_sugg,"top:",topquery_sugg);
+			
 			this.options.inFields.count = infield_sugg;
 			this.options.topQueries.count = topquery_sugg;
 			this.options.keywordSuggestions.count = keyword_sugg;
-			console.log("opt:",this.options.inFields.count,this.options.topQueries.count,this.options.keywordSuggestions.count);
+			
 		}
 		,processData: function(data){
 			if(this.options.maxSuggestions){
