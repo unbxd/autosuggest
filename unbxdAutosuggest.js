@@ -729,7 +729,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.options.inFields.count = infield_sugg;
 			this.options.topQueries.count = topquery_sugg;
 			this.options.keywordSuggestions.count = keyword_sugg;
-			
+			console.log("opt:",this.options.inFields.count,this.options.topQueries.count,this.options.keywordSuggestions.count);
 		}
 		,processData: function(data){
 			if(this.options.maxSuggestions){
