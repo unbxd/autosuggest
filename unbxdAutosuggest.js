@@ -730,7 +730,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			count['infields'] = infield_sugg;
 			count['topquery'] = topquery_sugg;
 			count['keyword'] = keyword_sugg;
-			console.log("maxSuggestions called");
 			return count;
 			
 		}
@@ -739,7 +738,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if(this.options.maxSuggestions){
 				count = this.max_suggest(data);
 			}
-			console.log(count);
 			this.currentResults = {
 				KEYWORD_SUGGESTION : []
 				,TOP_SEARCH_QUERIES : []
