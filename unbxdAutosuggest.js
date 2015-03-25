@@ -549,11 +549,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,getClass : function(object){return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];}
 		,requestData: function (q) {
-			if(this.options.maxSuggestions){
-				this.options.inFields.count = this.options.maxSuggestions;
-				this.options.topQueries.count = this.options.maxSuggestions;
-				this.options.keywordSuggestions.count = this.options.maxSuggestions;
-			}
 			var self = this,url = self.autosuggestUrl();
 			this.log("requestData", url);
 			this.ajaxCall = $.ajax({
@@ -573,12 +568,20 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			var host_path = this.getHostNPath();
 
 			var url = "q=" + encodeURIComponent(this.params.q);
-
-			url += '&inFields.count=' + this.options.inFields.count
+			if(this.options.maxSuggestions){
+				url += '&inFields.count=' + this.options.maxSuggestions
+				+ '&topQueries.count=' + this.options.maxSuggestions
+				+ '&keywordSuggestions.count=' + this.options.maxSuggestions
+				+ '&popularProducts.count=' + this.options.popularProducts.count;
+				+ '&indent=off';
+			}
+			else{
+				url += '&inFields.count=' + this.options.inFields.count
 				+ '&topQueries.count=' + this.options.topQueries.count
 				+ '&keywordSuggestions.count=' + this.options.keywordSuggestions.count
 				+ '&popularProducts.count=' + this.options.popularProducts.count;
 				+ '&indent=off';
+			}
 
 			for(var x in this.params.filters){
 				if(this.params.filters.hasOwnProperty(x)){
@@ -723,17 +726,20 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}
 				keyword_sugg = keyword_result;
 			}
-			
-			this.options.inFields.count = infield_sugg;
-			this.options.topQueries.count = topquery_sugg;
-			this.options.keywordSuggestions.count = keyword_sugg;
+			var count = [];
+			count['infields'] = infield_sugg;
+			count['topquery'] = topquery_sugg;
+			count['keyword'] = keyword_sugg;
+			console.log("maxSuggestions called");
+			return count;
 			
 		}
 		,processData: function(data){
+			var count;
 			if(this.options.maxSuggestions){
-				this.max_suggest(data);
+				count = this.max_suggest(data);
 			}
-			
+			console.log(count);
 			this.currentResults = {
 				KEYWORD_SUGGESTION : []
 				,TOP_SEARCH_QUERIES : []
@@ -745,87 +751,174 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			for(var x = 0; x < data.response.products.length; x++){
 				var doc = data.response.products[x]
 					,o = {};
-				if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length ){
-					o = {
-						autosuggest : doc.autosuggest
-						,highlighted : this.highlightStr(doc.autosuggest)
-						,type : "TOP_SEARCH_QUERIES"
-						,_original : doc.doctype
-					};
-					this.currentResults.TOP_SEARCH_QUERIES.push(o);
-				}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount ){
-					var ins = {}
-						,asrc = " " + doc.unbxdAutosuggestSrc + " "
-						,highlightedtext = this.highlightStr(doc.autosuggest);
+				if(this.options.maxSuggestions){
+					if("TOP_SEARCH_QUERIES" == doc.doctype && count['topquery'] > this.currentResults.TOP_SEARCH_QUERIES.length ){
+						o = {
+							autosuggest : doc.autosuggest
+							,highlighted : this.highlightStr(doc.autosuggest)
+							,type : "TOP_SEARCH_QUERIES"
+							,_original : doc.doctype
+						};
+						this.currentResults.TOP_SEARCH_QUERIES.push(o);
+					}else if("IN_FIELD" == doc.doctype && count['infields'] > infieldsCount ){
+						var ins = {}
+							,asrc = " " + doc.unbxdAutosuggestSrc + " "
+							,highlightedtext = this.highlightStr(doc.autosuggest);
 
-					for(var a in this.options.inFields.fields){
-						if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
-							ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
-						}
-					}
-
-					this.currentResults.IN_FIELD.push({
-						autosuggest : doc.autosuggest
-						,highlighted : highlightedtext
-						,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
-						,source : doc.unbxdAutosuggestSrc
-					});
-
-					infieldsCount++;
-
-					for(var a in ins){
-						for(var b = 0; b < ins[a].length; b++)
-							this.currentResults.IN_FIELD.push({
-								autosuggest : doc.autosuggest
-								,highlighted : ins[a][b]
-								,type : doc.doctype
-								,filtername : a
-								,filtervalue : ins[a][b]
-								,_original : doc
-								,source : doc.unbxdAutosuggestSrc
-							})
-					}
-				}else if("KEYWORD_SUGGESTION" == doc.doctype  && (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length) ){
-					o = {
-						autosuggest : doc.autosuggest
-						,highlighted : this.highlightStr(doc.autosuggest)
-						,type : doc.doctype
-						,_original : doc
-						,source : doc.unbxdAutosuggestSrc || ""
-					};
-					this.currentResults.KEYWORD_SUGGESTION.push(o);
-				}else if("POPULAR_PRODUCTS" == doc.doctype && this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
-					o = {
-						autosuggest : doc.autosuggest
-						,highlighted : this.highlightStr(doc.autosuggest)
-						,type : doc.doctype
-						,pid : doc.uniqueId.replace("popularProduct_","")
-						,_original : doc
-					};
-
-					if(this.options.popularProducts.price){
-						if(typeof this.options.popularProducts.priceFunctionOrKey == "function"){
-							o.price = this.options.popularProducts.priceFunctionOrKey(doc);
-						}else if(typeof this.options.popularProducts.priceFunctionOrKey == "string" && this.options.popularProducts.priceFunctionOrKey){
-							o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
-						}else{
-							o.price = "price" in doc ? doc["price"] : null;
+						for(var a in this.options.inFields.fields){
+							if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
+								ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+							}
 						}
 
-						if(this.options.popularProducts.currency)
-							o.currency = this.options.popularProducts.currency;
-					}
+						this.currentResults.IN_FIELD.push({
+							autosuggest : doc.autosuggest
+							,highlighted : highlightedtext
+							,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
+							,source : doc.unbxdAutosuggestSrc
+						});
 
-					if(this.options.popularProducts.image){
-						if(typeof this.options.popularProducts.imageUrlOrFunction == "function"){
-							o.image = this.options.popularProducts.imageUrlOrFunction(doc);
-						}else if(typeof this.options.popularProducts.imageUrlOrFunction == "string" && this.options.popularProducts.imageUrlOrFunction){
-							o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+						infieldsCount++;
+
+						for(var a in ins){
+							for(var b = 0; b < ins[a].length; b++)
+								this.currentResults.IN_FIELD.push({
+									autosuggest : doc.autosuggest
+									,highlighted : ins[a][b]
+									,type : doc.doctype
+									,filtername : a
+									,filtervalue : ins[a][b]
+									,_original : doc
+									,source : doc.unbxdAutosuggestSrc
+								})
 						}
-					}
+					}else if("KEYWORD_SUGGESTION" == doc.doctype  && (count['keyword'] > this.currentResults.KEYWORD_SUGGESTION.length) ){
+						o = {
+							autosuggest : doc.autosuggest
+							,highlighted : this.highlightStr(doc.autosuggest)
+							,type : doc.doctype
+							,_original : doc
+							,source : doc.unbxdAutosuggestSrc || ""
+						};
+						this.currentResults.KEYWORD_SUGGESTION.push(o);
+					}else if("POPULAR_PRODUCTS" == doc.doctype && this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
+						o = {
+							autosuggest : doc.autosuggest
+							,highlighted : this.highlightStr(doc.autosuggest)
+							,type : doc.doctype
+							,pid : doc.uniqueId.replace("popularProduct_","")
+							,_original : doc
+						};
 
-					this.currentResults.POPULAR_PRODUCTS.push(o);
+						if(this.options.popularProducts.price){
+							if(typeof this.options.popularProducts.priceFunctionOrKey == "function"){
+								o.price = this.options.popularProducts.priceFunctionOrKey(doc);
+							}else if(typeof this.options.popularProducts.priceFunctionOrKey == "string" && this.options.popularProducts.priceFunctionOrKey){
+								o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
+							}else{
+								o.price = "price" in doc ? doc["price"] : null;
+							}
+
+							if(this.options.popularProducts.currency)
+								o.currency = this.options.popularProducts.currency;
+						}
+
+						if(this.options.popularProducts.image){
+							if(typeof this.options.popularProducts.imageUrlOrFunction == "function"){
+								o.image = this.options.popularProducts.imageUrlOrFunction(doc);
+							}else if(typeof this.options.popularProducts.imageUrlOrFunction == "string" && this.options.popularProducts.imageUrlOrFunction){
+								o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+							}
+						}
+
+						this.currentResults.POPULAR_PRODUCTS.push(o);
+					}
 				}
+
+				else{
+					if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length ){
+						o = {
+							autosuggest : doc.autosuggest
+							,highlighted : this.highlightStr(doc.autosuggest)
+							,type : "TOP_SEARCH_QUERIES"
+							,_original : doc.doctype
+						};
+						this.currentResults.TOP_SEARCH_QUERIES.push(o);
+					}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount ){
+						var ins = {}
+							,asrc = " " + doc.unbxdAutosuggestSrc + " "
+							,highlightedtext = this.highlightStr(doc.autosuggest);
+
+						for(var a in this.options.inFields.fields){
+							if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
+								ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+							}
+						}
+
+						this.currentResults.IN_FIELD.push({
+							autosuggest : doc.autosuggest
+							,highlighted : highlightedtext
+							,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
+							,source : doc.unbxdAutosuggestSrc
+						});
+
+						infieldsCount++;
+
+						for(var a in ins){
+							for(var b = 0; b < ins[a].length; b++)
+								this.currentResults.IN_FIELD.push({
+									autosuggest : doc.autosuggest
+									,highlighted : ins[a][b]
+									,type : doc.doctype
+									,filtername : a
+									,filtervalue : ins[a][b]
+									,_original : doc
+									,source : doc.unbxdAutosuggestSrc
+								})
+						}
+					}else if("KEYWORD_SUGGESTION" == doc.doctype  && (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length) ){
+						o = {
+							autosuggest : doc.autosuggest
+							,highlighted : this.highlightStr(doc.autosuggest)
+							,type : doc.doctype
+							,_original : doc
+							,source : doc.unbxdAutosuggestSrc || ""
+						};
+						this.currentResults.KEYWORD_SUGGESTION.push(o);
+					}else if("POPULAR_PRODUCTS" == doc.doctype && this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
+						o = {
+							autosuggest : doc.autosuggest
+							,highlighted : this.highlightStr(doc.autosuggest)
+							,type : doc.doctype
+							,pid : doc.uniqueId.replace("popularProduct_","")
+							,_original : doc
+						};
+
+						if(this.options.popularProducts.price){
+							if(typeof this.options.popularProducts.priceFunctionOrKey == "function"){
+								o.price = this.options.popularProducts.priceFunctionOrKey(doc);
+							}else if(typeof this.options.popularProducts.priceFunctionOrKey == "string" && this.options.popularProducts.priceFunctionOrKey){
+								o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
+							}else{
+								o.price = "price" in doc ? doc["price"] : null;
+							}
+
+							if(this.options.popularProducts.currency)
+								o.currency = this.options.popularProducts.currency;
+						}
+
+						if(this.options.popularProducts.image){
+							if(typeof this.options.popularProducts.imageUrlOrFunction == "function"){
+								o.image = this.options.popularProducts.imageUrlOrFunction(doc);
+							}else if(typeof this.options.popularProducts.imageUrlOrFunction == "string" && this.options.popularProducts.imageUrlOrFunction){
+								o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+							}
+						}
+
+						this.currentResults.POPULAR_PRODUCTS.push(o);
+					}
+				}	
+				
 			}
 			//lenth of result list
 			outLength=this.currentResults.POPULAR_PRODUCTS.length+this.currentResults.IN_FIELD.length;

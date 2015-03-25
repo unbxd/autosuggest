@@ -89,9 +89,6 @@ var ractive = new Ractive({
 		ractive.observe( 'maxSuggestions', function ( newValue, oldValue, keypath ) {
 			if(newValue||oldValue){
 				auto[0].auto.setOption("maxSuggestions", isNaN(newValue)?0:parseInt(newValue));
-				auto[0].auto.setOption("inFields.count", isNaN(newValue)?0:parseInt(newValue));
-				auto[0].auto.setOption("keywordSuggestions.count", isNaN(newValue)?0:parseInt(newValue));
-				auto[0].auto.setOption("topQueries.count", isNaN(newValue)?0:parseInt(newValue));
 			}
 		});
 		/*counts start*/
