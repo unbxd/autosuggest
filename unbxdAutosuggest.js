@@ -145,25 +145,28 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 									,'<img src="{{image}}"/>'
 									,'{{/if}}'
 								,'</div>'
+								,'<div>'
 								,'<div  class="unbxd-as-popular-product-name">'
 									,'{{{safestring highlighted}}}'
 								,'</div>'
-							,'</div>'
-							,'<div class="unbxd-as-popular-product-cart">'
-								,'<div class="unbxd-as-popular-product-cart-action">'
-									,'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
-								,'</div>'
-								,'<div class="unbxd-as-popular-product-quantity">'
-									,'<div class="unbxd-as-popular-product-quantity-container">'
-										,'<span>Qty</span>'
-										,'<input class="unbxd-popular-product-qty-input" value="1"/>'
+							
+								,'<div class="unbxd-as-popular-product-cart">'
+									,'<div class="unbxd-as-popular-product-cart-action">'
+										,'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
 									,'</div>'
+									,'<div class="unbxd-as-popular-product-quantity">'
+										,'<div class="unbxd-as-popular-product-quantity-container">'
+											,'<span>Qty</span>'
+											,'<input class="unbxd-popular-product-qty-input" value="1"/>'
+										,'</div>'
+									,'</div>'
+									,'{{#if price}}'
+									,'<div class="unbxd-as-popular-product-price">'
+										,'{{currency}}{{price}}'
+									,'</div>'
+									,'{{/if}}'
 								,'</div>'
-								,'{{#if price}}'
-								,'<div class="unbxd-as-popular-product-price">'
-									,'{{currency}}{{price}}'
 								,'</div>'
-								,'{{/if}}'
 							,'</div>'
 						,'{{/unbxdIf}}'
 					,'{{else}}'
@@ -625,6 +628,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			var infield_sugg = Math.floor(this.options.maxSuggestions * 0.2);
 			var keyword_sugg = Math.ceil(this.options.maxSuggestions * 0.4);
 			var topquery_sugg = Math.floor(this.options.maxSuggestions * 0.4);
+			var keyword_rem,topquery_rem;
 			for(var x = 0; x < data.response.products.length; x++){
 				if(data.response.products[x].doctype == "IN_FIELD"){
 					infield_result++;
@@ -671,7 +675,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			if(topquery_result < topquery_sugg){
 				var topquery_rem = topquery_sugg - topquery_result;
-				while(topquery_rem > 0){
+				while(topquery_rem > 0 && keyword_result > keyword_sugg){
 					if(keyword_result >keyword_sugg){
 						if((keyword_result - keyword_sugg) >= topquery_rem){
 							keyword_sugg = keyword_sugg + topquery_rem;
@@ -682,25 +686,31 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 							keyword_sugg =keyword_result;
 						}
 					}
-					else if(infield_result > infield_sugg){
-						if((infield_result - infield_sugg) >= topquery_rem){
-							infield_sugg = infield_sugg + topquery_rem;
-							topquery_rem = 0;
-						}
-						else{
-							topquery_rem = topquery_rem - infield_result + infield_sugg;
-							topquery_sugg = topquery_result;
-						}
-					}
-					else
-						topquery_rem = 0;
+					// else if(infield_result > infield_sugg){
+					// 	if((infield_result - infield_sugg) >= topquery_rem){
+					// 		infield_sugg = infield_sugg + topquery_rem;
+					// 		topquery_rem = 0;
+					// 	}
+					// 	else{
+					// 		topquery_rem = topquery_rem - infield_result + infield_sugg;
+					// 		infield_sugg = infield_result;
+					// 	}
+					// }
+					// else
+					// 	topquery_rem = 0;
 				}
 				topquery_sugg = topquery_result;
+				console.log("top_rem",topquery_rem);
+			}
+			else{
+				topquery_rem = 0;
+				topquery_sugg = keyword_result;
+				console.log("top_rem",topquery_rem);
 			}
 
 			if(keyword_result < keyword_sugg){
-				var keyword_rem = keyword_sugg - keyword_result;
-				while(keyword_rem > 0){
+				keyword_rem = keyword_sugg - keyword_result;
+				while(keyword_rem > 0 && topquery_result > topquery_sugg){
 					if(topquery_result > topquery_sugg){
 						if((topquery_result - topquery_sugg) >= keyword_rem){
 							topquery_sugg = topquery_sugg + keyword_rem;
@@ -711,25 +721,34 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 							topquery_sugg = topquery_result;
 						}
 					}
-					else if(infield_result > infield_sugg){
-						if((infield_result - infield_sugg) >= keyword_rem){
-							infield_sugg = infield_sugg + keyword_rem;
-							keyword_rem = 0;
-						}
-						else{
-							keyword_rem = keyword_rem -infield_result + infield_sugg;
-							keyword_sugg = keyword_result;
-						}
-					}
-					else
-						keyword_rem = 0;
+					// else if(infield_result > infield_sugg){
+					// 	if((infield_result - infield_sugg) >= keyword_rem){
+					// 		infield_sugg = infield_sugg + keyword_rem;
+					// 		keyword_rem = 0;
+					// 	}
+					// 	else{
+					// 		keyword_rem = keyword_rem -infield_result + infield_sugg;
+					// 		keyword_sugg = keyword_result;
+					// 	}
+					// }
+					// else
+					// 	keyword_rem = 0;
 				}
+
 				keyword_sugg = keyword_result;
+				console.log("key_rem",keyword_rem);
+			}
+			else{
+				keyword_rem = 0;
+				keyword_sugg = keyword_result;
+				console.log("key_rem",keyword_rem);
 			}
 			var count = [];
 			count['infields'] = infield_sugg;
 			count['topquery'] = topquery_sugg;
 			count['keyword'] = keyword_sugg;
+			count['key_rem'] = keyword_rem;
+			count['top_rem'] = topquery_rem;
 			return count;
 			
 		}
@@ -737,6 +756,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			var count;
 			if(this.options.maxSuggestions){
 				count = this.max_suggest(data);
+				console.log(count);
 			}
 			this.currentResults = {
 				KEYWORD_SUGGESTION : []
@@ -745,7 +765,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				,IN_FIELD : []
 			}
 			,infieldsCount = 0;
-
+			var key_count = 0;
 			for(var x = 0; x < data.response.products.length; x++){
 				var doc = data.response.products[x]
 					,o = {};
@@ -758,38 +778,108 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 							,_original : doc.doctype
 						};
 						this.currentResults.TOP_SEARCH_QUERIES.push(o);
-					}else if("IN_FIELD" == doc.doctype && count['infields'] > infieldsCount ){
-						var ins = {}
+					}else if("IN_FIELD" == doc.doctype && (count['infields']+count['key_rem']+count['top_rem']) > infieldsCount ){
+						if(count['infields'] > infieldsCount){
+							var ins = {}
 							,asrc = " " + doc.unbxdAutosuggestSrc + " "
 							,highlightedtext = this.highlightStr(doc.autosuggest);
 
-						for(var a in this.options.inFields.fields){
-							if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
-								ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+							for(var a in this.options.inFields.fields){
+								if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
+									ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+								}
 							}
-						}
-
-						this.currentResults.IN_FIELD.push({
-							autosuggest : doc.autosuggest
-							,highlighted : highlightedtext
-							,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
-							,source : doc.unbxdAutosuggestSrc
-						});
-
-						infieldsCount++;
-
-						for(var a in ins){
-							for(var b = 0; b < ins[a].length; b++)
+							if(doc.autosuggest.indexOf(doc.category_in[0])==-1){
 								this.currentResults.IN_FIELD.push({
 									autosuggest : doc.autosuggest
-									,highlighted : ins[a][b]
-									,type : doc.doctype
-									,filtername : a
-									,filtervalue : ins[a][b]
-									,_original : doc
+									,highlighted : highlightedtext
+									,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
 									,source : doc.unbxdAutosuggestSrc
-								})
+								});
+							}
+							else{
+								this.currentResults.KEYWORD_SUGGESTION.push({
+									autosuggest : doc.autosuggest
+									,highlighted : highlightedtext
+									,type : "KEYWORD_SUGGESTION" //this is kept as keyword but in template it will be used as "IN_FIELD"
+									,source : doc.unbxdAutosuggestSrc
+								});
+							}
+
+							infieldsCount++;
+
+							for(var a in ins){
+								for(var b = 0; b < ins[a].length; b++){		
+									this.currentResults.IN_FIELD.push({
+										autosuggest : doc.autosuggest
+										,highlighted : ins[a][b]
+										,type : doc.doctype
+										,filtername : a
+										,filtervalue : ins[a][b]
+										,_original : doc
+										,source : doc.unbxdAutosuggestSrc
+									})
+									
+								}
+							}
 						}
+						else if(key_count < count['key_rem']){
+							o = {
+								autosuggest : doc.autosuggest
+								,highlighted : this.highlightStr(doc.autosuggest)
+								,type : "KEYWORD_SUGGESTION"
+								,_original : doc
+								,source : doc.unbxdAutosuggestSrc || ""
+							};
+							this.currentResults.KEYWORD_SUGGESTION.push(o);
+							key_count++;
+						}
+						else{
+							var ins = {}
+							,asrc = " " + doc.unbxdAutosuggestSrc + " "
+							,highlightedtext = this.highlightStr(doc.autosuggest);
+
+							for(var a in this.options.inFields.fields){
+								if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
+									ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+								}
+							}
+
+							if(doc.autosuggest.indexOf(doc.category_in[0])==-1){
+								this.currentResults.IN_FIELD.push({
+									autosuggest : doc.autosuggest
+									,highlighted : highlightedtext
+									,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
+									,source : doc.unbxdAutosuggestSrc
+								});
+							}
+							else{
+								this.currentResults.KEYWORD_SUGGESTION.push({
+									autosuggest : doc.autosuggest
+									,highlighted : highlightedtext
+									,type : "KEYWORD_SUGGESTION" //this is kept as keyword but in template it will be used as "IN_FIELD"
+									,source : doc.unbxdAutosuggestSrc
+								});
+							}
+
+							infieldsCount++;
+
+							for(var a in ins){
+								for(var b = 0; b < ins[a].length; b++){
+									this.currentResults.IN_FIELD.push({
+										autosuggest : doc.autosuggest
+										,highlighted : ins[a][b]
+										,type : doc.doctype
+										,filtername : a
+										,filtervalue : ins[a][b]
+										,_original : doc
+										,source : doc.unbxdAutosuggestSrc
+									})
+									
+								}
+							}
+						}
+						console.log(this.currentResults.IN_FIELD);
 					}else if("KEYWORD_SUGGESTION" == doc.doctype  && (count['keyword'] > this.currentResults.KEYWORD_SUGGESTION.length) ){
 						o = {
 							autosuggest : doc.autosuggest
@@ -852,18 +942,20 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 								ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
 							}
 						}
-
-						this.currentResults.IN_FIELD.push({
-							autosuggest : doc.autosuggest
-							,highlighted : highlightedtext
-							,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
-							,source : doc.unbxdAutosuggestSrc
-						});
+						
+						if(doc.autosuggest.indexOf(doc.category_in[0])==-1){
+							this.currentResults.IN_FIELD.push({
+								autosuggest : doc.autosuggest
+								,highlighted : highlightedtext
+								,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
+								,source : doc.unbxdAutosuggestSrc
+							});
+						}
 
 						infieldsCount++;
 
 						for(var a in ins){
-							for(var b = 0; b < ins[a].length; b++)
+							for(var b = 0; b < ins[a].length; b++){
 								this.currentResults.IN_FIELD.push({
 									autosuggest : doc.autosuggest
 									,highlighted : ins[a][b]
@@ -872,7 +964,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 									,filtervalue : ins[a][b]
 									,_original : doc
 									,source : doc.unbxdAutosuggestSrc
-								})
+								})	
+							}
 						}
 					}else if("KEYWORD_SUGGESTION" == doc.doctype  && (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length) ){
 						o = {
