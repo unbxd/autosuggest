@@ -103,11 +103,12 @@
 }
 
 .unbxd-as-wrapper ul li .unbxd-as-popular-product-name{
-    padding:0 0 0 5px;
+    padding:0 0 0 65px;
 }
 
 .unbxd-as-wrapper ul li.unbxd-as-popular-product .unbxd-as-popular-product-cart{
     line-height: 15px;
+    margin-top: 5px;
 }
 
 .unbxd-as-wrapper ul li .unbxd-as-popular-product-price
