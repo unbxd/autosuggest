@@ -77,6 +77,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,hbsHelpers: null // handlebar helper functions
 			,onSimpleEnter : null
 			,onItemSelect: null
+			,noResult: false
+			,displayNoResult: true
 			,inFields:{
 				count: 2
 				,fields:{
@@ -608,10 +610,16 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if (data) {
 				this.$input.removeClass(this.options.loadingClass);
 				this.$results.html('');
-
+				this.options.noResult = false;
 				// if the field no longer has focus or if there are no matches, do not display the drop down
-				if( !this.hasFocus || data.response.numberOfProducts == 0 || "error" in data ) return this.hideResultsNow(this);
-
+				if( !this.hasFocus || data.response.numberOfProducts == 0 || "error" in data ){
+					if(this.options.displayNoResult == false) return this.hideResultsNow(this);
+					else if(this.options.displayNoResult == true){
+						console.log("noResults");
+						this.options.noResult = true;
+					}
+					console.log(this.options.noResult);
+				}
 				this.processData(data);
 
 				this.addToCache(this.params.q, this.currentResults);
@@ -1057,7 +1065,17 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				self = this ,
 				mainlen = 0 ,
 				sidelen = 0 ;
-
+				if(this.options.noResult){
+					var msg_noResult;
+					if(this.options.noResultConfigMsg){
+						msg_noResult = '<li>'+this.options.noResultConfigMsg+'</li>';
+					}
+					else{
+						msg_noResult = '<li> No Results found for \''+this.params.q+'\'</li>';
+					}
+						html = html + msg_noResult
+					this.options.noResult = false;
+				}
 			this.options.mainTpl.forEach(function(key){
 				if(key === "inFields"){
 					key = "IN_FIELD";
@@ -1142,6 +1160,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			return q in this.cache && this.cache.hasOwnProperty(q);
 		}
 		,getFromCache: function(q){
+			if(!this.cache[q]['IN_FIELD'].length && !this.cache[q]['KEYWORD_SUGGESTION'].length && !this.cache[q]['POPULAR_PRODUCTS'].length && !this.cache[q]['TOP_SEARCH_QUERIES'].length){
+				this.options.noResult = true;
+			}
 			return this.cache[q];
 		}
 		,destroy: function(self){
