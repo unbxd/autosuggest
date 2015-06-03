@@ -77,6 +77,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,hbsHelpers: null // handlebar helper functions
 			,onSimpleEnter : null
 			,onItemSelect: null
+			,noResultTpl: function(query){
+				return 'No results found for '+ query;
+			} 
+			// ,noResultTpl: 'sorry No results were found'
 			,inFields:{
 				count: 2
 				,fields:{
@@ -608,10 +612,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if (data) {
 				this.$input.removeClass(this.options.loadingClass);
 				this.$results.html('');
-
 				// if the field no longer has focus or if there are no matches, do not display the drop down
-				if( !this.hasFocus || data.response.numberOfProducts == 0 || "error" in data ) return this.hideResultsNow(this);
-
+				if( !this.hasFocus || data.response.numberOfProducts == 0 || "error" in data ){
+					if(!this.options.noResultTpl){
+						return this.hideResultsNow(this)
+					}
+				}
 				this.processData(data);
 
 				this.addToCache(this.params.q, this.currentResults);
@@ -841,17 +847,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 								});
 							}
 								
-					 //    if(key_count < count['key_rem']){
-						// 	o = {
-						// 		autosuggest : doc.autosuggest
-						// 		,highlighted : this.highlightStr(doc.autosuggest)
-						// 		,type : "KEYWORD_SUGGESTION"
-						// 		,_original : doc
-						// 		,source : doc.unbxdAutosuggestSrc || ""
-						// 	};
-						// 	this.currentResults.KEYWORD_SUGGESTION.push(o);
-						// 	key_count++;
-						// }
 					}else if("KEYWORD_SUGGESTION" == doc.doctype  && (count['keyword'] > this.currentResults.KEYWORD_SUGGESTION.length) && this.isUnique(doc.autosuggest, uniqueInfields) ){
 						o = {
 							autosuggest : doc.autosuggest
@@ -1007,6 +1002,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			return output;
 		}
+		
 		,prepareinFieldsHTML: function (){
 			return '{{#if data.IN_FIELD}}'
 				+ (this.options.inFields.header ? '<li class="unbxd-as-header">'+ this.options.inFields.header +'</li>' : '')
@@ -1057,7 +1053,16 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				self = this ,
 				mainlen = 0 ,
 				sidelen = 0 ;
+			if(!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length 
+				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl){
 
+				if(typeof this.options.noResultTpl === "function"){
+					html = html + '<li>'+ this.options.noResultTpl.call(self,self.params.q) +'</li>';
+				}
+				else if(typeof this.options.noResultTpl == "string"){
+					html = html + '<li>'+ this.options.noResultTpl +'</li>';
+				}
+			}
 			this.options.mainTpl.forEach(function(key){
 				if(key === "inFields"){
 					key = "IN_FIELD";

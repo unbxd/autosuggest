@@ -46,6 +46,7 @@ var ractive = new Ractive({
 			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
+			// ,noResultConfigMsg: 'No Results were Found'
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
