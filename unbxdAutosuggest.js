@@ -77,10 +77,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,hbsHelpers: null // handlebar helper functions
 			,onSimpleEnter : null
 			,onItemSelect: null
-			,noResultTpl: function(query){
-				return 'No results found for '+ query;
-			} 
-			// ,noResultTpl: 'sorry No results were found'
+			,noResultTpl: null
 			,inFields:{
 				count: 2
 				,fields:{
