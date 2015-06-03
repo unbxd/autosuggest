@@ -51,6 +51,9 @@ $(function(){
 			,sideContentOn : "right"
 			,showCarts : false
 			,cartType : "separate"
+			,noResultTpl: function(query){
+				return 'No results found for '+ query;
+			}
 			,onSimpleEnter : function(){
 			    console.log("Simple enter :: do a form submit")
 			    //this.input.form.submit();
@@ -111,6 +114,7 @@ $(function(){
 - **sideContentOn** : either **left** or **right**. Used only when **template** is set to **2column**
 - **showCarts** : either **true** or **false**. To show Add-to-cart button and quantity input.
 - **cartType** : either **inline** or **separate**. Used only when **showCarts** is set to **true**
+- **noResultTpl** : either **function()** or **Template** to show on No results.
 - **inFields** : configure the IN-FIELDS feature. This value takes an object with different properties as explained below. 
   - **count** is useful to adjust the number of IN-FIELDS shown to user
   - **fields** is an object containing the name & count of values for fields uploaded to UNBXD. These fields will appear as *in-suggestions* in secondary level. 

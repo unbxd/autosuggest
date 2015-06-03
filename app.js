@@ -46,12 +46,16 @@ var ractive = new Ractive({
 			,showCarts : false
 			,template : "1column" // "2column"
 			,cartType : "separate"
+			// ,noResultConfigMsg: 'No Results were Found'
 			,onItemSelect : function(){
 				console.log("onItemSelect",arguments);
 			}
 			,onCartClick : function(obj){
 				console.log("addtocart",this, arguments);
 				return true;
+			}
+			,noResultTpl: function(query){
+				return 'No results found for '+ query;
 			}
 			,inFields:{
 				count: 2,
@@ -65,7 +69,6 @@ var ractive = new Ractive({
 			topQueries:{
 				count: 2
 				,header:''
-
 			},
 			
 			keywordSuggestions:{
