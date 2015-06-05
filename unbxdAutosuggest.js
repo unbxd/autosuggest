@@ -10,6 +10,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	      return navigator.userAgent.match(/Android/i);
 	    },
 	    BlackBerry: function() {
+	      return navigator.userAgent.match(/BlackBerry/i);
 	    },
 	    iOS: function() {
 	      return navigator.userAgent.match(/iPhone|iPad|iPod/i);
@@ -19,7 +20,6 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	    },
 	    Windows: function() {
 	      return navigator.userAgent.match(/IEMobile/i);
-	      return navigator.userAgent.match(/BlackBerry/i);
 	    },
 	    any: function() {
 	      return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
