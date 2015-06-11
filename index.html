@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Autosuggest by unbxd</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Autosuggest</h1>
+      <h2 class="project-tagline">Autosuggest library which works with Unbxd Search API</h2>
+      <a href="https://github.com/unbxd/autosuggest" class="btn">View on GitHub</a>
+      <a href="https://github.com/unbxd/autosuggest/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/unbxd/autosuggest/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h2>
+<a id="unbxd-autosuggest" class="anchor" href="#unbxd-autosuggest" aria-hidden="true"><span class="octicon octicon-link"></span></a>UNBXD AUTOSUGGEST</h2>
+
+<p>This plug-in depends on jQuery and Handlebars libraries. It works with the UNBXD Autosuggest APIs to provide a flexible and configurable auto-suggest for an e-commerce site. It provides features, especially required by e-commerce sites like</p>
+
+<h5>
+<a id="1-in-fields" class="anchor" href="#1-in-fields" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. IN FIELDS</h5>
+
+<p><img src="/screenshots/infields.png" alt="in fields" title="in fields"></p>
+
+<h5>
+<a id="2-top-queries" class="anchor" href="#2-top-queries" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. TOP QUERIES</h5>
+
+<p><img src="/screenshots/top-queries.png" alt="top-queries" title="top-queries"></p>
+
+<h5>
+<a id="3-keyword-suggestions" class="anchor" href="#3-keyword-suggestions" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. KEYWORD SUGGESTIONS</h5>
+
+<p><img src="/screenshots/keyword-suggestions.png" alt="keyword-suggestions" title="keyword-suggestions"></p>
+
+<h5>
+<a id="4-popular-products" class="anchor" href="#4-popular-products" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. POPULAR PRODUCTS</h5>
+
+<p><img src="/screenshots/popular-products.png" alt="popular-products" title="popular-products"></p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>USAGE</h2>
+
+<h3>
+<a id="step-1---include-scripts" class="anchor" href="#step-1---include-scripts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 1 - Include scripts</h3>
+
+<p>Please include Jquery(&gt; 1.7), Handlebars and unbxdAutosuggest.js in order.<br>
+Default css can be applied by including unbxdAutosuggest.css in your html.</p>
+
+<h5>
+<a id="include-unbxdautosuggestjs-and-unbxdautosuggestcss-after-downloading-this-repo-by-including-this-in-head-of-your-html-page" class="anchor" href="#include-unbxdautosuggestjs-and-unbxdautosuggestcss-after-downloading-this-repo-by-including-this-in-head-of-your-html-page" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include <strong>unbxdAutosuggest.js</strong> and <strong>unbxdAutosuggest.css</strong> after downloading this repo by including this in head of your html page</h5>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-k">&lt;</span>link rel<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>stylesheet<span class="pl-pds">"</span></span> href<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css<span class="pl-pds">"</span></span><span class="pl-k">&gt;</span>
+<span class="pl-k">&lt;</span>script type<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span> src<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js<span class="pl-pds">"</span></span><span class="pl-k">&gt;&lt;</span>/script<span class="pl-k">&gt;</span>
+<span class="pl-k">&lt;</span>script src<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>//code.jquery.com/jquery-1.10.2.js<span class="pl-pds">"</span></span><span class="pl-k">&gt;&lt;</span>/script<span class="pl-k">&gt;</span>
+<span class="pl-k">&lt;</span>script src<span class="pl-k">=</span><span class="pl-s"><span class="pl-pds">"</span>//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js<span class="pl-pds">"</span></span><span class="pl-k">&gt;&lt;</span>/script<span class="pl-k">&gt;</span> </pre></div>
+
+<h6>
+<a id="ps---please-include-these-script-tags-before-the-ending-head-tag-in-your-html-page" class="anchor" href="#ps---please-include-these-script-tags-before-the-ending-head-tag-in-your-html-page" aria-hidden="true"><span class="octicon octicon-link"></span></a>PS - please include these script tags before the ending <code>&lt;/head&gt;</code> tag in your html page.</h6>
+
+<h3>
+<a id="step-2---configuration" class="anchor" href="#step-2---configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Step 2 - Configuration</h3>
+
+<h5>
+<a id="configure-our-autosuggest-plugin-by-modifying-below-snippet-according-to-your-parameters-and-include-that-in-your-html-page-each-of-the-options-used-is-explained-in-detail-after-the-following-snippet" class="anchor" href="#configure-our-autosuggest-plugin-by-modifying-below-snippet-according-to-your-parameters-and-include-that-in-your-html-page-each-of-the-options-used-is-explained-in-detail-after-the-following-snippet" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configure our autosuggest plugin by modifying below snippet according to your parameters and include that in your html page. Each of the options used is explained in-detail after the following snippet.</h5>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">// initialize unbxdautocomplete by invoking the unbxdAutoSuggestFunction</span>
+<span class="pl-c">// with jquery &amp; handlebars as its parameters. you will need to do this only once.</span>
+unbxdAutoSuggestFunction(jQuery, Handlebars);
+
+$(<span class="pl-k">function</span>(){
+        <span class="pl-c">//on dom load set autocomplete options</span>
+        <span class="pl-c">//Usage: $(&lt;element&gt;).unbxdautocomplete(options);</span>
+        $(<span class="pl-s"><span class="pl-pds">"</span>#input<span class="pl-pds">"</span></span>).unbxdautocomplete({
+            siteName <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>demosite-u1407617955968<span class="pl-pds">'</span></span> <span class="pl-c">//your site key which can be found on dashboard</span>
+            ,APIKey <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>64a4a2592a648ac8415e13c561e44991<span class="pl-pds">'</span></span> <span class="pl-c">//your api key which is mailed to during account creation or can be found on account section on the dashboard</span>
+            ,minChars <span class="pl-k">:</span> <span class="pl-c1">2</span>
+            ,maxSuggestions<span class="pl-k">:</span> <span class="pl-c1">10</span>
+            ,delay <span class="pl-k">:</span> <span class="pl-c1">100</span>
+            ,loadingClass <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>unbxd-as-loading<span class="pl-pds">'</span></span>
+            ,mainWidth <span class="pl-k">:</span> <span class="pl-c1">0</span>
+            ,sideWidth <span class="pl-k">:</span> <span class="pl-c1">180</span>
+            ,zIndex <span class="pl-k">:</span> <span class="pl-c1">0</span>
+            ,position <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span>absolute<span class="pl-pds">'</span></span>
+            ,template <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>1column<span class="pl-pds">"</span></span> 
+            ,mainTpl<span class="pl-k">:</span> [<span class="pl-s"><span class="pl-pds">'</span>inFields<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>keywordSuggestions<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>topQueries<span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>popularProducts<span class="pl-pds">'</span></span>]
+            ,sideTpl<span class="pl-k">:</span> []
+            ,sideContentOn <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>right<span class="pl-pds">"</span></span>
+            ,showCarts <span class="pl-k">:</span> <span class="pl-c1">false</span>
+            ,cartType <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>separate<span class="pl-pds">"</span></span>
+            ,<span class="pl-en">noResultTpl</span>: <span class="pl-k">function</span>(<span class="pl-smi">query</span>){
+                <span class="pl-k">return</span> <span class="pl-s"><span class="pl-pds">'</span>No results found for <span class="pl-pds">'</span></span><span class="pl-k">+</span> query;
+            }
+            ,<span class="pl-en">onSimpleEnter</span> : <span class="pl-k">function</span>(){
+                <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">"</span>Simple enter :: do a form submit<span class="pl-pds">"</span></span>)
+                <span class="pl-c">//this.input.form.submit();</span>
+            }
+            ,<span class="pl-en">onItemSelect</span> : <span class="pl-k">function</span>(<span class="pl-smi">data</span>,<span class="pl-smi">original</span>){
+                <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">"</span>onItemSelect<span class="pl-pds">"</span></span>,arguments);
+            }
+            ,<span class="pl-en">onCartClick</span> : <span class="pl-k">function</span>(<span class="pl-smi">data</span>,<span class="pl-smi">original</span>){
+                <span class="pl-en">console</span><span class="pl-c1">.log</span>(<span class="pl-s"><span class="pl-pds">"</span>addtocart<span class="pl-pds">"</span></span>, arguments);
+                <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+            }
+            ,inFields<span class="pl-k">:</span>{
+                count<span class="pl-k">:</span> <span class="pl-c1">2</span>
+                ,fields<span class="pl-k">:</span>{
+                    <span class="pl-s"><span class="pl-pds">'</span>brand<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-c1">3</span>
+                    ,<span class="pl-s"><span class="pl-pds">'</span>category<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-c1">3</span>
+                    ,<span class="pl-s"><span class="pl-pds">'</span>color<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-c1">3</span>
+                }
+                ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+                ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+            }
+            ,topQueries<span class="pl-k">:</span>{
+                count<span class="pl-k">:</span> <span class="pl-c1">2</span>
+                ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+                ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+            }
+            ,keywordSuggestions<span class="pl-k">:</span>{
+                count<span class="pl-k">:</span> <span class="pl-c1">2</span>
+                ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+                ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+            }
+            ,popularProducts<span class="pl-k">:</span>{
+                count<span class="pl-k">:</span> <span class="pl-c1">2</span>
+                ,price<span class="pl-k">:</span> <span class="pl-c1">true</span>
+                ,priceFunctionOrKey <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>price<span class="pl-pds">"</span></span>
+                ,image<span class="pl-k">:</span> <span class="pl-c1">true</span>
+                ,imageUrlOrFunction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>imageUrl<span class="pl-pds">"</span></span>
+                ,currency <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>$<span class="pl-pds">"</span></span>
+                ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+                ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+            }
+        });
+    });</pre></div>
+
+<h4>
+<a id="configuration-options" class="anchor" href="#configuration-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration Options</h4>
+
+<ul>
+<li>
+<strong>siteName</strong> : This value can be found in UNBXD dashboard. It is unique for every search site created on the dashboard.</li>
+<li>
+<strong>APIKey</strong> : Use the API key which was mailed during account creation. It can also be found on the account section of the dashboard. </li>
+<li>
+<strong>minChars</strong> : Minimum number of characters required to start showing suggestions. The value should be <em>0 or &gt; 0 (greater than zero)</em>
+</li>
+<li>**maxSuggestions : Total number of suggestions to show.In the ratio 2:4:4 for infields, keywordsuggestions and topQueries respectively.</li>
+<li>
+<strong>delay</strong> : Number of <em>milliseconds</em> to wait before fetching results from server. This is helpful in waiting till user stops typing. </li>
+<li>
+<strong>loadingClass</strong> : This class name will be added to input during data fetching process, so that user can see some loader animation or state change.</li>
+<li>
+<strong>mainWidth</strong> : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input sideWidth.</li>
+<li>
+<strong>sideWidth</strong> : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input mainWidth.</li>
+<li>
+<strong>position</strong> : either <strong>absolute</strong> or <strong>fixed</strong>
+</li>
+<li>
+<strong>template</strong> : either <strong>1column</strong> or <strong>2column</strong>. On mobile browsers, this value is set to <strong>1column</strong> by default and the features in the <strong>mainTpl</strong> value will be displayed in the autocomplete.</li>
+<li>
+<strong>mainTpl</strong>: array of features to be present in the main template in the order in which they need to appear. values can be <strong>inFields</strong>, <strong>topQueries</strong>, <strong>keywordSuggestions</strong>, <strong>popularProducts</strong>
+</li>
+<li>
+<strong>sideTpl</strong>: array of features to be present in the side template in the order in which they need to appear. Values are same as the previous option.</li>
+<li>
+<strong>sideContentOn</strong> : either <strong>left</strong> or <strong>right</strong>. Used only when <strong>template</strong> is set to <strong>2column</strong>
+</li>
+<li>
+<strong>showCarts</strong> : either <strong>true</strong> or <strong>false</strong>. To show Add-to-cart button and quantity input.</li>
+<li>
+<strong>cartType</strong> : either <strong>inline</strong> or <strong>separate</strong>. Used only when <strong>showCarts</strong> is set to <strong>true</strong>
+</li>
+<li>
+<strong>noResultTpl</strong> : either <strong>function()</strong> or <strong>Template</strong> to show on No results.</li>
+<li>
+<strong>inFields</strong> : configure the IN-FIELDS feature. This value takes an object with different properties as explained below. 
+
+<ul>
+<li>
+<strong>count</strong> is useful to adjust the number of IN-FIELDS shown to user</li>
+<li>
+<strong>fields</strong> is an object containing the name &amp; count of values for fields uploaded to UNBXD. These fields will appear as <em>in-suggestions</em> in secondary level. </li>
+<li>
+<strong>header</strong> will display the header above the results if any IN FIELDS are present. </li>
+<li>
+<strong>tpl</strong> - Handlebars template that can be used to customize the HTML displaying the list of IN FIELDS.</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-javascript"><pre>,inFields<span class="pl-k">:</span>{
+    count<span class="pl-k">:</span> <span class="pl-c1">2</span>
+    ,fields<span class="pl-k">:</span>{
+        <span class="pl-s"><span class="pl-pds">'</span>brand<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-c1">3</span> <span class="pl-c">//shows 3 values from brand</span>
+        ,<span class="pl-s"><span class="pl-pds">'</span>category<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-c1">3</span> <span class="pl-c">//shows 3 from category</span>
+        ,<span class="pl-s"><span class="pl-pds">'</span>color<span class="pl-pds">'</span></span><span class="pl-k">:</span><span class="pl-c1">3</span> <span class="pl-c">//shows 3 from color</span>
+    }
+    ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+    ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+},</pre></div>
+
+<ul>
+<li>
+<strong>topQueries</strong> : configures the TOP-QUERIES feature. This value takes an object with different properties as explained below.
+
+<ul>
+<li>
+<strong>count</strong> is useful to adjust the number of TOP QUERIES shown to user</li>
+<li>
+<strong>header</strong> will display the header above the results if any TOP QUERIES are present. </li>
+<li>
+<strong>tpl</strong> - Handlebars template that can be used to customize the HTML displaying the list of TOP QUERIES.</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-javascript"><pre>,topQueries<span class="pl-k">:</span>{
+    count<span class="pl-k">:</span> <span class="pl-c1">2</span>
+    ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+    ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+}</pre></div>
+
+<ul>
+<li>
+<strong>keywordSuggestions</strong> : configures the KEYWORD-SUGGESTION feature. This value takes an object with different properties as explained below. 
+
+<ul>
+<li>
+<strong>count</strong> is useful to adjust the number of KEYWORD SUGGESTIONS shown to user</li>
+<li>
+<strong>header</strong> will display the header above the results if any KEYWORD SUGGESTIONS are present. </li>
+<li>
+<strong>tpl</strong> - Handlebars template that can be used to customize the HTML displaying the list of KEYWORD SUGGESTIONS.</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-javascript"><pre>,keywordSuggestions<span class="pl-k">:</span>{
+    count<span class="pl-k">:</span> <span class="pl-c1">2</span> 
+    ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+    ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+}</pre></div>
+
+<ul>
+<li>
+<strong>popularProducts</strong> : configures the POPULAR-PRODUCTS feature. This value takes an object with different properties as explained below.
+
+<ul>
+<li>
+<strong>count</strong> is useful to adjust the number of POPULAR PRODUCTS shown to user.</li>
+<li>
+<strong>currency</strong> has to be a string containing the symbol of the currency.</li>
+<li>
+<strong>image</strong> based on whether it is <em>true</em> or <em>false</em>, it can either be shown or hidden.</li>
+<li>
+<strong>imageUrlOrFunction</strong> can be either a fieldname(<em>string</em>) uploaded to UNBXD or a function which takes an object as argument and returns an image url.</li>
+<li>
+<strong>price</strong> based on whether it is <em>true</em> or <em>false</em>, it can either be shown or hidden.</li>
+<li>
+<strong>priceFunctionOrKey</strong> can be either a fieldname(<em>string</em>) uploaded to UNBXD or a function which takes an object as argument and returns string or a number.</li>
+<li>
+<strong>header</strong> will display the header above the results if any POPULAR PRODUCTS are present. </li>
+<li>
+<strong>tpl</strong> - Handlebars template that can be used to customize the HTML displaying the list of POPULAR PRODUCTS.</li>
+</ul>
+</li>
+</ul>
+
+<div class="highlight highlight-javascript"><pre>,popularProducts<span class="pl-k">:</span>{
+    count<span class="pl-k">:</span> <span class="pl-c1">2</span> <span class="pl-c">//number of products to be shown</span>
+    ,price<span class="pl-k">:</span> <span class="pl-c1">true</span> <span class="pl-c">//to show price in case of carts</span>
+    ,priceFunctionOrKey <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>price<span class="pl-pds">"</span></span> <span class="pl-c">//it can also be a function which takes an object as argument and returns a string or number</span>
+    ,image<span class="pl-k">:</span> <span class="pl-c1">true</span> <span class="pl-c">//to show image</span>
+    ,imageUrlOrFunction<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>imageUrl<span class="pl-pds">"</span></span> <span class="pl-c">//it can also be a function which takes an object as argument and returns a image url</span>
+    ,currency <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span>$<span class="pl-pds">"</span></span>
+    <span class="pl-c">//update title or header value here</span>
+    ,header<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+    <span class="pl-c">//give HBS template here.</span>
+    ,tpl<span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">'</span><span class="pl-pds">'</span></span>
+}</pre></div>
+
+<ul>
+<li>
+<strong>onSimpleEnter</strong> : This function will be called if user presses <em>enter</em> key without selecting any result.</li>
+<li>
+<strong>onItemSelect</strong> : This function will be called when a user selects one of the suggestions. It will be passed 2 arguments. The first argument is an object shown below and second value will be the original value from Unbxd.</li>
+</ul>
+
+<div class="highlight highlight-javascript"><pre><span class="pl-c">//the first argument</span>
+{
+    value <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span><span class="pl-c">//user selected value</span>
+    ,type <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span><span class="pl-c">//IN_FIELD || KEYWORD_SUGGESTION || TOP_SEARCH_QUERIES || POPULAR_PRODUCTS</span>
+    ,filtername <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span><span class="pl-c">//available only incase of IN_FIELD</span>
+    ,filtervalue <span class="pl-k">:</span> <span class="pl-s"><span class="pl-pds">"</span><span class="pl-pds">"</span></span><span class="pl-c">//available only incase of IN_FIELD</span>
+}</pre></div>
+
+<ul>
+<li>
+<strong>onCartClick</strong> : this function will be called when a user clicks on Add-to-cart button. The arguments will be same as <strong>onItemSelect</strong> but it includes quantity and uniqueId of the product.</li>
+<li>
+<strong>hbsHelpers</strong>: needs to be a function. You can register your handlebars helpers here.</li>
+<li>
+<strong>processResultsStyles</strong> : This option, if set, should be a function, with a single argument which takes an object with top, left and right properties in it. The function should return the object with all the css properties that can be applied to suggestions container. 
+Note: this object is generally used for positioning the suggestions.</li>
+<li>
+<strong>resultsContainerSelector</strong> : This option, if set, should be jQuery selector string for DOM element where suggestions should be appended in Document. If not set, then suggestions will be appended to body.</li>
+</ul>
+
+<h6>
+<a id="ps---if-you-want-more-css-changes-than-given-in-config-file-please-override-classes-in-unbxdautosuggestcss" class="anchor" href="#ps---if-you-want-more-css-changes-than-given-in-config-file-please-override-classes-in-unbxdautosuggestcss" aria-hidden="true"><span class="octicon octicon-link"></span></a>PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css</h6>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/unbxd/autosuggest">Autosuggest</a> is maintained by <a href="https://github.com/unbxd">unbxd</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
+
