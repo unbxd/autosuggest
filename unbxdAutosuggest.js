@@ -180,6 +180,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 							,'<div  class="unbxd-as-popular-product-name">'
 								,'{{{safestring highlighted}}}'
 							,'</div>'
+							,'{{#if price}}'
+								,'<div class="unbxd-as-popular-product-price">'
+									,'{{currency}}{{price}}'
+								,'</div>'
+							,'{{/if}}'
 						,'</div>'
 					,'{{/if}}'
 				,'</li>'].join('')
