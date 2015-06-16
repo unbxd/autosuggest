@@ -1101,17 +1101,13 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 				//main zero side not zero
 				if((mainlen == 0)&&(sidelen != 0)){
-					html = '<ul class="unbxd-as-maincontent">';
 					this.options.sideTpl.forEach(function(key){
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
 					});
 				}
 				else{
-					if(sidelen == 0){
-						html = html + '<ul class="unbxd-as-maincontent">';
-					}
-					else{
+					if(sidelen != 0){
 						html = '<ul class="unbxd-as-sidecontent">';
 						this.options.sideTpl.forEach(function(key){
 						key = 'prepare' + key + 'HTML';
