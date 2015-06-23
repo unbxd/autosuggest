@@ -1,3 +1,4 @@
+hljs.initHighlightingOnLoad();
 var ractive = new Ractive({
 	el: 'container',
 	template: '#template',
@@ -323,9 +324,28 @@ var ractive = new Ractive({
         		path:'bower_components/jquery-zclip/ZeroClipboard.swf',
         		copy:function(){return $('code#description').text();}
    			});
+
+   			$('button#pastebin').attr('disabled',false);
+   			$('span#pastebinUrl').css('display','none');
+   			$('span#pastebinError').css('display','none');
 		});
 		
 	// });
+		$('#pastebin').click(function(){
+		$.ajax({
+  			type: "POST",
+  			url: "http://www.unbxd.com/pastebin",
+			data: {
+			        api_paste_code: $("#description").text(),
+				  },
+  			success: function(data){
+  				ractive.set('pastebinUrl',data);
+  				$('button#pastebin').attr('disabled',true);
+  				$('span#pastebinUrl').css('display','inline');
+  			}
+		});
+
+		});
 
 	function replace(key, value){
       	if (value instanceof Function || typeof value == 'function') {
