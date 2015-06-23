@@ -334,14 +334,10 @@ var ractive = new Ractive({
 		$('#pastebin').click(function(){
 		$.ajax({
   			type: "POST",
-  			url: "http://localhost:6969/pastebin",
+  			url: "http://www.unbxd.com/pastebin",
 			data: {
-				        api_dev_key: "bcf3b3bb55e73dd16bb85ce9cf49c356",
-				        api_paste_code: $("#description").text(),
-				        api_option: 'paste',
-				        api_user_key: 'ae94f6aec0311259030bef6502f8a13e',
-				        api_paste_expire_date: '1M'
-				    },
+			        api_paste_code: $("#description").text(),
+				  },
   			success: function(data){
   				ractive.set('pastebinUrl',data);
   				$('button#pastebin').attr('disabled',true);
