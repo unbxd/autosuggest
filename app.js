@@ -1,3 +1,4 @@
+hljs.initHighlightingOnLoad();
 var ractive = new Ractive({
 	el: 'container',
 	template: '#template',
@@ -323,9 +324,32 @@ var ractive = new Ractive({
         		path:'bower_components/jquery-zclip/ZeroClipboard.swf',
         		copy:function(){return $('code#description').text();}
    			});
+
+   			$('button#pastebin').attr('disabled',false);
+   			$('span#pastebinUrl').css('display','none');
+   			$('span#pastebinError').css('display','none');
 		});
 		
 	// });
+		$('#pastebin').click(function(){
+		$.ajax({
+  			type: "POST",
+  			url: "http://localhost:6969/pastebin",
+			data: {
+				        api_dev_key: "bcf3b3bb55e73dd16bb85ce9cf49c356",
+				        api_paste_code: $("#description").text(),
+				        api_option: 'paste',
+				        api_user_key: 'ae94f6aec0311259030bef6502f8a13e',
+				        api_paste_expire_date: '1M'
+				    },
+  			success: function(data){
+  				ractive.set('pastebinUrl',data);
+  				$('button#pastebin').attr('disabled',true);
+  				$('span#pastebinUrl').css('display','inline');
+  			}
+		});
+
+		});
 
 	function replace(key, value){
       	if (value instanceof Function || typeof value == 'function') {
