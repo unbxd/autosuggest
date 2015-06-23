@@ -102,7 +102,7 @@ $(function(){
 - **siteName** : This value can be found in UNBXD dashboard. It is unique for every search site created on the dashboard.
 - **APIKey** : Use the API key which was mailed during account creation. It can also be found on the account section of the dashboard. 
 - **minChars** : Minimum number of characters required to start showing suggestions. The value should be *0 or > 0 (greater than zero)*
-- **maxSuggestions : Total number of suggestions to show.In the ratio 2:4:4 for infields, keywordsuggestions and topQueries respectively.
+- **maxSuggestions** : Total number of suggestions to show.In the ratio 2:4:4 for infields, keywordsuggestions and topQueries respectively.
 - **delay** : Number of *milliseconds* to wait before fetching results from server. This is helpful in waiting till user stops typing. 
 - **loadingClass** : This class name will be added to input during data fetching process, so that user can see some loader animation or state change.
 - **mainWidth** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input sideWidth.
