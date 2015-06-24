@@ -333,7 +333,7 @@ var ractive = new Ractive({
 		$('#pastebin').click(function(){
 			$.ajax({
 	  			type: "POST",
-	  			url: "http://www.unbxd.com/pastebin",
+	  			url: "http://localhost:6969/pastebin",
 				data: {
 					        api_paste_code: $("#description").text()
 					    },
