@@ -1,4 +1,3 @@
-hljs.initHighlightingOnLoad();
 var ractive = new Ractive({
 	el: 'container',
 	template: '#template',
@@ -42,7 +41,6 @@ var ractive = new Ractive({
 		window.auto = $("#input").unbxdautocomplete({
 			siteName : 'demosite-u1407617955968'
 			,APIKey : '64a4a2592a648ac8415e13c561e44991'
-			,inputID : '#input'
 			,minChars : 2
 			,showCarts : false
 			,template : "1column" // "2column"
@@ -86,6 +84,7 @@ var ractive = new Ractive({
 				,header:''
 			}
 		});
+		ractive.set('inputID','#input');
 		ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
 		$('#MainTpl').trigger('liszt:updated');
 
@@ -160,11 +159,6 @@ var ractive = new Ractive({
 		ractive.observe( 'APIKey', function ( newValue, oldValue, keypath ) {
 			if(newValue||oldValue){
 				auto[0].auto.setOption("APIKey", newValue);
-			}
-		});
-		ractive.observe( 'inputID', function ( newValue, oldValue, keypath ) {
-			if(newValue||oldValue){
-				auto[0].auto.setOption("inputID", '#'+newValue);
 			}
 		});
 		ractive.observe( 'on', function ( newValue, oldValue, keypath ) {
@@ -317,8 +311,12 @@ var ractive = new Ractive({
 			jscode = jscode.replace(/\\t/g,"\t");
 			jscode = jscode.replace(/\\"/g,"\"");
 			jscode = jscode.replace(/\n/g,"\n\t");
-			jscode = '<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">\n<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>\n<script src="//code.jquery.com/jquery-1.10.2.js"></script>\n<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>\n<script type = "text/javascript">\n\tunbxdAutoSuggestFunction(jQuery, Handlebars);\n\tvar config = '+jscode+';\n\tjQuery(function(){\n\t\tjQuery("'+auto[0].auto.options.inputID+'").unbxdautocomplete(config);\n\t});\n</script>';
-			ractive.set('content',jscode);
+			jscode = '<link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">\n<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>\n<script src="//code.jquery.com/jquery-1.10.2.js"></script>\n<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>\n<script type = "text/javascript">\n\tunbxdAutoSuggestFunction(jQuery, Handlebars);\n\tvar config = '+jscode+';\n\tjQuery(function(){\n\t\tjQuery("'+$('#inputID').val()+'").unbxdautocomplete(config);\n\t});\n</script>';
+			// ractive.set('content',jscode);
+			$('#description').text(jscode);
+			$('code#description').each(function(i, block) {
+    			hljs.highlightBlock(block);
+  			});
 
 			$('button#copy-description').zclip({
         		path:'../bower_components/jquery-zclip/ZeroClipboard.swf',
@@ -333,7 +331,7 @@ var ractive = new Ractive({
 		$('#pastebin').click(function(){
 			$.ajax({
 	  			type: "POST",
-	  			url: "http://localhost:6969/pastebin",
+	  			url: "http://www.unbxd.com/pastebin",
 				data: {
 					        api_paste_code: $("#description").text()
 					    },
