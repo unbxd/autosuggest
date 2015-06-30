@@ -186,8 +186,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 								,'</div>'
 							,'{{/if}}'
 						,'</div>'
-					,'{{/if}}'
-				,'</li>'].join('')
+					,'{{/if}}'].join('')
 			}
 			,resultsContainerSelector : null
 			,processResultsStyles : null
@@ -1047,6 +1046,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				+'{{#data.POPULAR_PRODUCTS}}'
 				+'<li class="unbxd-as-popular-product" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
 					+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
+				+'</li>'
 				+'{{/data.POPULAR_PRODUCTS}}'
 			+'{{/if}}';
 		}
