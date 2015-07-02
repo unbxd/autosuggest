@@ -331,10 +331,10 @@ var ractive = new Ractive({
 		$('#pastebin').click(function(){
 			$.ajax({
 	  			type: "POST",
-	  			url: "http://www.unbxd.com/pastebin",
+	  			url: "http://unbxd.com/pastebin",
 				data: {
-					        api_paste_code: $("#description").text()
-					    },
+					api_paste_code: $("#description").text()
+				},
 	  			success: function(data){
 	  				ractive.set('pastebinUrl',data);
 	  				$('button#pastebin').attr('disabled',true);
