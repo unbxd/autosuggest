@@ -6,6 +6,13 @@
 */
 var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
+  // Polyfill for window.location.origin 
+  if (!window.location.origin) {
+    window.location.origin = window.location.protocol + "//"
+      + window.location.hostname
+      + (window.location.port ? ':' + window.location.port: '');
+  }
+  
   // Production steps of ECMA-262, Edition 5, 15.4.4.18
   // Reference: http://es5.github.io/#x15.4.4.18
   if (!Array.prototype.forEach) {
