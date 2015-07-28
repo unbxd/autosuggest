@@ -6,6 +6,10 @@
 */
 var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
+   //use unbxd scope and add a version for autosuggest
+   window.Unbxd = window.Unbxd || {};
+   Unbxd.autosuggestVersion = 1.0;
+
   // Polyfill for window.location.origin 
   if (!window.location.origin) {
     window.location.origin = window.location.protocol + "//"
