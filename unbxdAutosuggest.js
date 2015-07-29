@@ -843,7 +843,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				return true;
 			}
 		}
-		,processTopSearchQuery: function(doc){
+	  //FIXME: Temporarily adding it for testing inFields behaviour
+	  ,isTempUnique: function(autosuggest, arr){
+	    autosuggest = autosuggest.toLowerCase();
+	    return arr.indexOf(autosuggest) === -1 ? arr.push(autosuggest) : false;
+	  }
+	  ,processTopSearchQuery: function(doc){
 			o = {
 				autosuggest : doc.autosuggest
 				,highlighted : this.highlightStr(doc.autosuggest)
@@ -987,7 +992,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					 && this.isUnique(doc.autosuggest, uniqueSuggestions) ){
 						this.processTopSearchQuery(doc);
 					}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount 
-						&& this.isUnique(doc.autosuggest, uniqueInfields) ){
+						&& this.isTempUnique(doc.autosuggest, uniqueInfields) ){
 						this.processInFields(doc);
 					}else if("KEYWORD_SUGGESTION" == doc.doctype  
 						&& (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length) 
