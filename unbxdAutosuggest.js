@@ -463,7 +463,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			} else {
 				if (typeof this.options.onSimpleEnter == "function" && (this.lastKeyPressCode == 10 || this.lastKeyPressCode == 13)){
 					this.lastKeyEvent.preventDefault();
-					self.options.onSimpleEnter.call(self,event);
+					self.options.onSimpleEnter.call(self);
 				}
 				
 				return false;
@@ -492,7 +492,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			}});
 
 			if (typeof this.options.onItemSelect == "function"){
-				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original,event);
+				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original);
 			}
 		}
 		,addToAnalytics:function(type,obj){
