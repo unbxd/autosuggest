@@ -352,7 +352,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 						return;
 					}
-					self.selectItem(p.data());
+					self.selectItem(p.data(),e);
 				}else{
 					self.hasFocus = false;
 					self.hideResults();
@@ -389,7 +389,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						break;
 					case 9:  // tab
 					case 13: // return
-						if( self.selectCurrent() ){
+						if( self.selectCurrent(e) ){
 							e.preventDefault();
 						}
 						else{
@@ -455,21 +455,21 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			else if(this.activeRow == -1)
 				this.$input.val(this.previous);
 		}
-		,selectCurrent: function () {
+		,selectCurrent: function (e) {
 			var li = this.$results.find('li.'+this.selectedClass),self = this;
 			if (li.length) {
-				this.selectItem(li.data());
+				this.selectItem(li.data(),e);
 				return true;
 			} else {
 				if (typeof this.options.onSimpleEnter == "function" && (this.lastKeyPressCode == 10 || this.lastKeyPressCode == 13)){
 					this.lastKeyEvent.preventDefault();
-					self.options.onSimpleEnter.call(self);
+					self.options.onSimpleEnter.call(self,e);
 				}
 				
 				return false;
 			}
 		}
-		,selectItem: function (data) {
+		,selectItem: function (data,e) {
 			if (!('value' in data))
 				return ;
 			this.log("selected Item : ",data);
@@ -492,7 +492,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			}});
 
 			if (typeof this.options.onItemSelect == "function"){
-				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original);
+				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original,e);
 			}
 		}
 		,addToAnalytics:function(type,obj){
