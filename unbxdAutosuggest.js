@@ -127,8 +127,23 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	
 	$.extend(autocomplete.prototype, {
 		default_options: {
-			siteName : 'demosite-u1407617955968'
-      		,APIKey : '64a4a2592a648ac8415e13c561e44991'
+		  siteName : 'demosite-u1407617955968'
+		  ,APIKey : '64a4a2592a648ac8415e13c561e44991'
+		  ,integrations: {} // can have an object of integrations
+		  /* The value of integrations can be an object with
+		   * key - `classical` or `universal`(2 types of GA integrations)
+		   * value - can either be a boolean value or the
+		   *         value of the global object in string
+		   * if the value is boolean, then for a `classical` integration
+		   * the default value will be '_gaq' and for `universal` the
+		   * default value will be 'ga'
+		   * integrations: {
+		   *   'classical': true
+		   * }
+		   * integrations: {
+		   *   'universal': 'ga'
+		   * }
+		   */
 			,resultsClass : 'unbxd-as-wrapper'
 			,minChars : 3
 			,delay : 100
@@ -487,7 +502,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				,field_value : data.filtervalue || null
 				,field_name : data.filtername || null
 				,src_field : data.source || null
-				,pid : data.pid || null
+			  ,pid : data.pid || null
+			  ,unbxdprank: parseInt(data.index, 10) + 1 || 0
 				,internal_query : prev
 			}});
 
@@ -496,11 +512,67 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			}
 		}
 		,addToAnalytics:function(type,obj){
-			if("Unbxd" in window && "track" in window.Unbxd && typeof window.Unbxd.track == "function"){
-				this.log("Pushing data to analytics",type,obj);
-				Unbxd.track( type, obj );
-			}
+		  if("Unbxd" in window && "track" in window.Unbxd && typeof window.Unbxd.track == "function"){
+		    this.log("Pushing data to analytics",type,obj);
+		    Unbxd.track( type, obj );
+		  }
+		  if(type !== 'search') return;
+
+		  if('classical' in this.options.integrations){
+		    this.trackclassical(type, obj);
+		  }
+		  if('universal' in this.options.integrations){
+		    this.trackuniversal(type, obj);
+		  }
 		}
+	  ,getEventAction: function(autosuggestType){
+	    var types = {
+	      'IN_FIELD': 'Scope_Click',
+	      'POPULAR_PRODUCTS': 'Pop_Click',
+	      'KEYWORD_SUGGESTION': 'TQ_Click',
+	      'TOP_SEARCH_QUERIES': 'TQ_Click'
+	    }
+	    return types[autosuggestType];
+	  }
+	  ,getEventLabel: function(autosuggest){
+	    var params = autosuggest.autosuggestParams;
+	    var value = params.autosuggest_suggestion;
+	    var index = params.unbxdprank;
+	    var filter = params.field_name && params.field_value ?
+		params.field_name + ':' + params.field_value : undefined;
+	    var types = {
+	      'IN_FIELD': value + (filter ? '&filter='+filter : '' )+ '-' + index,
+	      'POPULAR_PRODUCTS': value + '-' + index,
+	      'KEYWORD_SUGGESTION': value + '-' + index,
+	      'TOP_SEARCH_QUERIES': value + '-' + index
+	    };
+	    return types[params.autosuggest_type];
+	  }
+	  ,trackclassical: function(type, obj){
+	    var key = this.options.integrations['classical'],
+		eventAction = this.getEventAction(obj.autosuggestParams.autosuggest_type),
+		eventLabel = this.getEventLabel(obj),
+		value = 1;
+	    if(key){
+	      if(key && key === true){
+		key = '_gaq';
+	      }
+	      window[key].push(['_trackEvent', 'U_Autocomplete', eventAction, eventLabel, value, true])
+	    }
+	  }
+	  ,trackuniversal: function(type, obj){
+	    var key = this.options.integrations['universal'],
+		eventAction = this.getEventAction(obj.autosuggestParams.autosuggest_type),
+		eventLabel = this.getEventLabel(obj),
+		value = 1;
+
+	    if(key){
+	      if(key && key === true){
+		key = 'ga';
+	      }
+	      window[key]('send', 'event', 'U_Autocomplete', eventAction, eventLabel, value, {'non_Interaction': 1});
+	    }
+	  }
 		,showResults: function () {
 			if(this.options.width){
 				this.options.mainWidth = this.options.width;
