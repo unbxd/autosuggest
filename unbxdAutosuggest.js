@@ -570,7 +570,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	      if(key && key === true){
 		key = 'ga';
 	      }
-	      window[key]('send', 'event', 'U_Autocomplete', eventAction, eventLabel, value, {'non_Interaction': 1});
+	      window[key]('send', 'event', 'U_Autocomplete', eventAction, eventLabel, value, {'nonInteraction': 1});
 	    }
 	  }
 		,showResults: function () {
