@@ -42,7 +42,10 @@ var ractive = new Ractive({
 			siteName : 'demosite-u1407617955968'
 			,APIKey : '64a4a2592a648ac8415e13c561e44991'
 			,minChars : 2
-			,showCarts : false
+		  ,showCarts : false
+		  ,integrations: {
+		    'universal': true
+		  }
 			,template : "1column" // "2column"
 			,cartType : "separate"
 			// ,noResultConfigMsg: 'No Results were Found'
