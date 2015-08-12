@@ -554,10 +554,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		eventLabel = this.getEventLabel(obj),
 		value = 1;
 	    if(key){
-	      if(key && key === true){
-		key = '_gaq';
-	      }
-	      window[key].push(['_trackEvent', 'U_Autocomplete', eventAction, eventLabel, value, true])
+	      if(key === true) key = '_gaq';
+	      if(window[key])
+		window[key].push(['_trackEvent', 'U_Autocomplete', eventAction, eventLabel, value, true])
 	    }
 	  }
 	  ,trackuniversal: function(type, obj){
@@ -567,10 +566,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		value = 1;
 
 	    if(key){
-	      if(key && key === true){
-		key = 'ga';
-	      }
-	      window[key]('send', 'event', 'U_Autocomplete', eventAction, eventLabel, value, {'nonInteraction': 1});
+	      if(key === true) key = 'ga';
+	      if(window[key])
+		window[key]('send', 'event', 'U_Autocomplete', eventAction, eventLabel, value, {'nonInteraction': 1});
 	    }
 	  }
 		,showResults: function () {
