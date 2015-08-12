@@ -169,7 +169,7 @@ $(function(){
   - **priceFunctionOrKey** can be either a fieldname(*string*) uploaded to UNBXD or a function which takes an object as argument and returns string or a number.
   - **header** will display the header above the results if any POPULAR PRODUCTS are present. 
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of POPULAR PRODUCTS.
-
+  - **view** - either **grid** or **list**.
 ```javascript
 ,popularProducts:{
 	count: 2 //number of products to be shown
@@ -182,6 +182,7 @@ $(function(){
 	,header: ''
 	//give HBS template here.
 	,tpl: ''
+	,view:'grid'
 }
 ```
 
