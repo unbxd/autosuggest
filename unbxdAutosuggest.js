@@ -649,7 +649,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,br = parseInt(this.$input.css("border-right-width"),10)
 			,pb = parseInt(this.$input.css("padding-bottom"),10)
 			,fwidth = (parseInt(iWidth)-2+bl+br)
-			,fpos = {top : pos.top + bt + this.$input.innerHeight() + 'px', left: pos.left + "px"};
+		  //isNaN check for border-top-width:medium bug IE8 http://bugs.jquery.com/ticket/7058
+		  //for more info http://bugs.jquery.com/ticket/10855
+		  ,fpos = {top : pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px"};
 			
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
 			
