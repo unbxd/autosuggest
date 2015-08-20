@@ -259,6 +259,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				,imageUrlOrFunction: "imageUrl"
 				,currency : "Rs."
 				,header: ""
+				,view:'list'
 				,tpl: ['{{#if ../showCarts}}'
 						,'{{#unbxdIf ../../cartType "inline"}}'//"inline" || "separate"
 							,'<div class="unbxd-as-popular-product-inlinecart">'
@@ -1214,7 +1215,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			return '{{#if data.POPULAR_PRODUCTS}}'
 				+ (this.options.popularProducts.header ? '<li class="unbxd-as-header">'+ this.options.popularProducts.header +'</li>' : '')
 				+'{{#data.POPULAR_PRODUCTS}}'
-				+'<li class="unbxd-as-popular-product" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
+				+'<li class="unbxd-as-popular-product '+(this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
+				+'" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
 					+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
 				+'</li>'
 				+'{{/data.POPULAR_PRODUCTS}}'
