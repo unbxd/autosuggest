@@ -341,6 +341,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						,'</div>'
 					,'{{/if}}'].join('')
 			}
+			,filtered : false
 			,resultsContainerSelector : null
 			,processResultsStyles : null
 		}
@@ -355,6 +356,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		,lastKeyPressCode : null
 		,ajaxCall : null//keeps track of current ajax call
 		,currentResults	: []
+		,currentTopResults: []
 		,cache : {}
 		,params : {
 			query : '*'
@@ -391,7 +393,41 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				self.log("select : setting focus");
 				self.hasFocus = true;
 			});
-			
+			$(".unbxd-as-wrapper").on("mouseover", "ul.unbxd-as-maincontent", function(e) {
+				if ($.contains(self.$results[0], e.target) && self.options.filtered) {
+					$("." + self.selectedClass).removeClass(self.selectedClass);
+                    $(e.target).addClass(self.selectedClass);
+                    var $et = $(e.target), p = $et;
+	                self.hasFocus = false;
+	                if (e.target.tagName !== "LI") {
+	                    p = $et.parents("li")
+	                }
+	                var dataValue = $(p).attr('data-value') ? $(p).attr('data-value') : '';
+	                var dataFiltername = $(p).attr('data-filtername') ? $(p).attr('data-filtername') : '';
+	                var dataFiltervalue = $(p).attr('data-filtervalue') ? $(p).attr('data-filtervalue') : '';
+	                if (!p || p.hasClass("unbxd-as-header") || p.hasClass("unbxd-as-popular-product") || p.hasClass("topproducts") || e.target.tagName === "INPUT")
+                        return;
+                    if(dataValue){
+	                	var query = dataValue + (dataFiltername != ''? ':' + dataFiltername + ':' + dataFiltervalue :'')
+	                	var cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+	                	if(self.currentTopResults[query] && self.currentTopResults[query].length > 0){
+	                		$('.unbxd-as-sidecontent').html(cmpld({
+		                		data : self.currentTopResults[query]
+		                		,showCarts : self.options.showCarts
+								,cartType : self.options.cartType
+		                	}));
+	                	}
+		                else{
+                			$('.unbxd-as-sidecontent').html(cmpld({
+                				data : self.currentResults.POPULAR_PRODUCTS
+                				,showCarts : self.options.showCarts
+								,cartType : self.options.cartType
+		                	}));
+		                }
+                    }
+	            }
+
+			});
 			$(document).bind("click.auto",function(e){
 				if(e.target == self.input){
 					self.log("clicked on input : focused");
@@ -532,10 +568,49 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			$(lis[this.activeRow]).addClass(this.selectedClass);
 			
-			if(this.activeRow >= 0 && this.activeRow < lis.size())
+			if(this.activeRow >= 0 && this.activeRow < lis.size()){
 				this.$input.val($(lis[this.activeRow]).data('value'));
-			else if(this.activeRow == -1)
+				if(this.options.filtered && this.activeColumn === 0){
+					var dataValue = $(lis[this.activeRow]).attr('data-value') ? $(lis[this.activeRow]).attr('data-value') : '';
+	                var dataFiltername = $(lis[this.activeRow]).attr('data-filtername') ? $(lis[this.activeRow]).attr('data-filtername') : '';
+	                var dataFiltervalue = $(lis[this.activeRow]).attr('data-filtervalue') ? $(lis[this.activeRow]).attr('data-filtervalue') : '';
+	                var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '')
+	                var cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+	                if(this.currentTopResults[query] && this.currentTopResults[query].length > 0){
+	                	$('.unbxd-as-sidecontent').html(cmpld({
+	                		data:this.currentTopResults[query]
+	                		,showCarts : this.options.showCarts
+							,cartType : this.options.cartType
+	                	}));
+	                }
+                	else{
+                		$('.unbxd-as-sidecontent').html(cmpld({
+                			data:this.currentResults.POPULAR_PRODUCTS
+                			,showCarts : this.options.showCarts
+							,cartType : this.options.cartType
+                		}));
+                	}
+
+				}
+			}
+			else if(this.activeRow == -1){
 				this.$input.val(this.previous);
+				if(this.options.filtered){
+					var cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+					if(this.currentTopResults[this.previous] && this.currentTopResults[this.previous].length > 0)
+	                	$('.unbxd-as-sidecontent').html(cmpld({
+	                		data : this.currentTopResults[this.previous]
+	                		,showCarts : this.options.showCarts
+							,cartType : this.options.cartType
+	                	}));
+	                else
+                		$('.unbxd-as-sidecontent').html(cmpld({
+                			data : this.currentResults.POPULAR_PRODUCTS
+                			,showCarts : this.options.showCarts
+							,cartType : this.options.cartType
+                		}));
+				}
+			}
 		}
 		,selectCurrent: function (e) {
 			var li = this.$results.find('li.'+this.selectedClass),self = this;
@@ -597,7 +672,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	      'IN_FIELD': 'Scope_Click',
 	      'POPULAR_PRODUCTS': 'Pop_Click',
 	      'KEYWORD_SUGGESTION': 'TQ_Click',
-	      'TOP_SEARCH_QUERIES': 'TQ_Click'
+	      'TOP_SEARCH_QUERIES': 'TQ_Click',
+	      'POPULAR_PRODUCTS_FILTERED': 'Filtered_Pop_Click'
 	    }
 	    return types[autosuggestType];
 	  }
@@ -611,7 +687,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	      'IN_FIELD': value + (filter ? '&filter='+filter : '' )+ '-' + index,
 	      'POPULAR_PRODUCTS': value + '-' + index,
 	      'KEYWORD_SUGGESTION': value + '-' + index,
-	      'TOP_SEARCH_QUERIES': value + '-' + index
+	      'TOP_SEARCH_QUERIES': value + '-' + index,
+	      'POPULAR_PRODUCTS_FILTERED': value + '-' + index
 	    };
 	    return types[params.autosuggest_type];
 	  }
@@ -991,6 +1068,71 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	    autosuggest = autosuggest.toLowerCase();
 	    return arr.indexOf(autosuggest) === -1 ? arr.push(autosuggest) : false;
 	  }
+		,getfilteredPopularProducts: function() {
+			var self = this;
+			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
+				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count;
+	        $.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
+        		var query = self.params.q;
+        		self.processfilteredPopularProducts(query,d);
+        	});
+			for(i in this.currentResults){
+				if(i != 'POPULAR_PRODUCTS')
+				for(j in this.currentResults[i]){
+					if(this.currentResults[i][j]['filtername']){
+	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
+	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
+	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue']) 
+	            					+ '&rows=' + this.options.popularProducts.count;
+	            	}
+					else{
+	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
+	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count ;
+	            	}
+	            	$.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
+	            		var query = d.searchMetaData.queryParams.q + (d.searchMetaData.queryParams.filter ? ':' 
+	            						+ d.searchMetaData.queryParams.filter:'');
+	            		self.processfilteredPopularProducts(query,d);
+	            	});
+				}
+			}
+		}
+		,processfilteredPopularProducts:function(query,d){
+			this.currentTopResults[query] = [];
+    		for (var k = 0; k < d.response.products.length; k++) {
+    			var doc = d.response.products[k];
+    			o = {
+						autosuggest : (this.options.popularProducts.autosuggestName ? doc[this.options.popularProducts.autosuggestName] : (doc.title? doc.title : ''))
+						,highlighted : this.highlightStr(doc.title)
+						,_original : doc
+						,type : 'POPULAR_PRODUCTS_FILTERED'
+					};
+
+				if(this.options.popularProducts.price){
+					if(typeof this.options.popularProducts.priceFunctionOrKey === "function"){
+						o.price = this.options.popularProducts.priceFunctionOrKey(doc);
+					}else if(typeof this.options.popularProducts.priceFunctionOrKey === "string" 
+						&& this.options.popularProducts.priceFunctionOrKey){
+						o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
+					}else{
+						o.price = "price" in doc ? doc["price"] : null;
+					}
+
+					if(this.options.popularProducts.currency)
+						o.currency = this.options.popularProducts.currency;
+				}
+
+				if(this.options.popularProducts.image){
+					if(typeof this.options.popularProducts.imageUrlOrFunction === "function"){
+						o.image = this.options.popularProducts.imageUrlOrFunction(doc);
+					}else if(typeof this.options.popularProducts.imageUrlOrFunction === "string" 
+						&& this.options.popularProducts.imageUrlOrFunction){
+						o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+					}
+				}
+				this.currentTopResults[query].push(o);
+    		}
+		}
 	  ,processTopSearchQuery: function(doc){
 			o = {
 				autosuggest : doc.autosuggest
@@ -1148,6 +1290,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}	
 				
 			}
+			if(this.options.filtered){
+				this.getfilteredPopularProducts();
+			}
+			
 			//lenth of result list
 			outLength=this.currentResults.POPULAR_PRODUCTS.length+this.currentResults.IN_FIELD.length;
 		}
@@ -1210,6 +1356,15 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				+'</li>'
 				+'{{/each}}'
 			+'{{/if}}';
+		}
+		,preparefilteredPopularProducts: function (){
+			return  (this.options.popularProducts.header ? '<li class="unbxd-as-header">' + this.options.popularProducts.header + '</li>' : '')
+				+'{{#data}}'
+				+'<li class="unbxd-as-popular-product '+ (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
+				+'" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
+					+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
+				+'</li>'
+				+'{{/data}}'
 		}
 		,preparepopularProductsHTML: function (){
 			return '{{#if data.POPULAR_PRODUCTS}}'

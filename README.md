@@ -95,6 +95,7 @@ $(function(){
 				,header: ''
 				,tpl: ''
 			}
+			,filtered : false
 		});
 	});
 ```
@@ -185,7 +186,7 @@ $(function(){
 	,view:'grid'
 }
 ```
-
+- **filtered** : either **true** or **false**. If **true** filtered PopularProducts will be displayed.
 - **onSimpleEnter** : This function will be called if user presses *enter* key without selecting any result.
 - **onItemSelect** : This function will be called when a user selects one of the suggestions. It will be passed 2 arguments. The first argument is an object shown below and second value will be the original value from Unbxd.
 
