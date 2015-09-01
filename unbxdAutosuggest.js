@@ -1206,16 +1206,18 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				infieldsCount++;
 
 				for(var a in ins){
-					for(var b = 0; b < ins[a].length; b++){		
-						this.currentResults.IN_FIELD.push({
-							autosuggest : doc.autosuggest
-							,highlighted : ins[a][b]
-							,type : doc.doctype
-							,filtername : a
-							,filtervalue : ins[a][b]
-							,_original : doc
-							,source : doc.unbxdAutosuggestSrc
-						})
+					for(var b = 0; b < ins[a].length; b++){
+						if(ins[a][b] !== ''){		
+							this.currentResults.IN_FIELD.push({
+								autosuggest : doc.autosuggest
+								,highlighted : ins[a][b]
+								,type : doc.doctype
+								,filtername : a
+								,filtervalue : ins[a][b]
+								,_original : doc
+								,source : doc.unbxdAutosuggestSrc
+							})
+						}
 					}
 				}
 			}
