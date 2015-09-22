@@ -344,6 +344,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			,filtered : false
 			,resultsContainerSelector : null
 			,processResultsStyles : null
+			,recentSearch:false
 		}
 		,$input : null
 		,$results : null
@@ -383,6 +384,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 
 			this.wire();
+			this.initRecentSearch();
 		}
 		,wire: function(){
 			var self = this;
@@ -551,7 +553,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		,moveSelect: function (step) {
 			var lis = this.$results.find("ul." + (this.activeColumn ? "unbxd-as-sidecontent" : "unbxd-as-maincontent")).find('li:not(.unbxd-as-header)');
 			
-			if (!lis) return;
+			if (!lis || this.$results.is(':visible') === false) 
+				return;
 
 			this.activeRow += step;
 			
@@ -627,14 +630,16 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			}
 		}
 		,selectItem: function (data,e) {
-			if (!('value' in data))
+			if (!('value' in data) || this.$results.is(':visible') === false )
 				return ;
 			this.log("selected Item : ",data);
 			var v = $.trim(data['value']),prev = this.previous;
 			
 			this.previous = v;
 			this.input.lastSelected = data;
-			this.$results.html('');
+			//comenting this out, to get data from dom to push to local storage wheen recent searches on
+			//this.$results.html('');
+
 			this.$input.val(v);
 			this.hideResultsNow(this);
 			
@@ -716,6 +721,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	    }
 	  }
 		,showResults: function () {
+			//if recent searsches enabled, don't show autosuggest on focus of input
+			if(this.options.recentSearch === true && this.$input.val().trim().length === 0)
+				return;
+
 			if(this.options.width){
 				this.options.mainWidth = this.options.width;
 			}
@@ -1506,6 +1515,40 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,log: function(){
 			// console.log("unbxd auto :",arguments);
+		}
+		//initializa recent search plugin
+		,initRecentSearch:function(){
+			var self = this,
+				recentSearchCDNUrl = "recentSearch.js";
+
+			if(this.options.recentSearch === true){
+				this.loadScript( recentSearchCDNUrl , function(){
+					self.$input.recentSearch( self );
+				})
+			}
+		}
+		//load a script using passed url
+		,loadScript:function( url, callback ){
+			var script = document.createElement("script")
+			script.type = "text/javascript";
+
+			if (script.readyState){  //IE
+			script.onreadystatechange = function(){
+			    if ( script.readyState == "loaded" || script.readyState == "complete" ){
+			        script.onreadystatechange = null;
+			        var library = jQuery.noConflict();
+			        	callback(library);
+			    }
+			};
+			} else {  //Others
+			script.onload = function(){
+			     var library = jQuery.noConflict();
+			         callback(library);
+			};
+			}
+
+			script.src = url;
+			document.getElementsByTagName("head")[0].appendChild(script);
 		}
 	});
 
