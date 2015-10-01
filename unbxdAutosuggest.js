@@ -1388,7 +1388,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl){
 
 				if(typeof this.options.noResultTpl === "function"){
-					html = html + '<li>'+ this.options.noResultTpl.call(self,self.params.q) +'</li>';
+				  html = html + '<li>'+ this.options.noResultTpl.call(self, encodeURIComponent(self.params.q)) +'</li>';
 				}
 				else if(typeof this.options.noResultTpl == "string"){
 					html = html + '<li>'+ this.options.noResultTpl +'</li>';
