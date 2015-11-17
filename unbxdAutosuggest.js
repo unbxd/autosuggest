@@ -382,6 +382,18 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				this.options.hbsHelpers.call(this)
 
 
+			for(var i in this.options.featuredFields){
+
+				this['prepare'+this.options.featuredFields[i]+'HTML'] = new Function('key',
+					"return '{{#if data.' + key +'}}'"
+						+"+ (this.options[key].header ? '<li class=\"unbxd-as-header\">'+ this.options[key].header +'</li>' : '')"
+						+"+'{{#each data.' + key + '}}'"
+						+"+'<li class=\"unbxd-as-' + key + '\" data-value=\"{{autosuggest}}\" data-index=\"{{@index}}\" data-type=\"{{type}}\"  data-source=\"{{source}}\" data-parent=\"{{parent}}\">'"
+							+"+ (this.options[key].tpl ? this.options[key].tpl : this.default_options[key].tpl)"
+						+"+'</li>'"
+						+"+'{{/each}}'"
+					+"+'{{/if}};'") 
+			}
 			this.wire();
 		}
 		,wire: function(){
@@ -863,18 +875,25 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			var host_path = this.getHostNPath();
 
 			var url = "q=" + encodeURIComponent(this.params.q);
+
+			var sourceFields = '&sourceFields=' + this.options.featuredFields.join(',');
+			for (var i in this.options.featuredFields){
+				sourceFields +=  '&sourceField.'+this.options.featuredFields[i]+'.count=' + this.options[this.options.featuredFields[i]].count;
+			}
 			if(this.options.maxSuggestions){
 				url += '&inFields.count=' + this.options.maxSuggestions
 				+ '&topQueries.count=' + this.options.maxSuggestions
 				+ '&keywordSuggestions.count=' + this.options.maxSuggestions
-				+ '&popularProducts.count=' + this.options.popularProducts.count;
+				+ '&popularProducts.count=' + this.options.popularProducts.count
+				+  sourceFields
 				+ '&indent=off';
 			}
 			else{
 				url += '&inFields.count=' + this.options.inFields.count
 				+ '&topQueries.count=' + this.options.topQueries.count
 				+ '&keywordSuggestions.count=' + this.options.keywordSuggestions.count
-				+ '&popularProducts.count=' + this.options.popularProducts.count;
+				+ '&popularProducts.count=' + this.options.popularProducts.count
+				+  sourceFields
 				+ '&indent=off';
 			}
 
@@ -1186,6 +1205,16 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			this.currentResults.POPULAR_PRODUCTS.push(o);
 		}
+		,processfeatured: function(doc){
+			o = {
+				autosuggest : doc.autosuggest
+				,highlighted : this.highlightStr(doc.autosuggest)
+				,type : doc.doctype
+				,_original : doc
+				,source : doc.unbxdAutosuggestSrc || ""
+			};
+			this.currentResults[doc.doctype].push(o);
+		}
 		,processInFields: function(doc){
 			var ins = {}
 				,asrc = " " + doc.unbxdAutosuggestSrc + " "
@@ -1246,6 +1275,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				uniqueSuggestions = [];
 
 
+			var featuredFields = this.options.featuredFields;
+			for(var i in featuredFields){
+				this.currentResults[featuredFields[i]] = []
+			}
 			for(var x = 0; x < data.response.products.length; x++){
 				
 				var doc = data.response.products[x]
@@ -1286,6 +1319,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					}else if("POPULAR_PRODUCTS" == doc.doctype 
 						&& this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
 						this.processPopularProducts(doc);
+					}else if(featuredFields.indexOf(doc.doctype) > -1 
+						&& this.options[featuredFields[featuredFields.indexOf(doc.doctype)]].count > this.currentResults[featuredFields[featuredFields.indexOf(doc.doctype)]].length){
+						this.processfeatured(doc);
 					}
 				}	
 				
@@ -1386,7 +1422,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl){
 
 				if(typeof this.options.noResultTpl === "function"){
-					html = html + '<li>'+ this.options.noResultTpl.call(self,self.params.q) +'</li>';
+				  html = html + '<li>'+ this.options.noResultTpl.call(self, encodeURIComponent(self.params.q)) +'</li>';
 				}
 				else if(typeof this.options.noResultTpl == "string"){
 					html = html + '<li>'+ this.options.noResultTpl +'</li>';
@@ -1434,16 +1470,28 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				//main zero side not zero
 				if((mainlen == 0)&&(sidelen != 0)){
 					this.options.sideTpl.forEach(function(key){
+						field = key
 						key = 'prepare' + key + 'HTML';
-						html = html + self[key]();
+						if(self.options.featuredFields.indexOf(field) > -1){
+							html = html + self[key](field);
+						}
+						else{
+							html = html + self[key]();
+						}
 					});
 				}
 				else{
 					if(sidelen != 0){
 						html = '<ul class="unbxd-as-sidecontent">';
 						this.options.sideTpl.forEach(function(key){
+						field = key
 						key = 'prepare' + key + 'HTML';
-						html = html + self[key]();
+						if(self.options.featuredFields.indexOf(field) > -1){
+							html = html + self[key](field);
+						}
+						else{
+							html = html + self[key]();
+						}
 						});
 						html = html + '</ul><ul class="unbxd-as-maincontent">';
 					}
@@ -1451,8 +1499,14 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				 
 			}
 			this.options.mainTpl.forEach(function(key){
+				field = key
 				key = 'prepare' + key + 'HTML';
-				html = html + self[key]();
+				if(self.options.featuredFields.indexOf(field) > -1){
+					html = html + self[key](field);
+				}
+				else{
+					html = html + self[key]();
+				}
 			});
 			html = html + '</ul>';
 
