@@ -90,36 +90,37 @@ body {
 				</div>
 				<div class="pad-5-20">
 
-					max suggestions<br>
+					Maximum Suggestions<br>
 					<input class="form-control" type="text" name="keywords" value={{maxSuggestions}} style="width:60px" >
 				</div>
 				<div class="pad-5-20">
-					max no of Keywords<br>
+					Maximum Keywords Count<br>
 					<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
 				</div>
 				<div class="pad-5-20">
-					max no of Topqueries<br>
+					Maximum Top Queries Count<br>
 					<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
 				</div>
 				<div class="pad-5-20">
-					max no of In-fields<br>
+					Maximum In-Fields Count<br>
 					<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
 				</div>
 				<div class="pad-5-20">
-					max no of Popular-Products<br>
+					Maximum Popular-Products Count<br>
 					<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
 				</div>
 
+					<label>Look and Feel</label>
 				<div class="pad-5-20">
 					Keywords Header<br>
 					<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
 				</div>
 				<div class="pad-5-20">
-					Topqueries Header<br>
+					Top Queries Header<br>
 					<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
 				</div>
 				<div class="pad-5-20">
-					In-fields Header<br>
+					In-Fields Header<br>
 					<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
 				</div>
 				<div class="pad-5-20">
@@ -154,7 +155,7 @@ body {
 			</div>
 		
 				
-			<div class="pad-5-20">Main template
+			<div class="pad-5-20">Main Template
 				<select decorator='chosen' id="MainTpl" value='{{selectedmain}}' multiple style="width:200px;">
     				{{#mainfields}}
         				<option value='{{id}}'>{{name}}</option>
@@ -162,7 +163,7 @@ body {
 				</select>
 			</div>
 
-			<div class="pad-5-20">Side template
+			<div class="pad-5-20">Side Template
 				<select decorator='chosen' id="SideTpl" value='{{selectedside}}' multiple style="width:200px;">
     				{{#sidefields}}
         				<option value='{{id}}'>{{name}}</option>
