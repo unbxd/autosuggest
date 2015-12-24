@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Unbxd Autocomplete</title>
+	<link rel="shortcut icon" href="favicon.png" type="image/icon">
+    <link rel="icon" href="favicon.png" type="image/icon">
+	<link rel="stylesheet" href="unbxdAutosuggest.css">
+
+<style type="text/css">
+	*{
+		font-family: proxima-nova,Arial, sans-serif;
+	}
+	.rt{
+		float:right;
+	}
+	.lt{
+		float: left;
+	}
+	body {
+		padding: 20px;
+	}
+	</style>
+</head>
+<body>
+
+	
+	<div id="play-arena" class="rt" style="width: 75%;">
+		<input id="input" class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text" style="padding:4px; width: 300px;"/>
+
+
+
+
+
+	<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="unbxdAutosuggest.js"></script>
+
+
+	
+
+<script type = "text/javascript">
+	unbxdAutoSuggestFunction(jQuery, Handlebars);
+	var config = {
+		"siteName": "demosite-u1407617955968",
+		"APIKey": "64a4a2592a648ac8415e13c561e44991",
+		"integrations": {
+			"universal": true
+		},
+		"resultsClass": "unbxd-as-wrapper",
+		"minChars": 2,
+		"delay": 100,
+		"loadingClass": "unbxd-as-loading",
+		"mainWidth": 0,
+		"sideWidth": 180,
+		"zIndex": 0,
+		"position": "absolute",
+		"sideContentOn": "right",
+		"template": "1column",
+		"theme": "#ff8400",
+		"mainTpl": [
+			"inFields",
+			"keywordSuggestions",
+			"topQueries",
+			"popularProducts"
+		],
+		"sideTpl": [],
+		"showCarts": false,
+		"cartType": "separate",
+		"onCartClick": function (obj){
+					console.log("addtocart",this, arguments);
+					return true;
+				},
+		"hbsHelpers": null,
+		"onSimpleEnter": null,
+		"onItemSelect": function (){
+					console.log("onItemSelect",arguments);
+				},
+		"noResultTpl": function (query){
+					return 'No results found for '+ query;
+				},
+		"inFields": {
+			"count": 2,
+			"fields": {
+				"brand": 3,
+				"category": 3,
+				"color": 3
+			},
+			"header": "in fields head"
+		},
+		"topQueries": {
+			"count": 2,
+			"header": "tops queries"
+		},
+		"keywordSuggestions": {
+			"count": 2,
+			"header": ""
+		},
+		"popularProducts": {
+			"count": 2,
+			"price": true,
+			"priceFunctionOrKey": "price",
+			"image": true,
+			"imageUrlOrFunction": "imageUrl",
+			"currency": "Rs.",
+			"header": ""
+		},
+		"filtered": false,
+		"resultsContainerSelector": null,
+		"processResultsStyles": null,
+		"recentSearch":true,
+		"recentSearchConfig":{
+			"maxItems":8,
+			"heading" : "Recent Searches",
+			"clearMsg" : "clear"
+		}
+		
+	};
+	jQuery(function(){
+		jQuery("#input").unbxdautocomplete(config);
+	});
+</script>
+
+
+</body>
+</html>
