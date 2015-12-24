@@ -183,7 +183,7 @@ usage  - jQuery(element).recentSearch( autoSuggest ); , where autoSuggest is the
         if( $input.parents("form") && $input.parents("form").length > 0 ){
 			 $input.parents("form").submit(function( event ){
 	        	//ie hack
-	        	if( $.browser.msie || navigator.userAgent.indexOf("Trident") > 0 ){
+	        	if(/msie|trident/i).test(navigator.userAgent){
 	        		onSelect();
 	        	}
 	        	if( config.formDisabled === true ){
