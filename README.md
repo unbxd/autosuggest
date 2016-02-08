@@ -51,9 +51,6 @@ $(function(){
 			,sideContentOn : "right"
 			,showCarts : false
 			,cartType : "separate"
-			,noResultTpl: function(query){
-				return 'No results found for '+ query;
-			}
 			,onSimpleEnter : function(){
 			    console.log("Simple enter :: do a form submit")
 			    //this.input.form.submit();
