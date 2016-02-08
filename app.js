@@ -56,9 +56,6 @@ var ractive = new Ractive({
 				console.log("addtocart",this, arguments);
 				return true;
 			}
-			,noResultTpl: function(query){
-				return 'No results found for '+ query;
-			}
 			,inFields:{
 				count: 2,
 				fields:{
