@@ -1073,23 +1073,23 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		,getfilteredPopularProducts: function() {
 			var self = this;
 			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
-				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count;
+				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count  +'&indent=off&facet=off';
 	        $.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
         		var query = self.params.q;
         		self.processfilteredPopularProducts(query,d);
         	});
 			for(i in this.currentResults){
-				if(i != 'POPULAR_PRODUCTS')
+				if(i != 'POPULAR_PRODUCTS' && this.currentResults.hasOwnProperty(i))
 				for(j in this.currentResults[i]){
 					if(this.currentResults[i][j]['filtername']){
 	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
 	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
 	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue']) 
-	            					+ '&rows=' + this.options.popularProducts.count;
+	            					+ '&rows=' + this.options.popularProducts.count +'&indent=off&facet=off';
 	            	}
 					else{
 	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
-	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count ;
+	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count  +'&indent=off&facet=off';
 	            	}
 	            	$.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
 	            		var query = d.searchMetaData.queryParams.q + (d.searchMetaData.queryParams.filter ? ':' 
