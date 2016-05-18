@@ -649,8 +649,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				,internal_query : prev
 			}});
 
-			if (typeof this.options.onItemSelect == "function"){
+			if (typeof this.options.onItemSelect == "function" && data.type !== "POPULAR_PRODUCTS_FILTERED"){
 				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original,e);
+			} else if(data.type === "POPULAR_PRODUCTS_FILTERED"){
+				this.options.onItemSelect.call(this,data,this.currentTopResults[data.src][parseInt(data['index'])]._original,e);
 			}
 		}
 		,addToAnalytics:function(type,obj){
@@ -1106,6 +1108,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						,highlighted : this.highlightStr(doc.title)
 						,_original : doc
 						,type : 'POPULAR_PRODUCTS_FILTERED'
+						,src: query
 					};
 
 				if(this.options.popularProducts.price){
@@ -1361,7 +1364,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			return  (this.options.popularProducts.header ? '<li class="unbxd-as-header">' + this.options.popularProducts.header + '</li>' : '')
 				+'{{#data}}'
 				+'<li class="unbxd-as-popular-product '+ (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
-				+'" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
+				+'" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
 					+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
 				+'</li>'
 				+'{{/data}}'
