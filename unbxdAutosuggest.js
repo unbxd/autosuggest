@@ -1072,7 +1072,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	  }
 		,getfilteredPopularProducts: function() {
 			var self = this;
-			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
+			var url = "//search.unbxdapi.com/" + this.options.APIKey + "/" 
 				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count  +'&indent=off&facet=off';
 	        $.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
         		var query = self.params.q;
@@ -1082,13 +1082,13 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				if(i != 'POPULAR_PRODUCTS' && this.currentResults.hasOwnProperty(i))
 				for(j in this.currentResults[i]){
 					if(this.currentResults[i][j]['filtername']){
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
+	            		var url = "//search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
 	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
 	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue']) 
 	            					+ '&rows=' + this.options.popularProducts.count +'&indent=off&facet=off';
 	            	}
 					else{
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
+	            		var url = "//search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
 	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count  +'&indent=off&facet=off';
 	            	}
 	            	$.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
