@@ -1072,7 +1072,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	  }
 		,getfilteredPopularProducts: function() {
 			var self = this;
-			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
+			var url = "//search.unbxdapi.com/" + this.options.APIKey + "/"
 				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q)
 				+ "&rows=" + this.options.popularProducts.count;
 
@@ -1089,7 +1089,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				if(i != 'POPULAR_PRODUCTS'){
 					for(j in this.currentResults[i]){
 						if(this.currentResults[i][j]['filtername']){
-							var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/"
+							var url = "//search.unbxdapi.com/" + this.options.APIKey + "/"
 								+ this.options.siteName + "/search?q="
 								+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
 								+ this.currentResults[i][j]['filtername'] + ':'
@@ -1097,7 +1097,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 								+ "&rows=" + this.options.popularProducts.count;
 						}
 						else{
-							var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/"
+							var url = "//search.unbxdapi.com/" + this.options.APIKey + "/"
 								+ this.options.siteName + "/search?q="
 								+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
 								+ "&rows=" + this.options.popularProducts.count ;
