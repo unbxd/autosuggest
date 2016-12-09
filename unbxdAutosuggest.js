@@ -1073,50 +1073,69 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		,getfilteredPopularProducts: function() {
 			var self = this;
 			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
-				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count;
-	        $.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
-        		var query = self.params.q;
-        		self.processfilteredPopularProducts(query,d);
-        	});
+				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q)
+				+ "&rows=" + this.options.popularProducts.count;
+
+			$.ajax({
+				url: url,
+				dataType: "jsonp",
+				jsonp: "json.wrf"
+			}).done(function(d) {
+				var query = self.params.q;
+				self.processfilteredPopularProducts(query,d);
+			});
+
 			for(i in this.currentResults){
-				if(i != 'POPULAR_PRODUCTS')
-				for(j in this.currentResults[i]){
-					if(this.currentResults[i][j]['filtername']){
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
-	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
-	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue']) 
-	            					+ '&rows=' + this.options.popularProducts.count;
-	            	}
-					else{
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
-	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count ;
-	            	}
-	            	$.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
-	            		var query = d.searchMetaData.queryParams.q + (d.searchMetaData.queryParams.filter ? ':' 
-	            						+ d.searchMetaData.queryParams.filter:'');
-	            		self.processfilteredPopularProducts(query,d);
-	            	});
+				if(i != 'POPULAR_PRODUCTS'){
+					for(j in this.currentResults[i]){
+						if(this.currentResults[i][j]['filtername']){
+							var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/"
+								+ this.options.siteName + "/search?q="
+								+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
+								+ this.currentResults[i][j]['filtername'] + ':'
+								+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
+								+ "&rows=" + this.options.popularProducts.count;
+						}
+						else{
+							var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/"
+								+ this.options.siteName + "/search?q="
+								+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
+								+ "&rows=" + this.options.popularProducts.count ;
+						}
+						$.ajax({
+							url: url,
+							dataType: "jsonp",
+							jsonp: "json.wrf"
+						}).done(function(d) {
+							var query = d.searchMetaData.queryParams.q
+								+ (d.searchMetaData.queryParams.filter ? ':'
+								+ d.searchMetaData.queryParams.filter:'');
+							self.processfilteredPopularProducts(query,d);
+						});
+					}
 				}
 			}
 		}
 		,processfilteredPopularProducts:function(query,d){
 			this.currentTopResults[query] = [];
-    		for (var k = 0; k < d.response.products.length; k++) {
-    			var doc = d.response.products[k];
-    			o = {
-						autosuggest : (this.options.popularProducts.autosuggestName ? doc[this.options.popularProducts.autosuggestName] : (doc.title? doc.title : ''))
-						,highlighted : this.highlightStr(doc.title)
-						,_original : doc
-						,type : 'POPULAR_PRODUCTS_FILTERED'
-						,src: query
-					};
+			for (var k = 0; k < d.response.products.length; k++) {
+				var doc = d.response.products[k];
+				o = {
+					autosuggest : (this.options.popularProducts.autosuggestName ?
+						doc[this.options.popularProducts.autosuggestName] : (doc.title? doc.title : ''))
+					,highlighted : this.highlightStr(doc.title)
+					,_original : doc
+					,type : 'POPULAR_PRODUCTS_FILTERED'
+					,src: query
+				};
 
 				if(this.options.popularProducts.price){
 					if(typeof this.options.popularProducts.priceFunctionOrKey === "function"){
 						o.price = this.options.popularProducts.priceFunctionOrKey(doc);
 					}else if(typeof this.options.popularProducts.priceFunctionOrKey === "string" 
 						&& this.options.popularProducts.priceFunctionOrKey){
-						o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
+						o.price = this.options.popularProducts.priceFunctionOrKey in doc ?
+							doc[this.options.popularProducts.priceFunctionOrKey] : null;
 					}else{
 						o.price = "price" in doc ? doc["price"] : null;
 					}
@@ -1130,11 +1149,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						o.image = this.options.popularProducts.imageUrlOrFunction(doc);
 					}else if(typeof this.options.popularProducts.imageUrlOrFunction === "string" 
 						&& this.options.popularProducts.imageUrlOrFunction){
-						o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+						o.image = this.options.popularProducts.imageUrlOrFunction in doc ?
+							doc[this.options.popularProducts.imageUrlOrFunction] : null;
 					}
 				}
 				this.currentTopResults[query].push(o);
-    		}
+			}
 		}
 	  ,processTopSearchQuery: function(doc){
 			o = {
