@@ -1074,8 +1074,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			var self = this,
 				url_path = "//search.unbxdapi.com/" + this.options.APIKey + "/"
 				+ this.options.siteName + "/search",
+				default_search_params = "indent=off&facet=off&analytics=false&redirect=false",
 				url = url_path + "?q=" + encodeURIComponent(this.params.q)
-				+ "&rows=" + this.options.popularProducts.count;
+				+ "&rows=" + this.options.popularProducts.count + "&"
+				+ default_search_params;
 
 			$.ajax({
 				url: url,
@@ -1095,12 +1097,14 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
 									+ this.currentResults[i][j]['filtername'] + ':'
 									+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
-									+ "&rows=" + this.options.popularProducts.count;
+									+ "&rows=" + this.options.popularProducts.count + "&"
+									+ default_search_params;
 							}
 							else{
 								url = url_path + "?q="
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
-									+ "&rows=" + this.options.popularProducts.count ;
+									+ "&rows=" + this.options.popularProducts.count + "&"
+									+ default_search_params;
 							}
 							$.ajax({
 								url: url,
