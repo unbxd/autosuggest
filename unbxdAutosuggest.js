@@ -1095,9 +1095,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 							if(this.currentResults[i][j]['filtername']){
 								url = url_path + "?q="
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
-									+ this.currentResults[i][j]['filtername'] + ':'
+									+ this.currentResults[i][j]['filtername'] + ":\""
 									+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
-									+ "&rows=" + this.options.popularProducts.count + "&"
+									+ "\"&rows=" + this.options.popularProducts.count + "&"
 									+ default_search_params;
 							}
 							else{
@@ -1113,7 +1113,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 							}).done(function(d) {
 								var query = d.searchMetaData.queryParams.q
 									+ (d.searchMetaData.queryParams.filter ? ':'
-									+ d.searchMetaData.queryParams.filter:'');
+									+ d.searchMetaData.queryParams.filter.replace(/"/g,''):'');
 								self.processfilteredPopularProducts(query,d);
 							});
 						}
