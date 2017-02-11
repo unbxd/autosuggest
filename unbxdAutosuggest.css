@@ -237,3 +237,11 @@
     float: none;
     text-align: center;
 }
+
+/* css chnages for recent searches 
+   rs - recent search
+*/
+.unbxd-as-wrapper ul li.unbxd-as-header span.unbxd-rs-clear{
+    cursor: pointer;
+    float: right;
+}

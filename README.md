@@ -8,6 +8,8 @@ This plug-in depends on jQuery and Handlebars libraries. It works with the UNBXD
 ![keyword-suggestions](/screenshots/keyword-suggestions.png "keyword-suggestions")
 #####4. POPULAR PRODUCTS
 ![popular-products](/screenshots/popular-products.png "popular-products")
+#####5. RECENT SEARCHES or HISTORY
+![recent-searches](/screenshots/recent-searches.png "recent-searches")
 
 ## USAGE
 ###Step 1 - Include scripts
@@ -201,5 +203,17 @@ $(function(){
 - **processResultsStyles** : This option, if set, should be a function, with a single argument which takes an object with top, left and right properties in it. The function should return the object with all the css properties that can be applied to suggestions container. 
 	Note: this object is generally used for positioning the suggestions.
 - **resultsContainerSelector** : This option, if set, should be jQuery selector string for DOM element where suggestions should be appended in Document. If not set, then suggestions will be appended to body.
+- **recentSearch** : This option, if set true, shows recent search queries when user focuses on input.  
+- **recentSearchConfig** : Config options for recent search. This value takes an object with different properties as explained below.  
+  - **maxItems** maximum number of recent searche queries you want to show
+  - **heading** heading of recent searches widget, set to false if you don't want one
+  - **clearMsg** clear icon message , on click of this history will be cleared  
+```javascript
+,recentSearchConfig:{
+	maxItems: 6 //max number of recent search queries to show
+	,heading: "Recent Searches" //heading of recent search widget
+	,clearMsg : "clear" //message on clear history icon
+}
+```
 
 ###### PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css 
