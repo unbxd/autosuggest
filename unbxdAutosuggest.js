@@ -10,13 +10,13 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
    window.Unbxd = window.Unbxd || {};
    Unbxd.autosuggestVersion = 1.0;
 
-  // Polyfill for window.location.origin 
+  // Polyfill for window.location.origin
   if (!window.location.origin) {
     window.location.origin = window.location.protocol + "//"
       + window.location.hostname
       + (window.location.port ? ':' + window.location.port: '');
   }
-  
+
   // Production steps of ECMA-262, Edition 5, 15.4.4.18
   // Reference: http://es5.github.io/#x15.4.4.18
   if (!Array.prototype.forEach) {
@@ -141,7 +141,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
       return -1;
     };
   }
-  
+
 	var isMobile = {
 	    Android: function() {
 	      return navigator.userAgent.match(/Android/i);
@@ -175,7 +175,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		this.input = input;
 		this.init(input, options);
 	};
-	
+
 	function debounce(func, wait, immediate) {
 		var timeout;
 		return function() {
@@ -190,7 +190,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if (callNow) func.apply(context, args);
 		};
 	};
-	
+
 	$.extend(autocomplete.prototype, {
 		default_options: {
 		  siteName : 'demosite-u1407617955968'
@@ -303,7 +303,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 								,'<div  class="unbxd-as-popular-product-name">'
 									,'{{{safestring highlighted}}}'
 								,'</div>'
-							
+
 								,'<div class="unbxd-as-popular-product-cart">'
 									,'<div class="unbxd-as-popular-product-cart-action">'
 										,'<button class="unbxd-as-popular-product-cart-button">Add to cart</button>'
@@ -386,7 +386,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,wire: function(){
 			var self = this;
-			
+
 			this.$input.bind('keydown.auto',this.keyevents());
 
 			this.$input.bind('select.auto',function(){
@@ -483,7 +483,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			return function(e){
 				self.lastKeyPressCode = e.keyCode;
 				self.lastKeyEvent = e;
-				
+
 				switch(e.keyCode) {
 					case 38: // up
 						e.preventDefault();
@@ -517,12 +517,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					default:
 						self.activeRow = -1;
 						self.hasFocus = true;
-						
-						if (self.timeout) 
+
+						if (self.timeout)
 							clearTimeout(self.timeout);
-						
+
 						self.timeout = setTimeout(debounce(function(){self.onChange();}, 250), self.options.delay);
-						
+
 						break;
 				}
 			};
@@ -550,11 +550,11 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		}
 		,moveSelect: function (step) {
 			var lis = this.$results.find("ul." + (this.activeColumn ? "unbxd-as-sidecontent" : "unbxd-as-maincontent")).find('li:not(.unbxd-as-header)');
-			
+
 			if (!lis) return;
 
 			this.activeRow += step;
-			
+
 			if(this.activeRow < -1)
 				this.activeRow = lis.size()-1;
 			else if(this.activeRow == -1)
@@ -567,7 +567,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			$("."+this.selectedClass).removeClass(this.selectedClass);
 
 			$(lis[this.activeRow]).addClass(this.selectedClass);
-			
+
 			if(this.activeRow >= 0 && this.activeRow < lis.size()){
 				this.$input.val($(lis[this.activeRow]).data('value'));
 				if(this.options.filtered && this.activeColumn === 0){
@@ -622,7 +622,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					this.lastKeyEvent.preventDefault();
 					self.options.onSimpleEnter.call(self,e);
 				}
-				
+
 				return false;
 			}
 		}
@@ -631,14 +631,14 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				return ;
 			this.log("selected Item : ",data);
 			var v = $.trim(data['value']),prev = this.previous;
-			
+
 			this.previous = v;
 			this.input.lastSelected = data;
 			this.$results.html('');
 			this.$input.val(v);
 			this.hideResultsNow(this);
-			
-			this.addToAnalytics("search",{query : data.value, autosuggestParams : { 
+
+			this.addToAnalytics("search",{query : data.value, autosuggestParams : {
 				autosuggest_type : data.type
 				,autosuggest_suggestion : data.value
 				,field_value : data.filtervalue || null
@@ -730,9 +730,9 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		  //isNaN check for border-top-width:medium bug IE8 http://bugs.jquery.com/ticket/7058
 		  //for more info http://bugs.jquery.com/ticket/10855
 		  ,fpos = {top : pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px"};
-			
+
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth+"px");
-			
+
 			if(this.scrollbarWidth == null){
 				this.setScrollWidth();
 			}
@@ -776,13 +776,13 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 		,hideResultsNow: function () {
 			this.log("hideResultsNow");
 			if (this.timeout) clearTimeout(this.timeout);
-			
+
 			this.$input.removeClass(this.options.loadingClass);
-			
+
 			if (this.$results.is(':visible')) {
 				this.$results.hide();
 			}
-			
+
 			if(this.ajaxCall) this.ajaxCall.abort();
 		}
 		,addFilter : function(field, value){
@@ -798,7 +798,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				delete this.params.filters[field][value];
 
 			if(Object.keys(this.params.filters[field]).length == 0)
-				delete this.params.filters[field];			
+				delete this.params.filters[field];
 
 			return this;
 		}
@@ -816,14 +816,14 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 				return this.$results.hide();
 			}
-			
+
 			var v = this.$input.val();
 			if (v == this.previous) return;
-			
+
 			this.params.q = v
 			this.previous = v;
 			this.currentResults	=	{};
-			
+
 			if(this.inCache(v)){
 				this.log("picked from cache : " + v);
 				this.currentResults = this.getFromCache(v);
@@ -831,15 +831,15 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				this.showResults();
 			}else{
 				if(this.ajaxCall) this.ajaxCall.abort();
-			
+
 				if (v.length >= this.options.minChars) {
 					this.$input.addClass(this.options.loadingClass);
 					this.requestData(v);
-				} 
+				}
 				else {
 					this.$input.removeClass(this.options.loadingClass);
 					this.$results.hide();
-				}	
+				}
 			}
 		}
 		,getClass : function(object){return Object.prototype.toString.call(object).match(/^\[object\s(.*)\]$/)[1];}
@@ -851,10 +851,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				,dataType: "jsonp"
 				,jsonp: 'json.wrf'
 			})
-			.done(function(d) { 
+			.done(function(d) {
 				self.receiveData(d);
 			})
-			.fail(function(f) {	
+			.fail(function(f) {
 				self.$input.removeClass(self.options.loadingClass);
 				self.$results.hide();
 			});
@@ -911,7 +911,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				this.addToCache(this.params.q, this.currentResults);
 
 				this.$results.html(this.prepareHTML());
-				
+
 				this.showResults();
 			} else {
 				this.hideResultsNow(this);
@@ -936,7 +936,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				}
 			}
 
-			
+
 			if(infield_result < infield_sugg){
 				var infield_rem = infield_sugg - infield_result;
 				while(infield_rem > 0){
@@ -963,7 +963,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					}
 					else
 						infield_rem = 0;
-				
+
 				}
 				infield_sugg = infield_result;
 			}
@@ -1041,7 +1041,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			count['key_rem'] = keyword_rem;
 			count['top_rem'] = topquery_rem;
 			return count;
-			
+
 		}
 		,isUnique:function( autosuggest, arr ){
 			try{
@@ -1049,12 +1049,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				var unique = true;
 				for(var k=0; k<arr.length; k++){
 					var suggestion = arr[k];
-					if( Math.abs(suggestion.length - autosuggest.length) < 3 
+					if( Math.abs(suggestion.length - autosuggest.length) < 3
 						&&  (suggestion.indexOf(autosuggest) != -1 || autosuggest.indexOf(suggestion) != -1 ) ){
 						unique = false;
 						break;
 					}
-						
+
 				}
 				if(unique)
 					arr.push(autosuggest);
@@ -1070,7 +1070,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	  }
 		,getfilteredPopularProducts: function() {
 			var self = this;
-			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
+			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/"
 				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count;
 	        $.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
         		var query = self.params.q;
@@ -1080,17 +1080,17 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				if(i != 'POPULAR_PRODUCTS')
 				for(j in this.currentResults[i]){
 					if(this.currentResults[i][j]['filtername']){
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
+	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName
 	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
-	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue']) 
+	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue'])
 	            					+ '&rows=' + this.options.popularProducts.count;
 	            	}
 					else{
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
+	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName
 	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count ;
 	            	}
 	            	$.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
-	            		var query = d.searchMetaData.queryParams.q + (d.searchMetaData.queryParams.filter ? ':' 
+	            		var query = d.searchMetaData.queryParams.q + (d.searchMetaData.queryParams.filter ? ':'
 	            						+ d.searchMetaData.queryParams.filter:'');
 	            		self.processfilteredPopularProducts(query,d);
 	            	});
@@ -1111,7 +1111,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				if(this.options.popularProducts.price){
 					if(typeof this.options.popularProducts.priceFunctionOrKey === "function"){
 						o.price = this.options.popularProducts.priceFunctionOrKey(doc);
-					}else if(typeof this.options.popularProducts.priceFunctionOrKey === "string" 
+					}else if(typeof this.options.popularProducts.priceFunctionOrKey === "string"
 						&& this.options.popularProducts.priceFunctionOrKey){
 						o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
 					}else{
@@ -1125,7 +1125,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				if(this.options.popularProducts.image){
 					if(typeof this.options.popularProducts.imageUrlOrFunction === "function"){
 						o.image = this.options.popularProducts.imageUrlOrFunction(doc);
-					}else if(typeof this.options.popularProducts.imageUrlOrFunction === "string" 
+					}else if(typeof this.options.popularProducts.imageUrlOrFunction === "string"
 						&& this.options.popularProducts.imageUrlOrFunction){
 						o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
 					}
@@ -1164,7 +1164,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if(this.options.popularProducts.price){
 				if(typeof this.options.popularProducts.priceFunctionOrKey == "function"){
 					o.price = this.options.popularProducts.priceFunctionOrKey(doc);
-				}else if(typeof this.options.popularProducts.priceFunctionOrKey == "string" 
+				}else if(typeof this.options.popularProducts.priceFunctionOrKey == "string"
 					&& this.options.popularProducts.priceFunctionOrKey){
 					o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
 				}else{
@@ -1178,7 +1178,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			if(this.options.popularProducts.image){
 				if(typeof this.options.popularProducts.imageUrlOrFunction == "function"){
 					o.image = this.options.popularProducts.imageUrlOrFunction(doc);
-				}else if(typeof this.options.popularProducts.imageUrlOrFunction == "string" 
+				}else if(typeof this.options.popularProducts.imageUrlOrFunction == "string"
 					&& this.options.popularProducts.imageUrlOrFunction){
 					o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
 				}
@@ -1186,51 +1186,92 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			this.currentResults.POPULAR_PRODUCTS.push(o);
 		}
+        ,isInFieldSourceUnique: function(doc){
+            var isUnique = true;
+            for(var keywordIndex in this.currentResults.IN_FIELD){
+                if(this.currentResults.IN_FIELD[keywordIndex].type === "keyword" &&
+                this.currentResults.IN_FIELD[keywordIndex].autosuggest.trim().toLowerCase() === doc.autosuggest.trim().toLowerCase()){
+                    isUnique = false;
+                }
+            }
+            return isUnique;
+        }
+        ,isInFieldUnique: function(doc, curFilterValue, curKeywordIndex){
+            var isUnique = true;
+            for(var inFieldIndex = curKeywordIndex + 1; inFieldIndex < this.currentResults.IN_FIELD.length; inFieldIndex++){
+                if(this.currentResults.IN_FIELD[inFieldIndex].type === "IN_FIELD" &&
+                curFilterValue.trim().toLowerCase() === this.currentResults.IN_FIELD[inFieldIndex].filtervalue.trim().toLowerCase()){
+                    isUnique = false;
+                }
+            }
+            // Check for uniqueness across infield source and infield
+            if(curFilterValue.trim().toLowerCase() === this.currentResults.IN_FIELD[curKeywordIndex].autosuggest.trim().toLowerCase()){
+                isUnique = false;
+            }
+            return isUnique;
+        }
 		,processInFields: function(doc){
-			var ins = {}
-				,asrc = " " + doc.unbxdAutosuggestSrc + " "
-				,highlightedtext = this.highlightStr(doc.autosuggest);
+            var ins = {}
+                ,asrc = " " + doc.unbxdAutosuggestSrc + " "
+                ,highlightedtext = this.highlightStr(doc.autosuggest);
 
-			for(var a in this.options.inFields.fields){
-				if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
-					ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
-				}
-			}
-			if( !$.isEmptyObject(ins)){
-				this.currentResults.IN_FIELD.push({
-					autosuggest : doc.autosuggest
-					,highlighted : highlightedtext
-					,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
-					,source : doc.unbxdAutosuggestSrc
-				});
-				infieldsCount++;
+            for(var a in this.options.inFields.fields){
+                if( (a+"_in") in doc && doc[a+"_in"].length && asrc.indexOf(" " +a+" ") == -1){
+                    ins[a] = doc[a+"_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+                }
+            }
+            if( !$.isEmptyObject(ins)){
+                if(this.isInFieldSourceUnique(doc)){
+                    this.currentResults.IN_FIELD.push({
+                        autosuggest : doc.autosuggest
+                        ,highlighted : highlightedtext
+                        ,type : "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
+                        ,source : doc.unbxdAutosuggestSrc
+                    });
+                    infieldsCount++;
 
-				for(var a in ins){
-					for(var b = 0; b < ins[a].length; b++){
-						if(ins[a][b] !== ''){		
-							this.currentResults.IN_FIELD.push({
-								autosuggest : doc.autosuggest
-								,highlighted : ins[a][b]
-								,type : doc.doctype
-								,filtername : a
-								,filtervalue : ins[a][b]
-								,_original : doc
-								,source : doc.unbxdAutosuggestSrc
-							})
-						}
-					}
-				}
-			}
-			else{
-				this.currentResults.KEYWORD_SUGGESTION.push({
-					autosuggest : doc.autosuggest
-					,highlighted : highlightedtext
-					,type : "KEYWORD_SUGGESTION" //this is kept as keyword but in template it will be used as "IN_FIELD"
-					,source : doc.unbxdAutosuggestSrc
-				});
-			}
+                    // Store the current infield source index (type = keyword)
+                    var curKeywordIndex = this.currentResults.IN_FIELD.length - 1;
+                    for(var a in ins){
+                        for(var b = 0; b < ins[a].length; b++){
+                            if(ins[a][b] !== ''){
+                                if(this.isInFieldUnique(doc, ins[a][b], curKeywordIndex)){
+                                    this.currentResults.IN_FIELD.push({
+                                        autosuggest : doc.autosuggest
+                                        ,highlighted : ins[a][b]
+                                        ,type : doc.doctype
+                                        ,filtername : a
+                                        ,filtervalue : ins[a][b]
+                                        ,_original : doc
+                                        ,source : doc.unbxdAutosuggestSrc
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    var curInFieldLength = this.currentResults.IN_FIELD.length;
 
-		}
+                    // Convert the infield source into a keyword suggestion if there are no infields associated
+                    if(this.currentResults.IN_FIELD[curInFieldLength - 1].type === "keyword"){
+                        this.currentResults.IN_FIELD.splice(curInFieldLength - 1, 1);
+                        this.currentResults.KEYWORD_SUGGESTION.push({
+                            autosuggest : doc.autosuggest
+                            ,highlighted : highlightedtext
+                            ,type : "KEYWORD_SUGGESTION" //this is kept as keyword but in template it will be used as "IN_FIELD"
+                            ,source : doc.unbxdAutosuggestSrc
+                        });
+                    }
+                }
+            }
+            else{
+                this.currentResults.KEYWORD_SUGGESTION.push({
+                    autosuggest : doc.autosuggest
+                    ,highlighted : highlightedtext
+                    ,type : "KEYWORD_SUGGESTION" //this is kept as keyword but in template it will be used as "IN_FIELD"
+                    ,source : doc.unbxdAutosuggestSrc
+                });
+            }
+        }
 		,processData: function(data){
 			var count;
 			if(this.options.maxSuggestions){
@@ -1249,28 +1290,28 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 
 			for(var x = 0; x < data.response.products.length; x++){
-				
+
 				var doc = data.response.products[x]
 					,o = {};
 
 				if(this.options.maxSuggestions){
-					if("TOP_SEARCH_QUERIES" == doc.doctype && count['topquery'] > this.currentResults.TOP_SEARCH_QUERIES.length 
+					if("TOP_SEARCH_QUERIES" == doc.doctype && count['topquery'] > this.currentResults.TOP_SEARCH_QUERIES.length
 						&& this.isUnique(doc.autosuggest, uniqueSuggestions) ){
 						this.processTopSearchQuery(doc);
-					}else if("IN_FIELD" == doc.doctype && (count['infields']+count['key_rem']+count['top_rem']) > infieldsCount 
+					}else if("IN_FIELD" == doc.doctype && (count['infields']+count['key_rem']+count['top_rem']) > infieldsCount
 						&& this.isUnique(doc.autosuggest, uniqueInfields)){
 							if(count['infields'] > infieldsCount){
 								this.processInFields(doc);
 							}
-							else if(count['key_rem'] + count['top_rem'] > this.currentResults.KEYWORD_SUGGESTION.length 
+							else if(count['key_rem'] + count['top_rem'] > this.currentResults.KEYWORD_SUGGESTION.length
 								&& this.isUnique(doc.autosuggest, uniqueSuggestions)){
 								this.processKeywordSuggestion(doc);
 							}
-								
-					}else if("KEYWORD_SUGGESTION" == doc.doctype  && (count['keyword'] > this.currentResults.KEYWORD_SUGGESTION.length) 
+
+					}else if("KEYWORD_SUGGESTION" == doc.doctype  && (count['keyword'] > this.currentResults.KEYWORD_SUGGESTION.length)
 						&& this.isUnique(doc.autosuggest, uniqueInfields) ){
 						this.processKeywordSuggestion(doc);
-					}else if("POPULAR_PRODUCTS" == doc.doctype 
+					}else if("POPULAR_PRODUCTS" == doc.doctype
 						&& this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
 						this.processPopularProducts(doc);
 					}
@@ -1278,24 +1319,24 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					if("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length
 					 && this.isUnique(doc.autosuggest, uniqueSuggestions) ){
 						this.processTopSearchQuery(doc);
-					}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount 
+					}else if("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount
 						&& this.isTempUnique(doc.autosuggest, uniqueInfields) ){
 						this.processInFields(doc);
-					}else if("KEYWORD_SUGGESTION" == doc.doctype  
-						&& (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length) 
+					}else if("KEYWORD_SUGGESTION" == doc.doctype
+						&& (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length)
 						&& this.isUnique(doc.autosuggest, uniqueSuggestions) ){
 						this.processKeywordSuggestion(doc);
-					}else if("POPULAR_PRODUCTS" == doc.doctype 
+					}else if("POPULAR_PRODUCTS" == doc.doctype
 						&& this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length){
 						this.processPopularProducts(doc);
 					}
-				}	
-				
+				}
+
 			}
 			if(this.options.filtered){
 				this.getfilteredPopularProducts();
 			}
-			
+
 			//lenth of result list
 			outLength=this.currentResults.POPULAR_PRODUCTS.length+this.currentResults.IN_FIELD.length;
 		}
@@ -1308,7 +1349,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				var arr = q.split(' ');
 				for(var k in arr){
 					if(!arr.hasOwnProperty(k))continue;
-					
+
 					var l	= output.toLowerCase().lastIndexOf("</strong>");
 					if(l != -1) l += 9;
 					output = output.substring(0,l) + output.substring(l).replace(new RegExp(this.escapeStr( arr[k] ), 'gi') , function($1){
@@ -1322,7 +1363,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			return output;
 		}
-		
+
 		,prepareinFieldsHTML: function (){
 			return '{{#if data.IN_FIELD}}'
 				+ (this.options.inFields.header ? '<li class="unbxd-as-header">'+ this.options.inFields.header +'</li>' : '')
@@ -1384,7 +1425,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				self = this ,
 				mainlen = 0 ,
 				sidelen = 0 ;
-			if(!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length 
+			if(!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl){
 
 				if(typeof this.options.noResultTpl === "function"){
@@ -1423,7 +1464,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 					key = "KEYWORD_SUGGESTION";
 				sidelen=sidelen+self.currentResults[key].length;
 			});
-				
+
 			if(isMobile.any()) this.options.template = '1column';
 
 			if(this.options.template === '2column' && !this.options.sideTpl.length && !this.options.mainTpl){
@@ -1450,7 +1491,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 						html = html + '</ul><ul class="unbxd-as-maincontent">';
 					}
 				}
-				 
+
 			}
 			this.options.mainTpl.forEach(function(key){
 				key = 'prepare' + key + 'HTML';
@@ -1512,7 +1553,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	$.fn.unbxdautocomplete = function(options) {
 		return this.each(function() {
 			var self = this;
-			
+
 			try{
 				this.auto = new autocomplete(this, options);
 			}catch(e){
