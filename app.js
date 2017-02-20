@@ -88,6 +88,15 @@ var ractive = new Ractive({
 		ractive.set('selectedmain', ['inFields','keywordSuggestions','topQueries','popularProducts']);
 		$('#MainTpl').trigger('liszt:updated');
 
+		(function() {
+			var queryParams = new URLSearchParams(window.location.search);
+			if (queryParams.get('siteName')) {
+				ractive.set('siteName', queryParams.get('siteName'));
+			}
+			if (queryParams.get('APIKey')) {
+				ractive.set('APIKey', queryParams.get('APIKey'));
+			}
+		})()
 
 		ractive.observe( 'maxSuggestions', function ( newValue, oldValue, keypath ) {
 			if(newValue||oldValue){
