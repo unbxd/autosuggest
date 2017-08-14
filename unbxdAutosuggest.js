@@ -860,7 +860,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			});
 		}
 		,autosuggestUrl : function(){
-			var host_path = this.getHostNPath();
+			var host_path = this.getHostNPath('autosuggest');
 
 			var url = "q=" + encodeURIComponent(this.params.q);
 			if(this.options.maxSuggestions){
@@ -893,8 +893,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			return host_path + "?" + url;
 		}
-		,getHostNPath: function(){
-			return "//search.unbxdapi.com/"+ this.options.APIKey + "/" + this.options.siteName + "/autosuggest"
+		,getHostNPath: function(handler){
+			return "//search.unbxdapi.com/"+ this.options.APIKey + "/" + this.options.siteName + "/" + handler
 		}
 		,receiveData: function (data) {
 			if (data) {
@@ -1070,8 +1070,8 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	  }
 		,getfilteredPopularProducts: function() {
 			var self = this;
-			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
-				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count;
+			var host_path = self.getHostNPath('search');
+			var url =  host_path + "?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count;
 	        $.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
         		var query = self.params.q;
         		self.processfilteredPopularProducts(query,d);
@@ -1080,14 +1080,12 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				if(i != 'POPULAR_PRODUCTS')
 				for(j in this.currentResults[i]){
 					if(this.currentResults[i][j]['filtername']){
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
-	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
+						var url = host_path + "?q=" encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
 	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue']) 
 	            					+ '&rows=' + this.options.popularProducts.count;
 	            	}
 					else{
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
-	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count ;
+						var url = host_path + "?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count ;
 	            	}
 	            	$.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
 	            		var query = d.searchMetaData.queryParams.q + (d.searchMetaData.queryParams.filter ? ':' 
