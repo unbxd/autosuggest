@@ -8,7 +8,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
    //use unbxd scope and add a version for autosuggest
    window.Unbxd = window.Unbxd || {};
-   Unbxd.autosuggestVersion = 1.0;
+   Unbxd.autosuggestVersion = "1.0.1";
 
   // Polyfill for window.location.origin 
   if (!window.location.origin) {
