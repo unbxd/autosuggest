@@ -8,7 +8,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
    //use unbxd scope and add a version for autosuggest
    window.Unbxd = window.Unbxd || {};
-   Unbxd.autosuggestVersion = 1.0;
+   Unbxd.autosuggestVersion = "1.0.1";
 
   // Polyfill for window.location.origin 
   if (!window.location.origin) {
@@ -649,8 +649,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 				,internal_query : prev
 			}});
 
-			if (typeof this.options.onItemSelect == "function"){
+			if (typeof this.options.onItemSelect == "function" && data.type !== "POPULAR_PRODUCTS_FILTERED"){
 				this.options.onItemSelect.call(this,data,this.currentResults[data.type][parseInt(data['index'])]._original,e);
+			} else if(data.type === "POPULAR_PRODUCTS_FILTERED"){
+				this.options.onItemSelect.call(this,data,this.currentTopResults[data.src][parseInt(data['index'])]._original,e);
 			}
 		}
 		,addToAnalytics:function(type,obj){
@@ -1069,69 +1071,98 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 	    return arr.indexOf(autosuggest) === -1 ? arr.push(autosuggest) : false;
 	  }
 		,getfilteredPopularProducts: function() {
-			var self = this;
-			var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" 
-				+ this.options.siteName + "/search?q=" + encodeURIComponent(this.params.q) + '&rows=' + this.options.popularProducts.count;
-	        $.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
-        		var query = self.params.q;
-        		self.processfilteredPopularProducts(query,d);
-        	});
+			var self = this,
+				url_path = "//search.unbxdapi.com/" + this.options.APIKey + "/"
+				+ this.options.siteName + "/search",
+				default_search_params = "indent=off&facet=off&analytics=false&redirect=false",
+				url = url_path + "?q=" + encodeURIComponent(this.params.q)
+				+ "&rows=" + this.options.popularProducts.count + "&"
+				+ default_search_params;
+
+			$.ajax({
+				url: url,
+				dataType: "jsonp",
+				jsonp: "json.wrf"
+			}).done(function(d) {
+				var query = self.params.q;
+				self.processfilteredPopularProducts(query,d);
+			});
+
 			for(i in this.currentResults){
-				if(i != 'POPULAR_PRODUCTS')
-				for(j in this.currentResults[i]){
-					if(this.currentResults[i][j]['filtername']){
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
-	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) +'&filter='
-	            					+ this.currentResults[i][j]['filtername'] + ':' + encodeURIComponent(this.currentResults[i][j]['filtervalue']) 
-	            					+ '&rows=' + this.options.popularProducts.count;
-	            	}
-					else{
-	            		var url = "http://search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName 
-	            					+ "/search?q=" + encodeURIComponent(this.currentResults[i][j]['autosuggest']) + '&rows=' + this.options.popularProducts.count ;
-	            	}
-	            	$.ajax({url: url,dataType: "jsonp",jsonp: "json.wrf"}).done(function(d) {
-	            		var query = d.searchMetaData.queryParams.q + (d.searchMetaData.queryParams.filter ? ':' 
-	            						+ d.searchMetaData.queryParams.filter:'');
-	            		self.processfilteredPopularProducts(query,d);
-	            	});
+				if(i != 'POPULAR_PRODUCTS' && this.currentResults.hasOwnProperty(i)){
+					for(j in this.currentResults[i]){
+						if(this.currentResults[i].hasOwnProperty(j)){
+							if(this.currentResults[i][j]['filtername']){
+								url = url_path + "?q="
+									+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
+									+ this.currentResults[i][j]['filtername'] + ":\""
+									+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
+									+ "\"&rows=" + this.options.popularProducts.count + "&"
+									+ default_search_params;
+							}
+							else{
+								url = url_path + "?q="
+									+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
+									+ "&rows=" + this.options.popularProducts.count + "&"
+									+ default_search_params;
+							}
+							$.ajax({
+								url: url,
+								dataType: "jsonp",
+								jsonp: "json.wrf"
+							}).done(function(d) {
+								var query = d.searchMetaData.queryParams.q
+									+ (d.searchMetaData.queryParams.filter ? ':'
+									+ d.searchMetaData.queryParams.filter.replace(/"/g,''):'');
+								self.processfilteredPopularProducts(query,d);
+							});
+						}
+					}
 				}
 			}
 		}
 		,processfilteredPopularProducts:function(query,d){
 			this.currentTopResults[query] = [];
-    		for (var k = 0; k < d.response.products.length; k++) {
-    			var doc = d.response.products[k];
-    			o = {
-						autosuggest : (this.options.popularProducts.autosuggestName ? doc[this.options.popularProducts.autosuggestName] : (doc.title? doc.title : ''))
+			if(d.hasOwnProperty("response") && d.response.hasOwnProperty("products")
+				&& d.response.products.length){
+				for (var k = 0; k < d.response.products.length; k++) {
+					var doc = d.response.products[k];
+					o = {
+						autosuggest : (this.options.popularProducts.autosuggestName ?
+							doc[this.options.popularProducts.autosuggestName] : (doc.title? doc.title : ''))
 						,highlighted : this.highlightStr(doc.title)
 						,_original : doc
 						,type : 'POPULAR_PRODUCTS_FILTERED'
+						,src: query
 					};
 
-				if(this.options.popularProducts.price){
-					if(typeof this.options.popularProducts.priceFunctionOrKey === "function"){
-						o.price = this.options.popularProducts.priceFunctionOrKey(doc);
-					}else if(typeof this.options.popularProducts.priceFunctionOrKey === "string" 
-						&& this.options.popularProducts.priceFunctionOrKey){
-						o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
-					}else{
-						o.price = "price" in doc ? doc["price"] : null;
+					if(this.options.popularProducts.price){
+						if(typeof this.options.popularProducts.priceFunctionOrKey === "function"){
+							o.price = this.options.popularProducts.priceFunctionOrKey(doc);
+						}else if(typeof this.options.popularProducts.priceFunctionOrKey === "string" 
+							&& this.options.popularProducts.priceFunctionOrKey){
+							o.price = this.options.popularProducts.priceFunctionOrKey in doc ?
+								doc[this.options.popularProducts.priceFunctionOrKey] : null;
+						}else{
+							o.price = "price" in doc ? doc["price"] : null;
+						}
+
+						if(this.options.popularProducts.currency)
+							o.currency = this.options.popularProducts.currency;
 					}
 
-					if(this.options.popularProducts.currency)
-						o.currency = this.options.popularProducts.currency;
-				}
-
-				if(this.options.popularProducts.image){
-					if(typeof this.options.popularProducts.imageUrlOrFunction === "function"){
-						o.image = this.options.popularProducts.imageUrlOrFunction(doc);
-					}else if(typeof this.options.popularProducts.imageUrlOrFunction === "string" 
-						&& this.options.popularProducts.imageUrlOrFunction){
-						o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+					if(this.options.popularProducts.image){
+						if(typeof this.options.popularProducts.imageUrlOrFunction === "function"){
+							o.image = this.options.popularProducts.imageUrlOrFunction(doc);
+						}else if(typeof this.options.popularProducts.imageUrlOrFunction === "string" 
+							&& this.options.popularProducts.imageUrlOrFunction){
+							o.image = this.options.popularProducts.imageUrlOrFunction in doc ?
+								doc[this.options.popularProducts.imageUrlOrFunction] : null;
+						}
 					}
+					this.currentTopResults[query].push(o);
 				}
-				this.currentTopResults[query].push(o);
-    		}
+			}
 		}
 	  ,processTopSearchQuery: function(doc){
 			o = {
@@ -1363,7 +1394,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			return  (this.options.popularProducts.header ? '<li class="unbxd-as-header">' + this.options.popularProducts.header + '</li>' : '')
 				+'{{#data}}'
 				+'<li class="unbxd-as-popular-product '+ (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
-				+'" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
+				+'" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
 					+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
 				+'</li>'
 				+'{{/data}}'
