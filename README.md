@@ -1,29 +1,29 @@
 ## UNBXD AUTOSUGGEST
 This plug-in depends on jQuery and Handlebars libraries. It works with the UNBXD Autosuggest APIs to provide a flexible and configurable auto-suggest for an e-commerce site. It provides features, especially required by e-commerce sites like
-#####1. IN FIELDS  
+##### 1. IN FIELDS  
 ![in fields](/screenshots/infields.png "in fields")
-#####2. TOP QUERIES
+##### 2. TOP QUERIES
 ![top-queries](/screenshots/top-queries.png "top-queries")
-#####3. KEYWORD SUGGESTIONS
+##### 3. KEYWORD SUGGESTIONS
 ![keyword-suggestions](/screenshots/keyword-suggestions.png "keyword-suggestions")
-#####4. POPULAR PRODUCTS
+##### 4. POPULAR PRODUCTS
 ![popular-products](/screenshots/popular-products.png "popular-products")
 
 ## USAGE
-###Step 1 - Include scripts
+### Step 1 - Include scripts
 Please include Jquery(> 1.7), Handlebars and unbxdAutosuggest.js in order.  
 Default css can be applied by including unbxdAutosuggest.css in your html.
 
-#####Include **unbxdAutosuggest.js** and **unbxdAutosuggest.css** after downloading this repo by including this in head of your html page
+##### Include **unbxdAutosuggest.js** and **unbxdAutosuggest.css** after downloading this repo by including this in head of your html page
 ```javascript
 <link rel="stylesheet" href="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.css">
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script> 
+<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script>
 ```
 ###### PS - please include these script tags before the ending `</head>` tag in your html page.
 
-###Step 2 - Configuration
+### Step 2 - Configuration
 ##### Configure our autosuggest plugin by modifying below snippet according to your parameters and include that in your html page. Each of the options used is explained in-detail after the following snippet.
 
 ```javascript
@@ -45,7 +45,7 @@ $(function(){
 			,sideWidth : 180
 			,zIndex : 0
 			,position : 'absolute'
-			,template : "1column" 
+			,template : "1column"
 			,mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']
 			,sideTpl: []
 			,sideContentOn : "right"
@@ -96,12 +96,12 @@ $(function(){
 		});
 	});
 ```
-####Configuration Options
+#### Configuration Options
 - **siteName** : This value can be found in UNBXD dashboard. It is unique for every search site created on the dashboard.
-- **APIKey** : Use the API key which was mailed during account creation. It can also be found on the account section of the dashboard. 
+- **APIKey** : Use the API key which was mailed during account creation. It can also be found on the account section of the dashboard.
 - **minChars** : Minimum number of characters required to start showing suggestions. The value should be *0 or > 0 (greater than zero)*
 - **maxSuggestions** : Total number of suggestions to show.In the ratio 2:4:4 for infields, keywordsuggestions and topQueries respectively.
-- **delay** : Number of *milliseconds* to wait before fetching results from server. This is helpful in waiting till user stops typing. 
+- **delay** : Number of *milliseconds* to wait before fetching results from server. This is helpful in waiting till user stops typing.
 - **loadingClass** : This class name will be added to input during data fetching process, so that user can see some loader animation or state change.
 - **mainWidth** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input sideWidth.
 - **sideWidth** : if set any value (only integer), then it will be used to set the width of suggestions else defaults to input mainWidth.
@@ -113,10 +113,10 @@ $(function(){
 - **showCarts** : either **true** or **false**. To show Add-to-cart button and quantity input.
 - **cartType** : either **inline** or **separate**. Used only when **showCarts** is set to **true**
 - **noResultTpl** : either **function()** or **Template** to show on No results.
-- **inFields** : configure the IN-FIELDS feature. This value takes an object with different properties as explained below. 
+- **inFields** : configure the IN-FIELDS feature. This value takes an object with different properties as explained below.
   - **count** is useful to adjust the number of IN-FIELDS shown to user
-  - **fields** is an object containing the name & count of values for fields uploaded to UNBXD. These fields will appear as *in-suggestions* in secondary level. 
-  - **header** will display the header above the results if any IN FIELDS are present. 
+  - **fields** is an object containing the name & count of values for fields uploaded to UNBXD. These fields will appear as *in-suggestions* in secondary level.
+  - **header** will display the header above the results if any IN FIELDS are present.
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of IN FIELDS.
 
 ```javascript
@@ -134,7 +134,7 @@ $(function(){
 
 - **topQueries** : configures the TOP-QUERIES feature. This value takes an object with different properties as explained below.
   - **count** is useful to adjust the number of TOP QUERIES shown to user
-  - **header** will display the header above the results if any TOP QUERIES are present. 
+  - **header** will display the header above the results if any TOP QUERIES are present.
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of TOP QUERIES.
 
 ```javascript
@@ -145,14 +145,14 @@ $(function(){
 }
 ```
 
-- **keywordSuggestions** : configures the KEYWORD-SUGGESTION feature. This value takes an object with different properties as explained below. 
+- **keywordSuggestions** : configures the KEYWORD-SUGGESTION feature. This value takes an object with different properties as explained below.
   - **count** is useful to adjust the number of KEYWORD SUGGESTIONS shown to user
-  - **header** will display the header above the results if any KEYWORD SUGGESTIONS are present. 
+  - **header** will display the header above the results if any KEYWORD SUGGESTIONS are present.
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of KEYWORD SUGGESTIONS.
 
 ```javascript
 ,keywordSuggestions:{
-	count: 2 
+	count: 2
 	,header: ''
 	,tpl: ''
 }
@@ -165,7 +165,7 @@ $(function(){
   - **imageUrlOrFunction** can be either a fieldname(*string*) uploaded to UNBXD or a function which takes an object as argument and returns an image url.
   - **price** based on whether it is *true* or *false*, it can either be shown or hidden.
   - **priceFunctionOrKey** can be either a fieldname(*string*) uploaded to UNBXD or a function which takes an object as argument and returns string or a number.
-  - **header** will display the header above the results if any POPULAR PRODUCTS are present. 
+  - **header** will display the header above the results if any POPULAR PRODUCTS are present.
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of POPULAR PRODUCTS.
   - **view** - either **grid** or **list**.
 ```javascript
@@ -198,8 +198,8 @@ $(function(){
 ```
 - **onCartClick** : this function will be called when a user clicks on Add-to-cart button. The arguments will be same as **onItemSelect** but it includes quantity and uniqueId of the product.
 - **hbsHelpers**: needs to be a function. You can register your handlebars helpers here.
-- **processResultsStyles** : This option, if set, should be a function, with a single argument which takes an object with top, left and right properties in it. The function should return the object with all the css properties that can be applied to suggestions container. 
+- **processResultsStyles** : This option, if set, should be a function, with a single argument which takes an object with top, left and right properties in it. The function should return the object with all the css properties that can be applied to suggestions container.
 	Note: this object is generally used for positioning the suggestions.
 - **resultsContainerSelector** : This option, if set, should be jQuery selector string for DOM element where suggestions should be appended in Document. If not set, then suggestions will be appended to body.
 
-###### PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css 
+###### PS - if you want more css changes than given in config file, please override classes in unbxdAutosuggest.css
