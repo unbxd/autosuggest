@@ -556,10 +556,10 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 			this.activeRow += step;
 			
 			if(this.activeRow < -1)
-				this.activeRow = lis.size()-1;
+				this.activeRow = lis.length-1;
 			else if(this.activeRow == -1)
 				this.$input.focus();
-			else if(this.activeRow >= lis.size()){
+			else if(this.activeRow >= lis.length){
 				this.activeRow = -1;
 				this.$input.focus();
 			}
@@ -568,7 +568,7 @@ var unbxdAutoSuggestFunction = function($,Handlebars,undefined){
 
 			$(lis[this.activeRow]).addClass(this.selectedClass);
 			
-			if(this.activeRow >= 0 && this.activeRow < lis.size()){
+			if(this.activeRow >= 0 && this.activeRow < lis.length){
 				this.$input.val($(lis[this.activeRow]).data('value'));
 				if(this.options.filtered && this.activeColumn === 0){
 					var dataValue = $(lis[this.activeRow]).attr('data-value') ? $(lis[this.activeRow]).attr('data-value') : '';
