@@ -13,9 +13,13 @@
     "underscore": "*"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "bootstrap": "^3.3.2",
     "chai": "^4.2.0",
     "chosen-js": "^1.8.7",
+=======
+    "chai": "^4.2.0",
+>>>>>>> e0ea107... initial_setup
     "express": "^4.16.4",
     "grunt": "^1.0.3",
     "grunt-contrib-concat": "~0.3.0",
@@ -23,6 +27,7 @@
     "grunt-contrib-sass": "~0.4.1",
     "grunt-contrib-watch": "*",
     "grunt-ember-templates": "*",
+<<<<<<< HEAD
     "handlebars": "^4.1.0",
     "jquery": "^3.3.1",
     "karma": "^4.0.0",
@@ -47,5 +52,11 @@
   },
   "scripts": {
     "test": "karma start"
+=======
+    "mocha": "^6.0.1"
+  },
+  "scripts": {
+    "test": "mocha tests/**/*.js"
+>>>>>>> e0ea107... initial_setup
   }
 }
