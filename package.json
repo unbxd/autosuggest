@@ -7,23 +7,22 @@
     "aws-sdk": "*",
     "jade": "*",
     "log4js": "*",
-    "mocha": "^6.0.1",
     "request": "*",
     "uglify-js": "*",
     "underscore": "*"
   },
   "devDependencies": {
-    "@commitlint/cli": "^7.5.2",
-    "@commitlint/config-angular": "^7.5.0",
+    "chai": "^4.2.0",
     "express": "^4.16.4",
     "grunt": "^1.0.3",
     "grunt-contrib-concat": "~0.3.0",
     "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-sass": "~0.4.1",
     "grunt-contrib-watch": "*",
-    "grunt-ember-templates": "*"
+    "grunt-ember-templates": "*",
+    "mocha": "^6.0.1"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha tests/**/*.js"
   }
 }
