@@ -5,7 +5,6 @@
  *
 */
 var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
-
 	//use unbxd scope and add a version for autosuggest
 	window.Unbxd = window.Unbxd || {};
 	Unbxd.autosuggestVersion = "1.0.1";
@@ -172,6 +171,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 	});
 
 	function autocomplete(input, options) {
+		debugger;
 		this.input = input;
 		this.init(input, options);
 	};
@@ -191,10 +191,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		};
 	};
 
-	$.extend(autocomplete.prototype, {
+	window.autoSuggestObj = $.extend(autocomplete.prototype, {
 		default_options: {
-			siteName: 'demosite-u1407617955968'
-			, APIKey: '64a4a2592a648ac8415e13c561e44991'
+			siteName: 'demo-unbxd700181503576558'
+			, APIKey: 'fb853e3332f2645fac9d71dc63e09ec1'
 			, integrations: {} // can have an object of integrations
 			/* The value of integrations can be an object with
 			 * key - `classical` or `universal`(2 types of GA integrations)
@@ -230,6 +230,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			, onSimpleEnter: null
 			, onItemSelect: null
 			, noResultTpl: null
+			, maxSuggestions: 5
 			, inFields: {
 				count: 2
 				, fields: {
@@ -1542,6 +1543,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 	});
 
 	$.fn.unbxdautocomplete = function (options) {
+		debugger;
 		return this.each(function () {
 			var self = this;
 
@@ -1553,3 +1555,5 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		});
 	};
 };
+
+
