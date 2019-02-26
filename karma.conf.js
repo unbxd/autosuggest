@@ -17,10 +17,16 @@ module.exports = function (config) {
       'karma-json-fixtures-preprocessor',
       'karma-chrome-launcher',
       'karma-spec-reporter',
+<<<<<<< HEAD
       'karma-sinon-chai'
     ],
 
     frameworks: ['mocha', 'chai', 'jquery-1.8.3', 'sinon', 'fixture', 'sinon-chai'],
+=======
+    ],
+
+    frameworks: ['mocha', 'chai', 'jquery-1.8.3', 'sinon', 'fixture'],
+>>>>>>> 74f318d... test_cases_karma_mocha_puppeteer
 
     jsonFixturesPreprocessor: {
       variableName: '__json__'
@@ -55,6 +61,10 @@ module.exports = function (config) {
     // level of logging
     logLevel: config.LOG_INFO,
 
+<<<<<<< HEAD
     browsers: ['Chrome']
+=======
+    browsers: ['ChromeHeadless']
+>>>>>>> 74f318d... test_cases_karma_mocha_puppeteer
   });
 };

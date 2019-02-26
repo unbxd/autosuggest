@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 describe('Autosuggest', function () {
 
@@ -116,9 +117,22 @@ describe('Autosuggest', function () {
 });
 =======
 var testAutosuggest = require('../unbxdAutosuggest.js');
+=======
+>>>>>>> 74f318d... test_cases_karma_mocha_puppeteer
 
+describe('Autosuggest', function () {
 
+	before(function (done) {
 
+		this.testAutoSuggestResponse = fixture.load('mocks/autoSuggestTestResponse.json');
+		this.mockOptions = {
+			maxSuggestions: 5
+		}
+		done();
+	});
+
+<<<<<<< HEAD
+<<<<<<< HEAD
 
 // var assert = require('assert');
 // describe('Array', function() {
@@ -129,3 +143,36 @@ var testAutosuggest = require('../unbxdAutosuggest.js');
 //   });
 // });
 >>>>>>> e0ea107... initial_setup
+=======
+  
+    it('Should have total count less than or equal to max suggestions', function(){
+=======
+
+
+	it('Should have total count less than or equal to max suggestions', function () {
+<<<<<<< HEAD
+>>>>>>> f5076b4... test_cases_karma_mocha_puppeteer
+		// console.log(testScript);
+		unbxdAutoSuggestFunction(jQuery, Handlebars);
+		window.autoSuggestObj.options = this.mockOptions;
+		var a = window.autoSuggestObj.max_suggest(this.testAutoSuggestResponse);
+
+
+		var total = a.infields + a.topquery + a.keyword + a.key_rem + a.top_rem;
+		expect(total).to.be.equal(this.mockOptions.maxSuggestions);
+<<<<<<< HEAD
+    });
+  });
+  
+>>>>>>> 74f318d... test_cases_karma_mocha_puppeteer
+=======
+=======
+		unbxdAutoSuggestFunction(jQuery, Handlebars);
+		window.autoSuggestObj.options = this.mockOptions;
+		var count = window.autoSuggestObj.max_suggest(this.testAutoSuggestResponse);
+		var total = count.infields + count.topquery + count.keyword + count.key_rem + count.top_rem;
+		expect(total).to.be.at.most(this.mockOptions.maxSuggestions);
+>>>>>>> 6b1f865... test_cases_karma_mocha_puppeteer
+	});
+});
+>>>>>>> f5076b4... test_cases_karma_mocha_puppeteer
