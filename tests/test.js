@@ -128,6 +128,8 @@ describe('Autosuggest', function () {
 		this.mockOptions = {
 			maxSuggestions: 5
 		}
+		this.mockSuggestions = ["shoes", "shirt", "shorts", "blue shirt", "dress shirt", "black shoes", "green shirt", "white shirt"];
+		this.mockUniqueSuggestion = "dress shirts";
 		done();
 	});
 
@@ -173,6 +175,12 @@ describe('Autosuggest', function () {
 		var total = count.infields + count.topquery + count.keyword + count.key_rem + count.top_rem;
 		expect(total).to.be.at.most(this.mockOptions.maxSuggestions);
 >>>>>>> 6b1f865... test_cases_karma_mocha_puppeteer
+	});
+
+	it('Should have unique suggestions', function () {
+		unbxdAutoSuggestFunction(jQuery, Handlebars);
+		var isUnique = window.autoSuggestObj.isUnique(this.mockUniqueSuggestion,this.mockSuggestions);
+		expect(isUnique).to.equal(false);
 	});
 });
 >>>>>>> f5076b4... test_cases_karma_mocha_puppeteer
