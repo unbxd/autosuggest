@@ -38,6 +38,6 @@
     "sinon": "^7.2.4"
   },
   "scripts": {
-    "test": "karma start --browsers Chrome"
+    "test": "karma start"
   }
 }
