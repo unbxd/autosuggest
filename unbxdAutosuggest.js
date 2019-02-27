@@ -171,7 +171,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 	});
 
 	function autocomplete(input, options) {
-		debugger;
 		this.input = input;
 		this.init(input, options);
 	};
@@ -1543,7 +1542,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 	});
 
 	$.fn.unbxdautocomplete = function (options) {
-		debugger;
 		return this.each(function () {
 			var self = this;
 

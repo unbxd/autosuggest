@@ -294,7 +294,7 @@ var ractive = new Ractive({
 		});
 	
 		$('button#copy-description').zclip({
-        	path:'bower_components/jquery-zclip/ZeroClipboard.swf',
+        	path:'assets/jquery-zclip/ZeroClipboard.swf',
         	copy:function(){return $('code#description').text();}
    		});
 
@@ -319,7 +319,7 @@ var ractive = new Ractive({
   			});
 			
 			$('button#copy-description').zclip({
-        		path:'bower_components/jquery-zclip/ZeroClipboard.swf',
+        		path:'assets/jquery-zclip/ZeroClipboard.swf',
         		copy:function(){return $('code#description').text();}
    			});
 

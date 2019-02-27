@@ -1,0 +1,13 @@
+{
+	"name": "ractive-decorators-chosen",
+	"repo": "git://github.com/prezent/ractive-decorators-chosen.git",
+	"description": "ractive-decorators-chosen",
+	"version": "0.1.0",
+	"keywords": [],
+	"development": {},
+	"license": "MIT",
+	"main": "ractive-decorators-chosen.js",
+	"scripts": [
+		"ractive-decorators-chosen.js"
+	]
+}
