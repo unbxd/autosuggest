@@ -1,0 +1,23 @@
+{
+  "name": "autosuggest",
+  "version": "0.0.1",
+  "homepage": "https://github.com/unbxd/autosuggest",
+  "authors": [
+    "rahulcs"
+  ],
+  "description": "autosuggest plugin for unbxd",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-zclip": "~1.1.5",
+    "ractive": "~0.6.1",
+    "ractive-decorators-chosen": "~0.1.5"
+  }
+}

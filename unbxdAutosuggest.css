@@ -5,6 +5,7 @@
  *
 */
 .unbxd-as-wrapper{
+    z-index:100;
     border: 1px solid #dedede;
     border-top: none;
     background-color:#ffffff;

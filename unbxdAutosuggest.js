@@ -213,15 +213,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			, minChars: 3
 			, delay: 100
 			, loadingClass: 'unbxd-as-loading'
-			, mainWidth: 0
-			, sideWidth: 180
+			, mainWidth: 130
+			, sideWidth: 300
 			, zIndex: 0
 			, position: 'absolute'
 			, sideContentOn: "right" //"left"
-			, template: "1column" // "2column"
+			, template: "2column" // "2column"
 			, theme: "#ff8400"
-			, mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']
-			, sideTpl: []
+			, mainTpl: ['inFields', 'keywordSuggestions', 'topQueries']
+			, sideTpl: ["popularProducts"]
 			, showCarts: true // will be used in default template of popular products
 			, cartType: "inline" // "separate" will be used in default template popular products
 			, onCartClick: function (obj) { }
@@ -229,9 +229,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			, onSimpleEnter: null
 			, onItemSelect: null
 			, noResultTpl: null
-			, maxSuggestions: 5
 			, inFields: {
-				count: 2
+				count: 4
 				, fields: {
 					'brand': 3
 					, 'category': 3
@@ -252,14 +251,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				, tpl: "{{{safestring highlighted}}}"
 			}
 			, popularProducts: {
-				count: 2
+				count: 5
 				, price: true
 				, priceFunctionOrKey: "price"
 				, image: true
 				, imageUrlOrFunction: "imageUrl"
 				, currency: "Rs."
 				, header: ""
-				, view: 'list'
+				, view: 'grid'
 				, tpl: ['{{#if ../showCarts}}'
 					, '{{#unbxdIf ../../cartType "inline"}}'//"inline" || "separate"
 					, '<div class="unbxd-as-popular-product-inlinecart">'
@@ -341,7 +340,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '</div>'
 					, '{{/if}}'].join('')
 			}
-			, filtered: false
+			, filtered: true
 			, resultsContainerSelector: null
 			, processResultsStyles: null
 		}
