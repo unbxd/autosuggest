@@ -229,7 +229,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			, onSimpleEnter: null
 			, onItemSelect: null
 			, noResultTpl: null
-			, maxSuggestions: 5
 			, inFields: {
 				count: 4
 				, fields: {

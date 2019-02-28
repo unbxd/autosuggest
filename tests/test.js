@@ -1,27 +1,23 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-
 describe('Autosuggest', function () {
 
 	before(function (done) {
-
 		this.testAutoSuggestResponse = fixture.load('mocks/autoSuggestTestResponse.json');
 		this.mockSuggestions = ["shoes", "shirt", "shorts", "blue shirt", "dress shirt", "black shoes", "green shirt", "white shirt"];
 		this.mockUniqueSuggestion = "dress shirts";
 		unbxdAutoSuggestFunction(jQuery, Handlebars);
 		this.trackUniversalSpy = sinon.spy(window.autoSuggestObj,'trackuniversal');
-		this.trackClassicalSpy = sinon.spy(window.autoSuggestObj,'trackclassical');
-		//this.addToAnalyticsSpy = sinon.spy(window.autoSuggestObj.addToAnalytics);
-		
+		this.trackClassicalSpy = sinon.spy(window.autoSuggestObj,'trackclassical');	
 		done();
 	});
 
-	// after(function (done) {
-	// 	this.trackUniversalSpy.restore();
-	// 	done();
-	// });
-
-
+	it('Should have total count less than or equal to max suggestions', function () {
+		unbxdAutoSuggestFunction(jQuery, Handlebars);
+		window.autoSuggestObj.options = this.mockOptions;
+		var count = window.autoSuggestObj.max_suggest(this.testAutoSuggestResponse);
+		var total = count.infields + count.topquery + count.keyword + count.key_rem + count.top_rem;
+		expect(total).to.be.at.most(this.mockOptions.maxSuggestions);
+    });
+  
 	it('Should have total count less than or equal to max suggestions', function () {
 		var mockOptions = {
 			maxSuggestions: 5
@@ -115,72 +111,4 @@ describe('Autosuggest', function () {
 		expect(this.trackClassicalSpy).to.have.been.calledWith(type,obj);
 	});
 });
-=======
-var testAutosuggest = require('../unbxdAutosuggest.js');
-=======
->>>>>>> 74f318d... test_cases_karma_mocha_puppeteer
 
-describe('Autosuggest', function () {
-
-	before(function (done) {
-
-		this.testAutoSuggestResponse = fixture.load('mocks/autoSuggestTestResponse.json');
-		this.mockOptions = {
-			maxSuggestions: 5
-		}
-		this.mockSuggestions = ["shoes", "shirt", "shorts", "blue shirt", "dress shirt", "black shoes", "green shirt", "white shirt"];
-		this.mockUniqueSuggestion = "dress shirts";
-		done();
-	});
-
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-// var assert = require('assert');
-// describe('Array', function() {
-//   describe('#indexOf()', function() {
-//     it('should return -1 when the value is not present', function() {
-//       assert.equal([1, 2, 3].indexOf(4), -1);
-//     });
-//   });
-// });
->>>>>>> e0ea107... initial_setup
-=======
-  
-    it('Should have total count less than or equal to max suggestions', function(){
-=======
-
-
-	it('Should have total count less than or equal to max suggestions', function () {
-<<<<<<< HEAD
->>>>>>> f5076b4... test_cases_karma_mocha_puppeteer
-		// console.log(testScript);
-		unbxdAutoSuggestFunction(jQuery, Handlebars);
-		window.autoSuggestObj.options = this.mockOptions;
-		var a = window.autoSuggestObj.max_suggest(this.testAutoSuggestResponse);
-
-
-		var total = a.infields + a.topquery + a.keyword + a.key_rem + a.top_rem;
-		expect(total).to.be.equal(this.mockOptions.maxSuggestions);
-<<<<<<< HEAD
-    });
-  });
-  
->>>>>>> 74f318d... test_cases_karma_mocha_puppeteer
-=======
-=======
-		unbxdAutoSuggestFunction(jQuery, Handlebars);
-		window.autoSuggestObj.options = this.mockOptions;
-		var count = window.autoSuggestObj.max_suggest(this.testAutoSuggestResponse);
-		var total = count.infields + count.topquery + count.keyword + count.key_rem + count.top_rem;
-		expect(total).to.be.at.most(this.mockOptions.maxSuggestions);
->>>>>>> 6b1f865... test_cases_karma_mocha_puppeteer
-	});
-
-	it('Should have unique suggestions', function () {
-		unbxdAutoSuggestFunction(jQuery, Handlebars);
-		var isUnique = window.autoSuggestObj.isUnique(this.mockUniqueSuggestion,this.mockSuggestions);
-		expect(isUnique).to.equal(false);
-	});
-});
->>>>>>> f5076b4... test_cases_karma_mocha_puppeteer
