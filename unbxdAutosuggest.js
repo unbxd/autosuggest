@@ -1499,13 +1499,38 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			});
 		}
 		, addToCache: function (q, processedData) {
-			if (!(q in this.cache)) this.cache[q] = $.extend({}, processedData);
+			if (typeof localStorage !== 'undefined') {
+				var cacheObj = {};
+				cacheObj[q] = processedData;
+				localStorage.setItem('Unbxd_autosuggest_response',JSON.stringify(cacheObj));
+			}
+			else {
+				if (!(q in this.cache)) this.cache[q] = $.extend({}, processedData);
+			}
+			
 		}
 		, inCache: function (q) {
-			return q in this.cache && this.cache.hasOwnProperty(q);
+			if (typeof localStorage !== 'undefined') {
+				if (localStorage.getItem('Unbxd_autosuggest_response')) {
+					cacheResponse = JSON.parse(localStorage.getItem('Unbxd_autosuggest_response'));
+					return q in cacheResponse && cacheResponse.hasOwnProperty(q);
+				}
+			}
+			else {
+				return q in this.cache && this.cache.hasOwnProperty(q);
+			}			
 		}
 		, getFromCache: function (q) {
-			return this.cache[q];
+			var cacheResponse = '';
+			if (typeof localStorage !== 'undefined') {
+				if (localStorage.getItem('Unbxd_autosuggest_response')) {
+					cacheResponse = JSON.parse(localStorage.getItem('Unbxd_autosuggest_response'));
+					return cacheResponse[q];
+				}
+			}
+			else {
+				return this.cache[q];
+			}
 		}
 		, destroy: function (self) {
 			self.$input.unbind('.auto');
@@ -1542,8 +1567,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 	$.fn.unbxdautocomplete = function (options) {
 		return this.each(function () {
+			if (typeof localStorage !== 'undefined') {
+				if (localStorage.getItem('Unbxd_autosuggest_response')) {
+					localStorage.removeItem('Unbxd_autosuggest_response');
+				}
+			}
 			var self = this;
-
 			try {
 				this.auto = new autocomplete(this, options);
 			} catch (e) {

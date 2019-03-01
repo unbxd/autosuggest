@@ -2,6 +2,7 @@ describe('Autosuggest', function () {
 
 	before(function (done) {
 		this.testAutoSuggestResponse = fixture.load('mocks/autoSuggestTestResponse.json');
+		this.cacheTestResponse = fixture.load('mocks/cacheTestResponse.json');
 		this.mockSuggestions = ["shoes", "shirt", "shorts", "blue shirt", "dress shirt", "black shoes", "green shirt", "white shirt"];
 		this.mockUniqueSuggestion = "dress shirts";
 		unbxdAutoSuggestFunction(jQuery, Handlebars);
@@ -109,6 +110,13 @@ describe('Autosuggest', function () {
 		window.autoSuggestObj.options = mockOptionsClassical;
 		window.autoSuggestObj.addToAnalytics(type,obj);
 		expect(this.trackClassicalSpy).to.have.been.calledWith(type,obj);
+	});
+
+	it('Should retrieve from localStorage if exists', function () {
+		var q = "sh";
+		var processedData = this.cacheTestResponse;
+		window.autoSuggestObj.addToCache(q,processedData);
+		expect(window.autoSuggestObj.inCache(q,processedData)).to.equal(true);
 	});
 });
 
