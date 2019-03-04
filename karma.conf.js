@@ -47,11 +47,5 @@ module.exports = function (config) {
     // level of logging
     logLevel: config.LOG_INFO,
     browsers: ['ChromeHeadless']
-    // customLaunchers:{
-    //   HeadlessChrome:{
-    //     base: 'ChromeHeadless',
-    //     flags: ['--no-sandbox','--remote-debugging-port=9222']
-    //   }
-    // }
   });
 };

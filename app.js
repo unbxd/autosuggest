@@ -39,8 +39,8 @@ var ractive = new Ractive({
 		unbxdAutoSuggestFunction($, Handlebars);
 
 		window.auto = $("#input").unbxdautocomplete({
-			siteName : 'express_com-u1456154309768'
-			,APIKey : 'b3094e45838bdcf3acf786d57e4ddd98'
+			siteName : 'demosite-u1407617955968'
+			,APIKey : '64a4a2592a648ac8415e13c561e44991'
 			,minChars : 2
 		  ,showCarts : false
 		  ,integrations: {
