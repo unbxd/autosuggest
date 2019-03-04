@@ -52,7 +52,7 @@
     "watchify": "^3.11.1"
   },
   "scripts": { 
-    "e2e_test": "./node_modules/mocha/bin/mocha tests/e2etest.js",
+    "e2e_test": "./node_modules/mocha/bin/mocha tests/test_browser*.js",
     "unit_test": "karma start"
   }
 }

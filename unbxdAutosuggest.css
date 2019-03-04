@@ -238,3 +238,9 @@
     float: none;
     text-align: center;
 }
+
+#search_field:focus {
+    outline: none !important;
+    border:1px solid gray;
+    box-shadow: 0 0 5px #999;
+}

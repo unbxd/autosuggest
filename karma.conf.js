@@ -36,7 +36,7 @@ module.exports = function (config) {
         './index.html',
         './unbxdAutosuggest.js',
         'mocks/*.json',
-        'tests/test.js'
+        'tests/test_unit.js'
     ],
 
     reporters: ['spec'],
