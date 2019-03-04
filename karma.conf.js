@@ -1,6 +1,6 @@
-module.exports = function (config) {
-  'use strict';
 
+module.exports = function (config) {
+  
   process.env.CHROME_BIN = require('puppeteer').executablePath()
 
   config.set({
@@ -28,15 +28,8 @@ module.exports = function (config) {
 
     preprocessors: {
       '**/*.html': ['html2js'],
-      '**/*.json'   : ['json_fixtures']
+      '**/*.json': ['json_fixtures']
     },
-
-    // customLaunchers: {
-    //   Chrome_with_debugging: {
-    //     base: 'Chrome',
-    //     chromeDataDir: path.resolve(__dirname, '.chrome')
-    //   }
-    // },
 
     files: [
         './node_modules/handlebars/dist/handlebars.min.js',
@@ -49,10 +42,16 @@ module.exports = function (config) {
     reporters: ['spec'],
     port: 9876,
     colors: true,
-    autoWatch: false,
     singleRun: true,
 
     // level of logging
     logLevel: config.LOG_INFO,
+    browsers: ['ChromeHeadless']
+    // customLaunchers:{
+    //   HeadlessChrome:{
+    //     base: 'ChromeHeadless',
+    //     flags: ['--no-sandbox','--remote-debugging-port=9222']
+    //   }
+    // }
   });
 };
