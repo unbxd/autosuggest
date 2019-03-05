@@ -1,8 +1,4 @@
 **/.*
 node_modules
-<<<<<<< HEAD
 bower_components
 package-lock.json
-=======
-bower_components
->>>>>>> e0ea107... initial_setup
