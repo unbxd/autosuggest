@@ -861,7 +861,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				});
 		}
 		, getHostDomainName: function () {
-			if (this.platform === 'com') {
+			if (this.options.platform === 'com') {
 				return "//search.unbxdapi.com/";
 			}
 			else {
@@ -919,7 +919,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			return host_path + "?" + url;
 		}
 		, getHostNPath: function () {
-			if (this.platform === 'com') {
+			if (this.options.platform === 'com') {
 				return this.getHostDomainName() + this.options.APIKey + "/" + this.options.siteName + "/autosuggest";
 			}
 			else {
