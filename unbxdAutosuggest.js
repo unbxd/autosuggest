@@ -191,7 +191,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		};
 	};
 
-	$.extend(autocomplete.prototype, {
+	window.autoSuggestObj = $.extend(autocomplete.prototype, {
 		default_options: {
 			siteName: 'demosite-u1407617955968'
 			, APIKey: '64a4a2592a648ac8415e13c561e44991'
