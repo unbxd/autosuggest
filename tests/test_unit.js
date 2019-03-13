@@ -5,6 +5,7 @@ describe('Autosuggest', function () {
 		this.cacheTestResponse = fixture.load('mocks/cacheTestResponse.json');
 		this.mockSuggestions = ["shoes", "shirt", "shorts", "blue shirt", "dress shirt", "black shoes", "green shirt", "white shirt"];
 		this.mockUniqueSuggestion = "dress shirts";
+		this.mockCurrentResults = fixture.load('mocks/currentResults.json');
 		unbxdAutoSuggestFunction(jQuery, Handlebars);
 		this.trackUniversalSpy = sinon.spy(window.autoSuggestObj, 'trackuniversal');
 		this.trackClassicalSpy = sinon.spy(window.autoSuggestObj, 'trackclassical');
@@ -123,5 +124,39 @@ describe('Autosuggest', function () {
 		window.autoSuggestObj.options = mockOptionsIo;
 		var url = window.autoSuggestObj.getHostDomainName();
 		expect(url).to.equal("//search.unbxd.io/");
+	});
+
+	it('Should have suggestions sorted by length if enabled', function () {
+		var mockOptions = {
+			sortByLength: true
+		}
+
+		window.autoSuggestObj.options = mockOptions;
+		window.autoSuggestObj.currentResults.KEYWORD_SUGGESTION = this.mockCurrentResults.keywordSuggestions;
+		window.autoSuggestObj.currentResults.TOP_SEARCH_QUERIES = this.mockCurrentResults.topQueries;
+		window.autoSuggestObj.currentResults.IN_FIELD = this.mockCurrentResults.inFields;
+		window.autoSuggestObj.sortSuggestionsBylength();
+		var sortedSuggestions = window.autoSuggestObj.currentResults.SORTED_SUGGESTIONS;
+		var inFields = window.autoSuggestObj.currentResults.IN_FIELD;
+		var sorted = false;
+		var sortedInfields = false;
+		for (var i = 0; i < sortedSuggestions.length - 1; i++) {
+			if (i < (sortedSuggestions.length - 1) && (sortedSuggestions[i]['autosuggest'].length <= sortedSuggestions[i + 1]['autosuggest'].length)) {
+				sorted = true;
+			}
+			else {
+				sorted = false;
+			}
+		}
+		for (var i = 0; i < inFields.length - 1; i++) {
+			if (i < (inFields.length - 1) && (inFields[i]['autosuggest'].length <= inFields[i + 1]['autosuggest'].length)) {
+				sortedInfields = true;
+			}
+			else {
+				sortedInfields = false;
+			}
+		}
+		expect(sorted).to.equal(true);
+		expect(sortedInfields).to.equal(true);
 	});
 });

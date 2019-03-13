@@ -383,6 +383,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, removeDuplicates: false
 			, filtered: false
 			, platform: 'com'
+			, sortedSuggestions: {
+				tpl: "{{{safestring highlighted}}}"
+			}
 			, resultsContainerSelector: null
 			, processResultsStyles: null
 			, inputContainerSelector: ''
@@ -738,7 +741,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			});
 
 			if (typeof this.options.onItemSelect == "function" && data.type !== "POPULAR_PRODUCTS_FILTERED") {
-				this.options.onItemSelect.call(this, data, this.currentResults[data.type][parseInt(data['index'])]._original, e);
+				if (data.sorted) {
+					this.options.onItemSelect.call(this, data, this.currentResults['SORTED_SUGGESTIONS'][parseInt(data['index'])]._original, e);
+				}
+				else {
+					this.options.onItemSelect.call(this, data, this.currentResults[data.type][parseInt(data['index'])]._original, e);
+				}
 			} else if (data.type === "POPULAR_PRODUCTS_FILTERED") {
 				this.options.onItemSelect.call(this, data, this.currentTopResults[data.src][parseInt(data['index'])]._original, e);
 			}
@@ -1490,6 +1498,29 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					ins[a] = doc[a + "_in"].slice(0, parseInt(this.options.inFields.fields[a]))
 				}
 			}
+
+			var sortedInfields = [];
+			if (this.options.sortByLength) {
+				var k = 0;
+				for (var i in ins) {
+					for (var j = 0; j < ins[i].length; j++) {
+						sortedInfields[k] = {
+							filterName: i,
+							filterValue: ins[i][j]
+						}
+						k++;
+					}
+				}
+
+				sortedInfields.sort(function (a, b) {
+					if (a.filterValue.length - b.filterValue.length == 0) {
+						return a.filterValue.localeCompare(b.filterValue);
+					}
+					else {
+						return a.filterValue.length - b.filterValue.length;
+					}
+				})
+			}
 			if (!$.isEmptyObject(ins)) {
 				this.currentResults.IN_FIELD.push({
 					autosuggest: doc.autosuggest
@@ -1499,18 +1530,35 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				});
 
 				var that = this;
-				for (var a in ins) {
-					for (var b = 0; b < ins[a].length; b++) {
-						if (ins[a][b] !== '') {
+				if (this.options.sortByLength) {
+					for (var i = 0; i < sortedInfields.length; i++) {
+						if (sortedInfields[i].filterValue !== '') {
 							this.currentResults.IN_FIELD.push({
 								autosuggest: doc.autosuggest
-								, highlighted: this.options.inFields.type === 'separate' ? that.prepareinFieldsKeyword(ins[a][b]) : that.highlightStr(doc.autosuggest) + ' in ' + that.prepareinFieldsKeyword(ins[a][b])
+								, highlighted: this.options.inFields.type === 'separate' ? that.prepareinFieldsKeyword(sortedInfields[i].filterValue) : that.highlightStr(doc.autosuggest) + ' in ' + that.prepareinFieldsKeyword(sortedInfields[i].filterValue)
 								, type: doc.doctype
-								, filtername: a
-								, filtervalue: ins[a][b]
+								, filtername: sortedInfields[i].filterName
+								, filtervalue: sortedInfields[i].filterValue
 								, _original: doc
 								, source: doc.unbxdAutosuggestSrc
 							})
+						}
+					}
+				}
+				else {
+					for (var a in ins) {
+						for (var b = 0; b < ins[a].length; b++) {
+							if (ins[a][b] !== '') {
+								this.currentResults.IN_FIELD.push({
+									autosuggest: doc.autosuggest
+									, highlighted: this.options.inFields.type === 'separate' ? that.prepareinFieldsKeyword(ins[a][b]) : that.highlightStr(doc.autosuggest) + ' in ' + that.prepareinFieldsKeyword(ins[a][b])
+									, type: doc.doctype
+									, filtername: a
+									, filtervalue: ins[a][b]
+									, _original: doc
+									, source: doc.unbxdAutosuggestSrc
+								})
+							}
 						}
 					}
 				}
@@ -1525,6 +1573,25 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 		}
+		, sortSuggestionsBylength: function () {
+			this.currentResults.SORTED_SUGGESTIONS = this.currentResults.KEYWORD_SUGGESTION.concat(this.currentResults.TOP_SEARCH_QUERIES);
+			this.currentResults.SORTED_SUGGESTIONS.sort(function (a, b) {
+				if (a.autosuggest.length - b.autosuggest.length == 0) {
+					return a.autosuggest.localeCompare(b.autosuggest);
+				}
+				else {
+					return a.autosuggest.length - b.autosuggest.length;
+				}
+			});
+			this.currentResults.IN_FIELD.sort(function (a, b) {
+				if (a.autosuggest.length - b.autosuggest.length == 0) {
+					return a.autosuggest.localeCompare(b.autosuggest);
+				}
+				else {
+					return a.autosuggest.length - b.autosuggest.length;
+				}
+			})
+		}
 		, processData: function (data) {
 			var count;
 			if (this.options.maxSuggestions) {
@@ -1536,6 +1603,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, TOP_SEARCH_QUERIES: []
 				, POPULAR_PRODUCTS: []
 				, IN_FIELD: []
+				, SORTED_SUGGESTIONS: []
 			}
 			var infieldsCount = 0;
 			var key_count = 0,
@@ -1590,6 +1658,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 			if (this.options.filtered) {
 				this.getfilteredPopularProducts();
+			}
+			if (this.options.sortByLength) {
+				this.sortSuggestionsBylength();
 			}
 
 			//lenth of result list
@@ -1674,7 +1745,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ (this.options.keywordSuggestions.tpl ? this.options.keywordSuggestions.tpl : this.default_options.keywordSuggestions.tpl)
 				+ '</li>'
 				+ '{{/each}}'
-				+ '{{/if}}';
+				+ '{{/if}}';			
 		}
 		, preparetopQueriesHTML: function () {
 			return '{{#if data.TOP_SEARCH_QUERIES}}'
@@ -1684,7 +1755,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ (this.options.topQueries.tpl ? this.options.topQueries.tpl : this.default_options.topQueries.tpl)
 				+ '</li>'
 				+ '{{/each}}'
-				+ '{{/if}}';
+				+ '{{/if}}';	
 		}
 		, preparefilteredPopularProducts: function () {
 			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '') + '{{#data}}'
@@ -1719,6 +1790,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				key = "KEYWORD_SUGGESTION";
 
 			return key
+		}
+		, prepareSortedSuggestionsHTML: function () {
+			return '{{#if data.SORTED_SUGGESTIONS}}'
+				+ '{{#each data.SORTED_SUGGESTIONS}}'
+				+ '<li class="unbxd-as-sorted-suggestion" data-type="{{type}}" data-index="{{@index}}" data-value="{{autosuggest}}" data-sorted="true">'
+				+ (this.options.sortedSuggestions.tpl ? this.options.sortedSuggestions.tpl : this.default_options.sortedSuggestions.tpl)
+				+ '</li>'
+				+ '{{/each}}'
+				+ '{{/if}}';
 		}
 		, prepareHTML: function () {
 			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">',
@@ -1775,6 +1855,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				if ((mainlen == 0) && (sidelen != 0)) {
 					html = '<ul class="unbxd-as-sidecontent">';
 					this.options.sideTpl.forEach(function (key) {
+						if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+							return;
+						}
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
 					});
@@ -1783,6 +1866,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					if (sidelen != 0) {
 						html = '<ul class="unbxd-as-sidecontent">';
 						this.options.sideTpl.forEach(function (key) {
+							if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+								return;
+							}
 							key = 'prepare' + key + 'HTML';
 							html = html + self[key]();
 						});
@@ -1804,9 +1890,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
 				}
 
+				if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+					return;
+				}
 				key = 'prepare' + key + 'HTML';
 				html = html + self[key]();
 			});
+
+			if (this.options.sortByLength) {
+				html = html + self['prepareSortedSuggestionsHTML']();
+			}
 
 			html = html + '</ul>';
 
