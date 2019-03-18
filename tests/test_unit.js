@@ -105,4 +105,21 @@ describe('Autosuggest', function () {
 		expect(this.trackClassicalSpy).to.have.been.calledWith(type, obj);
 	});
 
+	it('Should have correct endpoint based on com or io platform', function () {
+		var mockOptionsCom = {
+			platform: 'com'
+		}
+
+		var mockOptionsIo = {
+			platform: 'io'
+		}
+
+		window.autoSuggestObj.options = mockOptionsCom;
+		var url = window.autoSuggestObj.getHostDomainName();
+		expect(url).to.equal("//search.unbxdapi.com/");
+
+		window.autoSuggestObj.options = mockOptionsIo;
+		var url = window.autoSuggestObj.getHostDomainName();
+		expect(url).to.equal("//search.unbxd.io/");
+	});
 });
