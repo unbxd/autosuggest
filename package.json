@@ -25,7 +25,7 @@
     "grunt-ember-templates": "*",
     "chosen": "0.0.2",
     "handlebars": "^4.1.0",
-    "jquery": "^3.0.0",
+    "jquery": "^3.3.1",
     "karma": "^4.0.1",
     "karma-browserify": "^6.0.0",
     "karma-chai": "^0.1.0",
