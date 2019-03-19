@@ -342,6 +342,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '{{/if}}'].join('')
 			}
 			, filtered: false
+			, platform: 'com'
 			, resultsContainerSelector: null
 			, processResultsStyles: null
 		}
@@ -849,11 +850,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, requestData: function (q) {
 			var self = this, url = self.autosuggestUrl();
 			this.log("requestData", url);
-			this.ajaxCall = $.ajax({
-				url: url
-				, dataType: "jsonp"
-				, jsonp: 'json.wrf'
-			})
+			var params = this.getAjaxParams();
+			params.url = url;
+			this.ajaxCall = $.ajax(params)
 				.done(function (d) {
 					self.receiveData(d);
 				})
@@ -861,6 +860,30 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					self.$input.removeClass(self.options.loadingClass);
 					self.$results.hide();
 				});
+		}
+		, getHostDomainName: function () {
+			if (this.options.platform === 'com') {
+				return "//search.unbxdapi.com/";
+			}
+			else {
+				return "//search.unbxd.io/";
+			}
+		}
+		, getAjaxParams: function () {
+			var params = {};
+			if (this.options.platform === 'io') {
+				params = {
+					dataType: "json",
+					method: "get"
+				}
+			}
+			else {
+				params = {
+					dataType: "jsonp",
+					jsonp: "json.wrf"
+				}
+			}
+			return params;
 		}
 		, autosuggestUrl: function () {
 			var host_path = this.getHostNPath();
@@ -897,7 +920,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			return host_path + "?" + url;
 		}
 		, getHostNPath: function () {
-			return "//search.unbxdapi.com/" + this.options.APIKey + "/" + this.options.siteName + "/autosuggest"
+			return this.getHostDomainName() + this.options.APIKey + "/" + this.options.siteName + "/autosuggest"
 		}
 		, receiveData: function (data) {
 			if (data) {
@@ -1073,18 +1096,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, getfilteredPopularProducts: function () {
 			var self = this,
-				url_path = "//search.unbxdapi.com/" + this.options.APIKey + "/"
+				url_path = this.getHostDomainName() + this.options.APIKey + "/"
 					+ this.options.siteName + "/search",
 				default_search_params = "indent=off&facet=off&analytics=false&redirect=false",
 				url = url_path + "?q=" + encodeURIComponent(this.params.q)
 					+ "&rows=" + this.options.popularProducts.count + "&"
 					+ default_search_params;
 
-			$.ajax({
-				url: url,
-				dataType: "jsonp",
-				jsonp: "json.wrf"
-			}).done(function (d) {
+			var params = this.getAjaxParams();
+			params.url = url;
+			$.ajax(params).done(function (d) {
 				var query = self.params.q;
 				self.processfilteredPopularProducts(query, d);
 			});
@@ -1107,11 +1128,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 									+ "&rows=" + this.options.popularProducts.count + "&"
 									+ default_search_params;
 							}
-							$.ajax({
-								url: url,
-								dataType: "jsonp",
-								jsonp: "json.wrf"
-							}).done(function (d) {
+							var params = this.getAjaxParams();
+							$.ajax(params).done(function (d) {
 								var query = d.searchMetaData.queryParams.q
 									+ (d.searchMetaData.queryParams.filter ? ':'
 										+ d.searchMetaData.queryParams.filter.replace(/"/g, '') : '');
