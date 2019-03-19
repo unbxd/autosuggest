@@ -31,10 +31,6 @@ var ractive = new Ractive({
 	}
 });
 
-Ractive.decorators.chosen.type.demo = {
-	width: '25%',
-};
-
 // $(function(){
 unbxdAutoSuggestFunction($, Handlebars);
 
