@@ -1,4 +1,4 @@
-## UNBXD AUTOSUGGEST
+## AUTOSUGGEST [![Build Status](https://travis-ci.com/unbxd/autosuggest.svg?branch=master)](https://travis-ci.com/unbxd/autosuggest)
 This plug-in depends on jQuery and Handlebars libraries. It works with the UNBXD Autosuggest APIs to provide a flexible and configurable auto-suggest for an e-commerce site. It provides features, especially required by e-commerce sites like
 ##### 1. IN FIELDS  
 ![in fields](/screenshots/infields.png "in fields")
