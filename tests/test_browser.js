@@ -15,7 +15,7 @@ describe('Autosuggest', () => {
 
         // Set the view port size so we can "see" the whole page
         await page.setViewport({ width: 1280, height: 800 })
-        await page.goto('http://localhost:7000/tests/', { waitUntil: 'networkidle0' })
+        await page.goto('https://unbxd.github.io/autosuggest/tests/index.html', { waitUntil: 'networkidle0' })
 
         // Assert the search input is there
         const searchInput = await page.$('input#search_field')

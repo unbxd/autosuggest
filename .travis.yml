@@ -1,0 +1,20 @@
+language: node_js
+
+node_js:
+  - "11.10.0"
+
+cache:
+  directories:
+    - node_modules
+
+before_install:
+  - "npm --version"
+
+install:
+  - "npm install"
+
+cache: npm
+
+script:
+  - npm run unit_test
+  - npm run e2e_test
