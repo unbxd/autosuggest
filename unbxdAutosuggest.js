@@ -368,6 +368,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, init: function (input, options) {
 			this.options = $.extend({}, this.default_options, options);
 			this.setDefaultPopularProductsOptions();
+			this.getPopularProductFields();
 			this.$input = $(input).attr('autocomplete', 'off');
 			this.$results = $('<div/>', { 'class': this.options.resultsClass })
 				.css('position', this.options.position === 'relative' ? 'absolute' : this.options.position)
@@ -888,22 +889,28 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, autosuggestUrl: function () {
 			var host_path = this.getHostNPath();
-
 			var url = "q=" + encodeURIComponent(this.params.q);
+
 			if (this.options.maxSuggestions) {
 				url += '&inFields.count=' + this.options.maxSuggestions
 					+ '&topQueries.count=' + this.options.maxSuggestions
 					+ '&keywordSuggestions.count=' + this.options.maxSuggestions
-					+ '&popularProducts.count=' + this.options.popularProducts.count;
-				+ '&indent=off';
+					+ '&popularProducts.count=' + this.options.popularProducts.count
+					+ '&indent=off';
 			}
 			else {
 				url += '&inFields.count=' + this.options.inFields.count
 					+ '&topQueries.count=' + this.options.topQueries.count
 					+ '&keywordSuggestions.count=' + this.options.keywordSuggestions.count
-					+ '&popularProducts.count=' + this.options.popularProducts.count;
-				+ '&indent=off';
+					+ '&popularProducts.count=' + this.options.popularProducts.count
+					+ '&indent=off';
 			}
+
+			if (this.options.popularProducts.fields.length > 0) {
+				var popularProductFields = this.options.popularProducts.fields.join(",");
+				url = url + '&popularProducts.fields=' + popularProductFields
+			}
+
 
 			for (var x in this.params.filters) {
 				if (this.params.filters.hasOwnProperty(x)) {
@@ -1097,12 +1104,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, getfilteredPopularProducts: function () {
 			var self = this,
-				url_path = this.getHostDomainName() + this.options.APIKey + "/"
+				urlPath = this.getHostDomainName() + this.options.APIKey + "/"
 					+ this.options.siteName + "/search",
-				default_search_params = "indent=off&facet=off&analytics=false&redirect=false",
-				url = url_path + "?q=" + encodeURIComponent(this.params.q)
+				defaultSearchParams = "indent=off&facet=off&analytics=false&redirect=false",
+				url = urlPath + "?q=" + encodeURIComponent(this.params.q)
 					+ "&rows=" + this.options.popularProducts.count + "&"
-					+ default_search_params;
+					+ defaultSearchParams;
+
+			if (self.options.popularProducts.fields.length > 0) {
+				var popularProductFields = "&fields=" + self.options.popularProducts.fields.join(",");
+				url = url + popularProductFields;
+			}
 
 			var params = this.getAjaxParams();
 			params.url = url;
@@ -1116,18 +1128,18 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					for (j in this.currentResults[i]) {
 						if (this.currentResults[i].hasOwnProperty(j)) {
 							if (this.currentResults[i][j]['filtername']) {
-								url = url_path + "?q="
+								url = urlPath + "?q="
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
 									+ this.currentResults[i][j]['filtername'] + ":\""
 									+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
-									+ "\"&rows=" + this.options.popularProducts.count + "&"
-									+ default_search_params;
+									+ "\"&rows=" + this.options.popularProducts.count + popularProductFields + "&"
+									+ defaultSearchParams;
 							}
 							else {
-								url = url_path + "?q="
+								url = urlPath + "?q="
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
-									+ "&rows=" + this.options.popularProducts.count + "&"
-									+ default_search_params;
+									+ "&rows=" + this.options.popularProducts.count + popularProductFields + "&"
+									+ defaultSearchParams;
 							}
 							var params = this.getAjaxParams();
 							params.url = url;
@@ -1217,12 +1229,35 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			};
 			this.currentResults.KEYWORD_SUGGESTION.push(o);
 		}
-		, setDefaultPopularProductsOptions: function() {
+		, setDefaultPopularProductsOptions: function () {
 			if (!this.options.popularProducts.autosuggestName) {
 				this.options.popularProducts.autosuggestName = 'title';
 			}
 			if (!this.options.popularProducts.title) {
 				this.options.popularProducts.title = 'autosuggest';
+			}
+			if (!this.options.popularProducts.fields) {
+				this.options.popularProducts.fields = [];
+			}
+		}
+		, getPopularProductFields: function () {
+			var popularProductsFields = ['doctype'];
+			this.options.popularProducts.fields.push(this.options.popularProducts.title);
+			if (this.options.popularProducts.price && typeof this.options.popularProducts.priceFunctionOrKey == "string"
+				&& this.options.popularProducts.priceFunctionOrKey) {
+				popularProductsFields.push(this.options.popularProducts.priceFunctionOrKey);
+			}
+			if (this.options.popularProducts.image) {
+				if (typeof this.options.popularProducts.imageUrlOrFunction == "string"
+					&& this.options.popularProducts.imageUrlOrFunction) {
+					popularProductsFields.push(this.options.popularProducts.imageUrlOrFunction);
+				}
+			}
+			if (this.options.popularProducts.fields.length > 0) {
+				this.options.popularProducts.fields = popularProductsFields.concat(this.options.popularProducts.fields);
+			}
+			else {
+				this.options.popularProducts.fields = popularProductsFields;
 			}
 		}
 		, processPopularProducts: function (doc) {
@@ -1244,9 +1279,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				} else {
 					o.price = "price" in doc ? doc["price"] : null;
 				}
+			}
 
-				if (this.options.popularProducts.currency)
-					o.currency = this.options.popularProducts.currency;
+			if (this.options.popularProducts.currency) {
+				o.currency = this.options.popularProducts.currency;
 			}
 
 			if (this.options.popularProducts.image) {
@@ -1259,6 +1295,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 
 			this.currentResults.POPULAR_PRODUCTS.push(o);
+
 		}
 		, processInFields: function (doc) {
 			var ins = {}
