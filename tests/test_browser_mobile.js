@@ -15,7 +15,7 @@ describe('Autosuggest Mobile View', () => {
 
   it('shows single column on mobiles', async () => {
     await page.emulate(devices['iPhone 6'])
-    await page.goto('https://unbxd.github.io/autosuggest/tests/index.html', { waitUntil: 'networkidle0' })
+    await page.goto('http://localhost:7000/tests/index.html', { waitUntil: 'networkidle0' })
     await page.waitForSelector('input#search_field')
     await page.type('input#search_field', 'bul')
     await page.waitFor(2000)

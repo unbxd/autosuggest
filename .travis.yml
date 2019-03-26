@@ -16,5 +16,7 @@ install:
 cache: npm
 
 script:
+  # Starting the server for testing
+  - http-server -p 7000 > http.log 2>&1 &
   - npm run unit_test
   - npm run e2e_test
