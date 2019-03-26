@@ -1129,6 +1129,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 									+ default_search_params;
 							}
 							var params = this.getAjaxParams();
+							params.url = url;
 							$.ajax(params).done(function (d) {
 								var query = d.searchMetaData.queryParams.q
 									+ (d.searchMetaData.queryParams.filter ? ':'
