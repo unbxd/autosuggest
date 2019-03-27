@@ -367,6 +367,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, scrollbarWidth: null
 		, init: function (input, options) {
 			this.options = $.extend({}, this.default_options, options);
+			this.setDefaultPopularProductsOptions();
 			this.$input = $(input).attr('autocomplete', 'off');
 			this.$results = $('<div/>', { 'class': this.options.resultsClass })
 				.css('position', this.options.position === 'relative' ? 'absolute' : this.options.position)
@@ -1147,14 +1148,27 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				&& d.response.products.length) {
 				for (var k = 0; k < d.response.products.length; k++) {
 					var doc = d.response.products[k];
+
 					o = {
-						autosuggest: (this.options.popularProducts.autosuggestName ?
-							doc[this.options.popularProducts.autosuggestName] : (doc.title ? doc.title : ''))
-						, highlighted: this.highlightStr(doc.title)
-						, _original: doc
+						_original: doc
 						, type: 'POPULAR_PRODUCTS_FILTERED'
 						, src: query
 					};
+
+					if (this.options.popularProducts.autosuggestName && doc[this.options.popularProducts.autosuggestName]) {
+						o.autosuggest = doc[this.options.popularProducts.autosuggestName];
+					}
+					else if (this.options.popularProducts.title && doc[this.options.popularProducts.title]) {
+						o.autosuggest = doc[this.options.popularProducts.title];
+					}
+					else if (doc.title) {
+						o.autosuggest = doc.title;
+					}
+					else {
+						o.autosuggest = '';
+					}
+
+					o.highlighted = this.highlightStr(o.autosuggest);
 
 					if (this.options.popularProducts.price) {
 						if (typeof this.options.popularProducts.priceFunctionOrKey === "function") {
@@ -1203,14 +1217,23 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			};
 			this.currentResults.KEYWORD_SUGGESTION.push(o);
 		}
+		, setDefaultPopularProductsOptions: function() {
+			if (!this.options.popularProducts.autosuggestName) {
+				this.options.popularProducts.autosuggestName = 'title';
+			}
+			if (!this.options.popularProducts.title) {
+				this.options.popularProducts.title = 'autosuggest';
+			}
+		}
 		, processPopularProducts: function (doc) {
 			o = {
-				autosuggest: doc.autosuggest
-				, highlighted: this.highlightStr(doc.autosuggest)
+				autosuggest: doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : ''
 				, type: doc.doctype
 				, pid: doc.uniqueId.replace("popularProduct_", "")
 				, _original: doc
 			};
+
+			o.highlighted = this.highlightStr(o.autosuggest);
 
 			if (this.options.popularProducts.price) {
 				if (typeof this.options.popularProducts.priceFunctionOrKey == "function") {
