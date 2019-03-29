@@ -341,7 +341,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '</div>'
 					, '{{/if}}'].join('')
 			}
-			, popularProductsFields: ['doctype']
 			, enableVariants: false
 			, filtered: false
 			, platform: 'com'
