@@ -40,14 +40,16 @@ describe('Autosuggest', function () {
 			},
 			popularProducts: {
 				count: 5
-			}
+			},
+			popularProductsFields: ['doctype']
 		}
 
 		var mockOptionsWithMaxSuggestions = {
 			maxSuggestions: 5,
 			popularProducts: {
 				count: 5
-			}
+			},
+			popularProductsFields: ['doctype']
 		}
 
 		// With Max Suggestions
