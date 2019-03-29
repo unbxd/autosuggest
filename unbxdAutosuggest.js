@@ -341,6 +341,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '</div>'
 					, '{{/if}}'].join('')
 			}
+			, enableVariants: false
 			, filtered: false
 			, platform: 'com'
 			, resultsContainerSelector: null
@@ -367,6 +368,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, scrollbarWidth: null
 		, init: function (input, options) {
 			this.options = $.extend({}, this.default_options, options);
+			this.setDefaultPopularProductsOptions();
+			this.getPopularProductFields();
 			this.$input = $(input).attr('autocomplete', 'off');
 			this.$results = $('<div/>', { 'class': this.options.resultsClass })
 				.css('position', this.options.position === 'relative' ? 'absolute' : this.options.position)
@@ -887,22 +890,32 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, autosuggestUrl: function () {
 			var host_path = this.getHostNPath();
-
 			var url = "q=" + encodeURIComponent(this.params.q);
+
 			if (this.options.maxSuggestions) {
 				url += '&inFields.count=' + this.options.maxSuggestions
 					+ '&topQueries.count=' + this.options.maxSuggestions
 					+ '&keywordSuggestions.count=' + this.options.maxSuggestions
-					+ '&popularProducts.count=' + this.options.popularProducts.count;
-				+ '&indent=off';
+					+ '&popularProducts.count=' + this.options.popularProducts.count
+					+ '&indent=off';
 			}
 			else {
 				url += '&inFields.count=' + this.options.inFields.count
 					+ '&topQueries.count=' + this.options.topQueries.count
 					+ '&keywordSuggestions.count=' + this.options.keywordSuggestions.count
-					+ '&popularProducts.count=' + this.options.popularProducts.count;
-				+ '&indent=off';
+					+ '&popularProducts.count=' + this.options.popularProducts.count
+					+ '&indent=off';
 			}
+
+			if (this.options.popularProducts.fields.length > 0) {
+				var popular_product_fields = this.options.popularProducts.fields.join(",");
+				url = url + '&popularProducts.fields=' + popular_product_fields
+			}
+
+			if (this.options.enableVariants) {
+				url = url + '&variants=true' + "&variants.fields=" + (this.options.popularProducts.variants.fields ? this.options.popularProducts.variants.fields : '*')
+			}
+
 
 			for (var x in this.params.filters) {
 				if (this.params.filters.hasOwnProperty(x)) {
@@ -1103,6 +1116,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					+ "&rows=" + this.options.popularProducts.count + "&"
 					+ default_search_params;
 
+			if (self.options.popularProducts.fields.length > 0) {
+				var popular_product_fields = "&fields=" + self.options.popularProducts.fields.join(",");
+				url = url + popular_product_fields;
+			}
+
+			if (self.options.enableVariants) {
+				url = url + '&variants=true' + "&variants.fields=" + (this.options.popularProducts.variants.fields ? this.options.popularProducts.variants.fields : '*')
+			}
+
 			var params = this.getAjaxParams();
 			params.url = url;
 			$.ajax(params).done(function (d) {
@@ -1119,15 +1141,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
 									+ this.currentResults[i][j]['filtername'] + ":\""
 									+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
-									+ "\"&rows=" + this.options.popularProducts.count + "&"
+									+ "\"&rows=" + this.options.popularProducts.count + popular_product_fields + "&"
 									+ default_search_params;
 							}
 							else {
 								url = url_path + "?q="
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
-									+ "&rows=" + this.options.popularProducts.count + "&"
+									+ "&rows=" + this.options.popularProducts.count + popular_product_fields + "&"
 									+ default_search_params;
 							}
+
+							if (self.options.enableVariants) {
+								url = url + '&variants=true' + "&variants.fields=" + (this.options.popularProducts.variants.fields ? this.options.popularProducts.variants.fields : '*')
+							}
+
 							var params = this.getAjaxParams();
 							params.url = url;
 							$.ajax(params).done(function (d) {
@@ -1141,46 +1168,135 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				}
 			}
 		}
+
+		, setPopularProductsConfig: function (o, doc, fieldType) {
+
+			if (fieldType == 'autosuggestName') {
+				if (this.options.popularProducts.autosuggestName && doc[this.options.popularProducts.autosuggestName]) {
+					o.autosuggest = doc[this.options.popularProducts.autosuggestName];
+				}
+				else if (this.options.popularProducts.title && doc[this.options.popularProducts.title]) {
+					o.autosuggest = doc[this.options.popularProducts.title];
+				}
+				else if (doc.title) {
+					o.autosuggest = doc.title;
+				}
+				else {
+					o.autosuggest = '';
+				}
+				o.highlighted = this.highlightStr(o.autosuggest);
+				return;
+			}
+
+			if (fieldType == 'price') {
+				if (this.options.popularProducts.price) {
+					if (typeof this.options.popularProducts.priceFunctionOrKey === "function") {
+						o.price = this.options.popularProducts.priceFunctionOrKey(doc);
+					} else if (typeof this.options.popularProducts.priceFunctionOrKey === "string"
+						&& this.options.popularProducts.priceFunctionOrKey) {
+						o.price = this.options.popularProducts.priceFunctionOrKey in doc ?
+							doc[this.options.popularProducts.priceFunctionOrKey] : null;
+					} else {
+						o.price = "price" in doc ? doc["price"] : null;
+					}
+
+					if (this.options.popularProducts.currency)
+						o.currency = this.options.popularProducts.currency;
+				}
+				return;
+			}
+
+			if (fieldType == 'image') {
+				if (this.options.popularProducts.image) {
+					if (typeof this.options.popularProducts.imageUrlOrFunction === "function") {
+						o.image = this.options.popularProducts.imageUrlOrFunction(doc);
+					} else if (typeof this.options.popularProducts.imageUrlOrFunction === "string"
+						&& this.options.popularProducts.imageUrlOrFunction) {
+						o.image = this.options.popularProducts.imageUrlOrFunction in doc ?
+							doc[this.options.popularProducts.imageUrlOrFunction] : null;
+					}
+				}
+				return;
+			}
+
+		}
+
 		, processfilteredPopularProducts: function (query, d) {
 			this.currentTopResults[query] = [];
 			if (d.hasOwnProperty("response") && d.response.hasOwnProperty("products")
 				&& d.response.products.length) {
 				for (var k = 0; k < d.response.products.length; k++) {
 					var doc = d.response.products[k];
-					o = {
-						autosuggest: (this.options.popularProducts.autosuggestName ?
-							doc[this.options.popularProducts.autosuggestName] : (doc.title ? doc.title : ''))
-						, highlighted: this.highlightStr(doc.title)
-						, _original: doc
-						, type: 'POPULAR_PRODUCTS_FILTERED'
-						, src: query
-					};
 
-					if (this.options.popularProducts.price) {
-						if (typeof this.options.popularProducts.priceFunctionOrKey === "function") {
-							o.price = this.options.popularProducts.priceFunctionOrKey(doc);
-						} else if (typeof this.options.popularProducts.priceFunctionOrKey === "string"
-							&& this.options.popularProducts.priceFunctionOrKey) {
-							o.price = this.options.popularProducts.priceFunctionOrKey in doc ?
-								doc[this.options.popularProducts.priceFunctionOrKey] : null;
-						} else {
-							o.price = "price" in doc ? doc["price"] : null;
+					if (doc.relevantDocument == "variant" && doc.variants && doc.variants.length > 0) {
+
+						var variantsDoc = doc.variants[0];
+
+						var variantsObject = {
+							_original: variantsDoc
+							, type: 'POPULAR_PRODUCTS_FILTERED'
+							, src: query
+						};
+
+						if (this.options.popularProducts.variants.autosuggestName && doc[this.options.popularProducts.variants.autosuggestName]) {
+							variantsObject.autosuggest = typeof doc[this.options.popularProducts.variants.autosuggestName] == "object" ? doc[this.options.popularProducts.variants.autosuggestName][0] : doc[this.options.popularProducts.variants.autosuggestName];
+						}
+						else if (this.options.popularProducts.variants.title && doc[this.options.popularProducts.variants.title]) {
+							variantsObject.autosuggest = typeof doc[this.options.popularProducts.variants.title] == "object" ? doc[this.options.popularProducts.variants.title][0] : doc[this.options.popularProducts.variants.title];
+						}
+						else if (doc.v_title) {
+							variantsObject.autosuggest = typeof doc.v_title == "object" ? doc.v_title[0] : doc.v_title;
+						}
+						else {
+							this.setPopularProductsConfig(variantsObject, doc, 'autosuggestName');
 						}
 
-						if (this.options.popularProducts.currency)
-							o.currency = this.options.popularProducts.currency;
+						variantsObject.highlighted = this.highlightStr(variantsObject.autosuggest);
+
+						if (this.options.popularProducts.price) {
+							if (typeof this.options.popularProducts.variants.priceFunctionOrKey === "function") {
+								variantsObject.price = this.options.popularProducts.variants.priceFunctionOrKey(doc);
+							} else if (typeof this.options.popularProducts.variants.priceFunctionOrKey === "string"
+								&& this.options.popularProducts.variants.priceFunctionOrKey && doc[this.options.popularProducts.variants.priceFunctionOrKey]) {
+								variantsObject.price = typeof doc[this.options.popularProducts.variants.priceFunctionOrKey] == "object" ? doc[this.options.popularProducts.variants.priceFunctionOrKey][0] : doc[this.options.popularProducts.variants.priceFunctionOrKey];
+							} else if (doc.v_price) {
+								variantsObject.price = typeof doc.v_price == "object" ? doc.v_price[0] : doc.v_price;
+							} else {
+								this.setPopularProductsConfig(variantsObject, doc, 'price');
+							}
+							if (this.options.popularProducts.currency) {
+								variantsObject.currency = this.options.popularProducts.currency;
+							}
+						}
+
+						if (this.options.popularProducts.image) {
+							if (typeof this.options.popularProducts.variants.imageUrlOrFunction === "function") {
+								variantsObject.image = this.options.popularProducts.variants.imageUrlOrFunction(doc);
+							} else if (typeof this.options.popularProducts.variants.imageUrlOrFunction === "string"
+								&& this.options.popularProducts.variants.imageUrlOrFunction && doc[this.options.popularProducts.variants.imageUrlOrFunction]) {
+								variantsObject.image = typeof doc[this.options.popularProducts.variants.imageUrlOrFunction] == "object" ? doc[this.options.popularProducts.variants.imageUrlOrFunction][0] : doc[this.options.popularProducts.variants.imageUrlOrFunction];
+							}
+							else {
+								this.setPopularProductsConfig(variantsObject, doc, 'image');
+							}
+						}
+
+						this.currentTopResults[query].push(variantsObject);
+					} else {
+						o = {
+							_original: doc
+							, type: 'POPULAR_PRODUCTS_FILTERED'
+							, src: query
+						};
+
+						var popConfig = ['autosuggestName', 'price', 'image']
+						for (var i = 0; i < popConfig.length; i++) {
+							this.setPopularProductsConfig(o, doc, popConfig[i]);
+						}
+
+						this.currentTopResults[query].push(o);
 					}
 
-					if (this.options.popularProducts.image) {
-						if (typeof this.options.popularProducts.imageUrlOrFunction === "function") {
-							o.image = this.options.popularProducts.imageUrlOrFunction(doc);
-						} else if (typeof this.options.popularProducts.imageUrlOrFunction === "string"
-							&& this.options.popularProducts.imageUrlOrFunction) {
-							o.image = this.options.popularProducts.imageUrlOrFunction in doc ?
-								doc[this.options.popularProducts.imageUrlOrFunction] : null;
-						}
-					}
-					this.currentTopResults[query].push(o);
 				}
 			}
 		}
@@ -1203,39 +1319,116 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			};
 			this.currentResults.KEYWORD_SUGGESTION.push(o);
 		}
-		, processPopularProducts: function (doc) {
-			o = {
-				autosuggest: doc.autosuggest
-				, highlighted: this.highlightStr(doc.autosuggest)
-				, type: doc.doctype
-				, pid: doc.uniqueId.replace("popularProduct_", "")
-				, _original: doc
-			};
-
-			if (this.options.popularProducts.price) {
-				if (typeof this.options.popularProducts.priceFunctionOrKey == "function") {
-					o.price = this.options.popularProducts.priceFunctionOrKey(doc);
-				} else if (typeof this.options.popularProducts.priceFunctionOrKey == "string"
-					&& this.options.popularProducts.priceFunctionOrKey) {
-					o.price = this.options.popularProducts.priceFunctionOrKey in doc ? doc[this.options.popularProducts.priceFunctionOrKey] : null;
-				} else {
-					o.price = "price" in doc ? doc["price"] : null;
-				}
-
-				if (this.options.popularProducts.currency)
-					o.currency = this.options.popularProducts.currency;
+		, setDefaultPopularProductsOptions: function () {
+			if (!this.options.popularProducts.autosuggestName) {
+				this.options.popularProducts.autosuggestName = 'title';
+			}
+			if (!this.options.popularProducts.title) {
+				this.options.popularProducts.title = 'autosuggest';
+			}
+			if (!this.options.popularProducts.fields) {
+				this.options.popularProducts.fields = [];
 			}
 
+			var variants = {
+				autosuggestName: "v_title",
+				title: "autosuggest",
+				priceFunctionOrKey: "v_price",
+				imageUrlOrFunction: "v_imageUrl",
+				fields: ['v_title', 'v_price', 'v_imageUrl'],
+				tpl: ''
+			}
+
+			if (!this.options.popularProducts.variants) {
+				this.options.popularProducts.variants = variants;
+			}
+
+		}
+		, getPopularProductFields: function () {
+			var popularProductsFields = ['doctype'];
+			this.options.popularProducts.fields.push(this.options.popularProducts.title);
+			if (this.options.popularProducts.price && typeof this.options.popularProducts.priceFunctionOrKey == "string"
+				&& this.options.popularProducts.priceFunctionOrKey) {
+				popularProductsFields.push(this.options.popularProducts.priceFunctionOrKey);
+			}
 			if (this.options.popularProducts.image) {
-				if (typeof this.options.popularProducts.imageUrlOrFunction == "function") {
-					o.image = this.options.popularProducts.imageUrlOrFunction(doc);
-				} else if (typeof this.options.popularProducts.imageUrlOrFunction == "string"
+				if (typeof this.options.popularProducts.imageUrlOrFunction == "string"
 					&& this.options.popularProducts.imageUrlOrFunction) {
-					o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
+					popularProductsFields.push(this.options.popularProducts.imageUrlOrFunction);
 				}
 			}
+			if (this.options.popularProducts.fields.length > 0) {
+				this.options.popularProducts.fields = popularProductsFields.concat(this.options.popularProducts.fields);
+			}
+			else {
+				this.options.popularProducts.fields = popularProductsFields;
+			}
+		}
+		, processPopularProducts: function (doc) {
+			if (doc.relevantDocument == "variant" && doc.variants && doc.variants.length > 0) {
+				// var variantsConfig = this.getVariantFields();
+				var variantsDoc = doc.variants[0];
 
-			this.currentResults.POPULAR_PRODUCTS.push(o);
+				var variantsObject = {
+					_original: variantsDoc
+					, type: 'POPULAR_PRODUCTS_FILTERED'
+				};
+
+				if (this.options.popularProducts.variants.title && doc[this.options.popularProducts.variants.title]) {
+					variantsObject.autosuggest = typeof doc[this.options.popularProducts.variants.title] == "object" ? doc[this.options.popularProducts.variants.title][0] : doc[this.options.popularProducts.variants.title];
+				}
+				else if (doc.v_title) {
+					variantsObject.autosuggest = typeof doc.v_title == "object" ? doc.v_title[0] : doc.v_title;
+				}
+				else {
+					variantsObject.autosuggest = doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : ''
+				}
+
+				variantsObject.highlighted = this.highlightStr(variantsObject.autosuggest);
+
+				if (this.options.popularProducts.price) {
+					if (typeof this.options.popularProducts.variants.priceFunctionOrKey === "function") {
+						variantsObject.price = this.options.popularProducts.variants.priceFunctionOrKey(doc);
+					} else if (typeof this.options.popularProducts.variants.priceFunctionOrKey === "string"
+						&& this.options.popularProducts.variants.priceFunctionOrKey && doc[this.options.popularProducts.variants.priceFunctionOrKey]) {
+						variantsObject.price = typeof doc[this.options.popularProducts.variants.priceFunctionOrKey] == "object" ? doc[this.options.popularProducts.variants.priceFunctionOrKey][0] : doc[this.options.popularProducts.variants.priceFunctionOrKey];
+					} else if (doc.v_price) {
+						variantsObject.price = typeof doc.v_price == "object" ? doc.v_price[0] : doc.v_price;
+					} else {
+						this.setPopularProductsConfig(variantsObject, doc, 'price');
+					}
+					if (this.options.popularProducts.currency) {
+						variantsObject.currency = this.options.popularProducts.currency;
+					}
+				}
+
+				if (this.options.popularProducts.image) {
+					if (typeof this.options.popularProducts.variants.imageUrlOrFunction === "function") {
+						variantsObject.image = this.options.popularProducts.variants.imageUrlOrFunction(doc);
+					} else if (typeof this.options.popularProducts.variants.imageUrlOrFunction === "string"
+						&& this.options.popularProducts.variants.imageUrlOrFunction && doc[this.options.popularProducts.variants.imageUrlOrFunction]) {
+						variantsObject.image = typeof doc[this.options.popularProducts.variants.imageUrlOrFunction] == "object" ? doc[this.options.popularProducts.variants.imageUrlOrFunction][0] : doc[this.options.popularProducts.variants.imageUrlOrFunction];
+					}
+					else {
+						this.setPopularProductsConfig(variantsObject, doc, 'image');
+					}
+				}
+
+				this.currentResults.POPULAR_PRODUCTS.push(variantsObject);
+			} else {
+				o = {
+					autosuggest: doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : ''
+					, type: doc.doctype
+					, pid: doc.uniqueId.replace("popularProduct_", "")
+					, _original: doc
+				};
+
+				o.highlighted = this.highlightStr(o.autosuggest);
+				this.setPopularProductsConfig(o, doc, 'price');
+				this.setPopularProductsConfig(o, doc, 'image');
+
+				this.currentResults.POPULAR_PRODUCTS.push(o);
+			}
 		}
 		, processInFields: function (doc) {
 			var ins = {}
@@ -1415,7 +1608,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{#data}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
-				+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
+				+ ((this.options.popularProducts.variants && this.options.popularProducts.variants.tpl) ? this.options.popularProducts.variants.tpl : this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
 				+ '</li>'
 				+ '{{/data}}'
 		}
@@ -1425,7 +1618,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{#data.POPULAR_PRODUCTS}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
-				+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
+				+ ((this.options.popularProducts.variants && this.options.popularProducts.variants.tpl) ? this.options.popularProducts.variants.tpl : this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
 				+ '</li>'
 				+ '{{/data.POPULAR_PRODUCTS}}'
 				+ '{{/if}}';
