@@ -39,15 +39,17 @@ describe('Autosuggest', function () {
 				count: 2
 			},
 			popularProducts: {
-				count: 5
+				count: 5,
+				fields: []
 			}
 		}
 
 		var mockOptionsWithMaxSuggestions = {
 			maxSuggestions: 5,
 			popularProducts: {
-				count: 5
-			}
+				count: 5,
+				fields: []
+			},
 		}
 
 		// With Max Suggestions
