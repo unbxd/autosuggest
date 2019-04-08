@@ -1,0 +1,22 @@
+{
+  "name": "ractive-decorators-chosen",
+  "version": "0.1.5",
+  "author": "Kalcifer & Prezent Internet B.V.",
+  "main": "ractive-decorators-chosen.js",
+  "ignore": [
+    "**/.*",
+    "src",
+    "test",
+    "Gruntfile.js"
+  ],
+  "homepage": "https://github.com/kalcifer/ractive-decorators-chosen",
+  "_release": "0.1.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.5",
+    "commit": "11d03590e88a953d627ab5682efb27d0c7ae38d8"
+  },
+  "_source": "git://github.com/kalcifer/ractive-decorators-chosen.git",
+  "_target": "~0.1.5",
+  "_originalSource": "ractive-decorators-chosen"
+}

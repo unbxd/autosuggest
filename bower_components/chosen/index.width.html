@@ -1,0 +1,30 @@
+<!doctype html> 
+<html lang="en"> 
+<head>
+  <link rel="stylesheet" href="docsupport/style.css">
+  <link rel="stylesheet" href="chosen.css">
+  <style type="text/css" media="all">
+    /* fix rtl for demo */
+    form { width: 50%; margin: 2em;}
+    .chzn-rtl .chzn-drop { left: -9000px; }
+  </style>
+</head>
+<body>
+  <form>
+
+ <select class="chosen" multiple data-placeholder="Выберите доступные колонки документа">
+    <option>Колонка</option>
+    <option>Колонка</option>
+    <option>Колонка</option>
+    <option>Колонка</option>
+    <option>Колонка</option>
+</select>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
+  <script src="chosen.jquery.js" type="text/javascript"></script>
+  <script type="text/javascript"> 
+      $('.chosen').chosen({ width: "100%" });
+  </script>
+  </form>
+</body>
+</html>
