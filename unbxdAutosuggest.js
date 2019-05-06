@@ -4,7 +4,7 @@
  * Copyright 2015, Unbxd
  *
 */
-var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
+var unbxdAutoSuggestFunction = function ($, Handlebars, portal) {
 
 	//use unbxd scope and add a version for autosuggest
 	window.Unbxd = window.Unbxd || {};
@@ -390,6 +390,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, wire: function () {
 			var self = this;
 
+			if (portal) {
+                self.onChange();
+            }
+
 			this.$input.bind('keydown.auto', this.keyevents());
 
 			this.$input.bind('select.auto', function () {
@@ -476,7 +480,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					self.selectItem(p.data(), e);
 				} else {
 					self.hasFocus = false;
-					self.hideResults();
+					if (!portal) {
+                        self.hideResults();
+                    }
 				}
 			});
 
@@ -935,7 +941,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				this.$input.removeClass(this.options.loadingClass);
 				this.$results.html('');
 				// if the field no longer has focus or if there are no matches, do not display the drop down
-				if (!this.hasFocus || data.response.numberOfProducts == 0 || "error" in data) {
+				if (!portal && (!this.hasFocus || data.response.numberOfProducts == 0 || "error" in data)) {
 					if (!this.options.noResultTpl) {
 						return this.hideResultsNow(this)
 					}
