@@ -750,7 +750,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
-					fpos.left = pos.left - this.options.sideWidth + "px";
+					fpos.left = pos.left + this.$input.outerWidth() - this.$results.outerWidth() + "px";
 				}
 			}
 
