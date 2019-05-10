@@ -412,6 +412,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 						return;
 					if (dataValue) {
 						var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '')
+						if (self.options.popularProducts.header) {
+							self.options.popularProducts.headerText = self.options.popularProducts.header + ' ' + dataValue;
+						}
 						var cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
 						if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
 							$('.unbxd-as-sidecontent').html(cmpld({
@@ -1295,6 +1298,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 
 			this.currentResults.POPULAR_PRODUCTS.push(o);
+			if (this.options.popularProducts.header) {
+				this.options.popularProducts.headerText = this.options.popularProducts.header + ' ' + this.params.q;
+			}
 
 		}
 		, processInFields: function (doc) {
@@ -1471,7 +1477,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/if}}';
 		}
 		, preparefilteredPopularProducts: function () {
-			return (this.options.popularProducts.header ? '<li class="unbxd-as-header">' + this.options.popularProducts.header + '</li>' : '')
+			return (this.options.popularProducts.headerText ? '<li class="unbxd-as-header">' + this.options.popularProducts.headerText + '</li>' : '')
 				+ '{{#data}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
@@ -1481,7 +1487,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, preparepopularProductsHTML: function () {
 			return '{{#if data.POPULAR_PRODUCTS}}'
-				+ (this.options.popularProducts.header ? '<li class="unbxd-as-header">' + this.options.popularProducts.header + '</li>' : '')
+				+ (this.options.popularProducts.headerText ? '<li class="unbxd-as-header">' + this.options.popularProducts.headerText + '</li>' : '')
 				+ '{{#data.POPULAR_PRODUCTS}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
