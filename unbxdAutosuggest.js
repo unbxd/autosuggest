@@ -251,6 +251,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				, header: ""
 				, tpl: "{{{safestring highlighted}}}"
 			}
+			, suggestionsHeader: ''
 			, popularProducts: {
 				count: 2
 				, price: true
@@ -1495,6 +1496,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				self = this,
 				mainlen = 0,
 				sidelen = 0;
+			if (this.options.suggestionsHeader) {
+				html = html + '<li class="unbxd-as-header">' + this.options.suggestionsHeader + '</li>';
+			}
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl) {
 
@@ -1563,6 +1567,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				}
 
 			}
+
+			if (this.options.suggestionsHeader) {
+				html = html + '<li class="unbxd-as-header">' + this.options.suggestionsHeader + '</li>';
+			}
+
 			this.options.mainTpl.forEach(function (key) {
 				key = 'prepare' + key + 'HTML';
 				html = html + self[key]();
