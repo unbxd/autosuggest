@@ -232,6 +232,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			, noResultTpl: null
 			, inFields: {
 				count: 2
+				, type: "separate"
 				, fields: {
 					'brand': 3
 					, 'category': 3
@@ -1317,12 +1318,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				});
 				infieldsCount++;
 
+				var that = this;
 				for (var a in ins) {
 					for (var b = 0; b < ins[a].length; b++) {
 						if (ins[a][b] !== '') {
 							this.currentResults.IN_FIELD.push({
 								autosuggest: doc.autosuggest
-								, highlighted: ins[a][b]
+								, highlighted: this.options.inFields.type === 'separate' ? ins[a][b] : that.highlightStr(doc.autosuggest) + ' in ' + ins[a][b]
 								, type: doc.doctype
 								, filtername: a
 								, filtervalue: ins[a][b]
@@ -1436,7 +1438,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 
 		, prepareinFieldsHTML: function () {
-			return '{{#if data.IN_FIELD}}'
+			if (this.options.inFields.type === "inline") {
+				return '{{#if data.IN_FIELD}}'
+				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+				+ '{{#each data.IN_FIELD}}'
+				+ '{{#unbxdIf type "keyword"}}'
+				+ '{{else}}'
+				+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+				+ '</li>'
+				+ '{{/unbxdIf}}'
+				+ '{{/each}}'
+				+ '{{/if}}';
+			} else { 
+				return '{{#if data.IN_FIELD}}'
 				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
 				+ '{{#each data.IN_FIELD}}'
 				+ '{{#unbxdIf type "keyword"}}'
@@ -1450,6 +1465,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/unbxdIf}}'
 				+ '{{/each}}'
 				+ '{{/if}}';
+			  }
 		}
 		, preparekeywordSuggestionsHTML: function () {
 			return '{{#if data.KEYWORD_SUGGESTION}}'

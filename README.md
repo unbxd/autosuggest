@@ -117,6 +117,7 @@ $(function(){
 - **noResultTpl** : either **function()** or **Template** to show on No results.
 - **inFields** : configure the IN-FIELDS feature. This value takes an object with different properties as explained below.
   - **count** is useful to adjust the number of IN-FIELDS shown to user
+  - **type** either **inline** or **separate**. Shows IN-FIELDS in same or separate line.
   - **fields** is an object containing the name & count of values for fields uploaded to UNBXD. These fields will appear as *in-suggestions* in secondary level.
   - **header** will display the header above the results if any IN FIELDS are present.
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of IN FIELDS.
@@ -124,6 +125,7 @@ $(function(){
 ```javascript
 ,inFields:{
 	count: 2
+	, type: "separate"
 	,fields:{
 		'brand':3 //shows 3 values from brand
 		,'category':3 //shows 3 from category
