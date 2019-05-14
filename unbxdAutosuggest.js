@@ -436,7 +436,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 							}));
 						}
 					}
-					if (self.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
+					if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
 						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100/self.options.popularProducts.rowCount) + "%");
 					}
 				}
