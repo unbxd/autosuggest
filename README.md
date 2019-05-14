@@ -169,7 +169,10 @@ $(function(){
   - **imageUrlOrFunction** can be either a fieldname(*string*) uploaded to UNBXD or a function which takes an object as argument and returns an image url.
   - **price** based on whether it is *true* or *false*, it can either be shown or hidden.
   - **priceFunctionOrKey** can be either a fieldname(*string*) uploaded to UNBXD or a function which takes an object as argument and returns string or a number.
-  - **header** will display the header above the results if any POPULAR PRODUCTS are present.
+  - **header** will display the header above the results if any POPULAR PRODUCTS are present. Also, handlebar template is supported.
+  ```javascript
+  ,header: 'Popular products in {{hoverSuggestion}}'
+  ```
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of POPULAR PRODUCTS.
   - **view** - either **grid** or **list**.
 ```javascript
