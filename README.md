@@ -175,6 +175,7 @@ $(function(){
   ```
   - **tpl** - Handlebars template that can be used to customize the HTML displaying the list of POPULAR PRODUCTS.
   - **view** - either **grid** or **list**.
+  - **rowCount** - Number of products per row.
 ```javascript
 ,popularProducts:{
 	count: 2 //number of products to be shown

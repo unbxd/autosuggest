@@ -436,6 +436,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 							}));
 						}
 					}
+					if (self.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
+						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100/self.options.popularProducts.rowCount) + "%");
+					}
 				}
 
 			});
@@ -764,6 +767,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
 					fpos.left = pos.left - this.options.sideWidth + "px";
+				}
+				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
+					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100/this.options.popularProducts.rowCount) + "%");
 				}
 			}
 
@@ -1257,6 +1263,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 			if (!this.options.popularProducts.fields) {
 				this.options.popularProducts.fields = [];
+			}
+			if (!this.options.popularProducts.rowCount && this.options.platform === 'io') {
+				this.options.popularProducts.rowCount = (this.options.popularProducts.count / 2);
 			}
 		}
 		, getPopularProductFields: function () {
