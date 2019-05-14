@@ -1443,9 +1443,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
 				+ '{{#each data.IN_FIELD}}'
 				+ '{{#unbxdIf type "keyword"}}'
-				// + '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
-				// + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				// + '</li>'
 				+ '{{else}}'
 				+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
 				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
