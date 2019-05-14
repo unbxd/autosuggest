@@ -232,7 +232,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			, noResultTpl: null
 			, inFields: {
 				count: 2
-				, type: "separate"
 				, fields: {
 					'brand': 3
 					, 'category': 3
@@ -371,6 +370,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, init: function (input, options) {
 			this.options = $.extend({}, this.default_options, options);
 			this.setDefaultPopularProductsOptions();
+			this.setDefaultOptions();
 			this.getPopularProductFields();
 			this.$input = $(input).attr('autocomplete', 'off');
 			this.$results = $('<div/>', { 'class': this.options.resultsClass })
@@ -1266,6 +1266,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 			if (!this.options.popularProducts.rowCount && this.options.platform === 'io') {
 				this.options.popularProducts.rowCount = (this.options.popularProducts.count / 2);
+			}
+		}
+		, setDefaultOptions: function () {
+			if (!this.options.inFields.type) {
+				this.options.inFields.type = 'separate';
 			}
 		}
 		, getPopularProductFields: function () {
