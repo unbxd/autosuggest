@@ -244,3 +244,15 @@
     border: 1px solid gray;
     box-shadow: 0 0 5px #999;
 }
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-image-container {
+    margin: 0 auto;
+}
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-image-container img {
+    width: 100%;
+}
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-name {
+    width: 100%;
+}
