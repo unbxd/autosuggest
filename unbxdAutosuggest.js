@@ -269,7 +269,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '<img src="{{image}}"/>'
 					, '{{/if}}'
 					, '</div>'
-					, '<div  class="unbxd-as-popular-product-name">'
+					, '<div  class="unbxd-as-popular-product-name popular-title">'
 					, '<div style="table-layout:fixed;width:100%;display:table;">'
 					, '<div style="display:table-row">'
 					, '<div style="display:table-cell;text-overflow:ellipsis;overflow: hidden;white-space: nowrap;">'
@@ -279,7 +279,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '</div>'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price">'
+					, '<div class="unbxd-as-popular-product-price popular-price">'
 					, '{{currency}}{{price}}'
 					, '</div>'
 					, '{{/if}}'
@@ -301,7 +301,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '{{/if}}'
 					, '</div>'
 					, '<div>'
-					, '<div  class="unbxd-as-popular-product-name">'
+					, '<div  class="unbxd-as-popular-product-name popular-title">'
 					, '{{{safestring highlighted}}}'
 					, '</div>'
 
@@ -316,7 +316,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '</div>'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price">'
+					, '<div class="unbxd-as-popular-product-price popular-price">'
 					, '{{currency}}{{price}}'
 					, '</div>'
 					, '{{/if}}'
@@ -331,11 +331,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '<img src="{{image}}"/>'
 					, '{{/if}}'
 					, '</div>'
-					, '<div  class="unbxd-as-popular-product-name">'
+					, '<div  class="unbxd-as-popular-product-name popular-title">'
 					, '{{{safestring highlighted}}}'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price">'
+					, '<div class="unbxd-as-popular-product-price popular-price">'
 					, '{{currency}}{{price}}'
 					, '</div>'
 					, '{{/if}}'
@@ -373,7 +373,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			this.setDefaultOptions();
 			this.getPopularProductFields();
 			this.$input = $(input).attr('autocomplete', 'off');
-			this.$results = $('<div/>', { 'class': this.options.resultsClass })
+			this.$results = $('<div/>', { 'class': this.options.resultsClass + ' ' + 'overall-autosuggest' })
 				.css('position', this.options.position === 'relative' ? 'absolute' : this.options.position)
 				.hide();
 			if (this.options.zIndex > 0)
@@ -1362,7 +1362,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 						if (ins[a][b] !== '') {
 							this.currentResults.IN_FIELD.push({
 								autosuggest: doc.autosuggest
-								, highlighted: this.options.inFields.type === 'separate' ? ins[a][b] : that.highlightStr(doc.autosuggest) + ' in ' + ins[a][b]
+								, highlighted: this.options.inFields.type === 'separate' ? that.prepareinFieldsKeyword(ins[a][b]) : that.highlightStr(doc.autosuggest) + ' in ' + that.prepareinFieldsKeyword(ins[a][b])
 								, type: doc.doctype
 								, filtername: a
 								, filtervalue: ins[a][b]
@@ -1474,6 +1474,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 			return output;
 		}
+		, prepareinFieldsKeyword: function (str) {
+			return '<span class="suggestions-infields">' + str + '</span>';
+		}
 
 		, prepareinFieldsHTML: function () {
 			if (this.options.inFields.type === "inline") {
@@ -1526,7 +1529,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/if}}';
 		}
 		, preparefilteredPopularProducts: function () {
-			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header">' + this.compiledPopularProductHeader + '</li>' : '')
+			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header popular-header">' + this.compiledPopularProductHeader + '</li>' : '')
 				+ '{{#data}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
@@ -1536,7 +1539,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, preparepopularProductsHTML: function () {
 			return '{{#if data.POPULAR_PRODUCTS}}'
-				+ (this.compiledPopularProductHeader ? '<li class="unbxd-as-header">' + this.compiledPopularProductHeader + '</li>' : '')
+				+ (this.compiledPopularProductHeader ? '<li class="unbxd-as-header popular-header">' + this.compiledPopularProductHeader + '</li>' : '')
 				+ '{{#data.POPULAR_PRODUCTS}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
@@ -1546,12 +1549,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/if}}';
 		}
 		, prepareHTML: function () {
-			var html = '<ul class="unbxd-as-maincontent">',
+			var html = '<ul class="unbxd-as-maincontent suggestions-overall">',
 				self = this,
 				mainlen = 0,
 				sidelen = 0;
 			if (this.options.suggestionsHeader) {
-				html = html + '<li class="unbxd-as-header">' + this.options.suggestionsHeader + '</li>';
+				html = html + '<li class="unbxd-as-header suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl) {
@@ -1616,14 +1619,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 							key = 'prepare' + key + 'HTML';
 							html = html + self[key]();
 						});
-						html = html + '</ul><ul class="unbxd-as-maincontent">';
+						html = html + '</ul><ul class="unbxd-as-maincontent suggestions-overall">';
 					}
 				}
 
 			}
 
 			if (this.options.suggestionsHeader) {
-				html = html + '<li class="unbxd-as-header">' + this.options.suggestionsHeader + '</li>';
+				html = html + '<li class="unbxd-as-header suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
 
 			this.options.mainTpl.forEach(function (key) {
