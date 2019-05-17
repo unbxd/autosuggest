@@ -256,6 +256,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				count: 2
 				, price: true
 				, priceFunctionOrKey: "price"
+				, salePrice: false
+				, salePriceKey: ''
 				, image: true
 				, imageUrlOrFunction: "imageUrl"
 				, currency: "Rs."
@@ -279,8 +281,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					, '</div>'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price popular-price">'
+					, '<div class="unbxd-as-popular-product-price">'
+					, '{{#if salePrice}}'
+					, '<span class="regular-price">'
 					, '{{currency}}{{price}}'
+					, '</span>'
+					, '<span class="discount">'
+					, '{{currency}}{{salePrice}}'
+					, '</span>'
+					, '{{else}}'
+					, '{{currency}}{{price}}'
+					, '{{/if}}'
 					, '</div>'
 					, '{{/if}}'
 					, '<div class="unbxd-as-popular-product-quantity">'
@@ -316,8 +327,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					, '</div>'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price popular-price">'
+					, '<div class="unbxd-as-popular-product-price">'
+					, '{{#if salePrice}}'
+					, '<span class="regular-price">'
 					, '{{currency}}{{price}}'
+					, '</span>'
+					, '<span class="discount">'
+					, '{{currency}}{{salePrice}}'
+					, '</span>'
+					, '{{else}}'
+					, '{{currency}}{{price}}'
+					, '{{/if}}'
 					, '</div>'
 					, '{{/if}}'
 					, '</div>'
@@ -335,8 +355,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					, '{{{safestring highlighted}}}'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price popular-price">'
+					, '<div class="unbxd-as-popular-product-price">'
+					, '{{#if salePrice}}'
+					, '<span class="regular-price">'
 					, '{{currency}}{{price}}'
+					, '</span>'
+					, '<span class="discount">'
+					, '{{currency}}{{salePrice}}'
+					, '</span>'
+					, '{{else}}'
+					, '{{currency}}{{price}}'
+					, '{{/if}}'
 					, '</div>'
 					, '{{/if}}'
 					, '</div>'
@@ -1257,6 +1286,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							o.currency = this.options.popularProducts.currency;
 					}
 
+					if (this.options.popularProducts.salePrice && this.options.popularProducts.salePriceKey) {
+						o.salePrice = this.options.popularProducts.salePriceKey in doc ? doc[this.options.popularProducts.salePriceKey] : null;
+					}
+
 					if (this.options.popularProducts.image) {
 						if (typeof this.options.popularProducts.imageUrlOrFunction === "function") {
 							o.image = this.options.popularProducts.imageUrlOrFunction(doc);
@@ -1350,6 +1383,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				} else {
 					o.price = "price" in doc ? doc["price"] : null;
 				}
+			}
+
+			if (this.options.popularProducts.salePrice && this.options.popularProducts.salePriceKey) {
+				o.salePrice = this.options.popularProducts.salePriceKey in doc ? doc[this.options.popularProducts.salePriceKey] : null;
 			}
 
 			if (this.options.popularProducts.currency) {
