@@ -256,3 +256,11 @@
 .unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-name {
     width: 100%;
 }
+
+.unbxd-as-popular-product-price .regular-price {
+    text-decoration: line-through;
+}
+
+.discount {
+    color:#bb2525;
+}
