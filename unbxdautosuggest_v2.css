@@ -257,10 +257,6 @@
     width: 100%;
 }
 
-.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid {
-    float: unset;
-    box-sizing: border-box;
-}
 .unbxd-as-popular-product-price .regular-price {
     text-decoration: line-through;
 }
@@ -272,16 +268,4 @@
 }.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid {
     float: unset;
     box-sizing: border-box;
-}
-
-.unbxd-as-popular-product-price .regular-price {
-    text-decoration: line-through;
-}
-
-.unbxd-as-discount {
-    color:#bb2525;
-}
-
-.unbxd-as-wrapper .unbxd-as-keysuggestion:hover, .unbxd-as-wrapper .unbxd-as-popular-product:hover{
-    background: lightgrey;
 }
