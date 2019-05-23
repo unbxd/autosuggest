@@ -4,7 +4,7 @@
  * Copyright 2015, Unbxd
  *
 */
-var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
+var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 	//use unbxd scope and add a version for autosuggest
 	window.Unbxd = window.Unbxd || {};
@@ -437,7 +437,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 						}
 					}
 					if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
-						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100/self.options.popularProducts.rowCount) + "%");
+						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
 					}
 				}
 
@@ -494,52 +494,57 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, keyevents: function () {
 			var self = this;
-			return function (e) {
-				self.lastKeyPressCode = e.keyCode;
-				self.lastKeyEvent = e;
+			if (params && params.selfServe) {
+				self.onChange();
+			} else {
+				return function (e) {
+					self.lastKeyPressCode = e.keyCode;
+					self.lastKeyEvent = e;
 
-				switch (e.keyCode) {
-					case 38: // up
-						e.preventDefault();
-						self.moveSelect(-1);
-						break;
-					case 40: // down
-						e.preventDefault();
-						self.moveSelect(1);
-						break;
-					case 39: // right
-						if (self.activeRow > -1) {
+					switch (e.keyCode) {
+						case 38: // up
 							e.preventDefault();
-							self.moveSide(1);
-						}
-						break;
-					case 37: // left
-						if (self.activeRow > -1) {
+							self.moveSelect(-1);
+							break;
+						case 40: // down
 							e.preventDefault();
-							self.moveSide(-1);
-						}
-						break;
-					case 9:  // tab
-					case 13: // return
-						if (self.selectCurrent(e)) {
-							e.preventDefault();
-						}
-						else {
-							self.hideResultsNow();
-						}
-						break;
-					default:
-						self.activeRow = -1;
-						self.hasFocus = true;
+							self.moveSelect(1);
+							break;
+						case 39: // right
+							if (self.activeRow > -1) {
+								e.preventDefault();
+								self.moveSide(1);
+							}
+							break;
+						case 37: // left
+							if (self.activeRow > -1) {
+								e.preventDefault();
+								self.moveSide(-1);
+							}
+							break;
+						case 9:  // tab
+						case 13: // return
+							if (self.selectCurrent(e)) {
+								e.preventDefault();
+							}
+							else {
+								self.hideResultsNow();
+							}
+							break;
+						default:
+							self.activeRow = -1;
+							self.hasFocus = true;
 
-						if (self.timeout)
-							clearTimeout(self.timeout);
+							if (self.timeout)
+								clearTimeout(self.timeout);
 
-						self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
+							self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
 
-						break;
+
+							break;
+					}
 				}
-			};
+			}
 		}
 		, moveSide: function (step) {
 			//step : 1 -> right click
@@ -769,7 +774,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					fpos.left = pos.left - this.options.sideWidth + "px";
 				}
 				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
-					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100/this.options.popularProducts.rowCount) + "%");
+					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
 				}
 			}
 
@@ -842,7 +847,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				return this.$results.hide();
 			}
 
-			var v = this.$input.val();
+			var v = '';
+			if (params && params.selfServe) {
+				v = '*';
+			} else {
+				v = this.$input.val();
+			}
+
+
 			if (v == this.previous) return;
 
 			this.params.q = v
@@ -866,6 +878,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				if (v.length >= this.options.minChars) {
 					this.$input.addClass(this.options.loadingClass);
 					this.requestData(v);
+					if (params && params.selfServe) {
+						this.showResults();
+					}
 				}
 				else {
 					this.$input.removeClass(this.options.loadingClass);
@@ -960,7 +975,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				this.$input.removeClass(this.options.loadingClass);
 				this.$results.html('');
 				// if the field no longer has focus or if there are no matches, do not display the drop down
-				if (!this.hasFocus || data.response.numberOfProducts == 0 || "error" in data) {
+				if ((!this.hasFocus && (params ? !params.selfServe : true)) || data.response.numberOfProducts == 0 || "error" in data) {
 					if (!this.options.noResultTpl) {
 						return this.hideResultsNow(this)
 					}
@@ -1481,32 +1496,32 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, prepareinFieldsHTML: function () {
 			if (this.options.inFields.type === "inline") {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '{{else}}'
-				+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			} else { 
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '{{else}}'
+					+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			} else {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{else}}'
-				+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			  }
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{else}}'
+					+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			}
 		}
 		, preparekeywordSuggestionsHTML: function () {
 			return '{{#if data.KEYWORD_SUGGESTION}}'
