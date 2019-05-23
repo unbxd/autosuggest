@@ -742,9 +742,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			if (this.options.width) {
 				this.options.mainWidth = this.options.width;
 			}
-			var pos = this.$input.offset()
-				// either use the specified width or calculate based on form element
-				, iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
+			var pos = this.$input.offset();
+
+			var totalWidth = '';
+			if (this.options.platform == 'io') {
+				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + this.$input.outerWidth()) : document.body.clientWidth - pos.left;
+				if (totalWidth > 788 && totalWidth < 2000) {
+					totalWidth = (70 * totalWidth / 100);
+				}
+				else if (totalWidth > 2000) {
+					totalWidth = (45 * totalWidth / 100);
+				}
+			}
+			// either use the specified width or calculate based on form element
+			var iWidth = totalWidth ? (30 * totalWidth / 100) : (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
 				, bt = parseInt(this.$input.css("border-top-width"), 10)
 				, bl = parseInt(this.$input.css("border-left-width"), 10)
 				, br = parseInt(this.$input.css("border-right-width"), 10)
@@ -762,11 +773,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 			//set column direction
 			if (this.options.template == "2column") {
-				this.$results.find("ul.unbxd-as-sidecontent").css("width", this.options.sideWidth + "px");
+				var swidth = totalWidth ? (70 * totalWidth / 100) : this.options.sideWidth;
+				this.$results.find("ul.unbxd-as-sidecontent").css("width", swidth + "px");
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
-					fpos.left = pos.left - this.options.sideWidth + "px";
+					fpos.left = pos.left + this.$input.outerWidth() - fwidth - swidth;
+					if (fpos.left < 0) {
+						fpos.left = 0;
+					}
+					fpos.left = fpos.left + "px";
 				}
 				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
 					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100/this.options.popularProducts.rowCount) + "%");
