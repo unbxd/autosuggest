@@ -743,8 +743,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				this.options.mainWidth = this.options.width;
 			}
 			var pos = this.$input.offset();
-
 			var totalWidth = '';
+			var mwidth = '';
+			
 			if (this.options.platform == 'io') {
 				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + this.$input.outerWidth()) : document.body.clientWidth - pos.left;
 				if (totalWidth > 788 && totalWidth < 2000) {
@@ -754,8 +755,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					totalWidth = (45 * totalWidth / 100);
 				}
 			}
+
+			if (this.options.template == '1column') {
+				mwidth = (60 * totalWidth/100);
+			} else {
+				mwidth = (30 * totalWidth / 100);
+			}
+
 			// either use the specified width or calculate based on form element
-			var iWidth = totalWidth ? (30 * totalWidth / 100) : (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
+			var iWidth = totalWidth ? mwidth : (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
 				, bt = parseInt(this.$input.css("border-top-width"), 10)
 				, bl = parseInt(this.$input.css("border-left-width"), 10)
 				, br = parseInt(this.$input.css("border-right-width"), 10)

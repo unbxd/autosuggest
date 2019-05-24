@@ -256,3 +256,9 @@
 .unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-name {
     width: 100%;
 }
+
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid {
+    float: unset;
+    box-sizing: border-box;
+}
