@@ -437,7 +437,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 						}
 					}
 					if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
-						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100/self.options.popularProducts.rowCount) + "%");
+						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
 					}
 				}
 
@@ -785,7 +785,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					fpos.left = fpos.left + "px";
 				}
 				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
-					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100/this.options.popularProducts.rowCount) + "%");
+					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
 				}
 			}
 
@@ -1497,32 +1497,32 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		, prepareinFieldsHTML: function () {
 			if (this.options.inFields.type === "inline") {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '{{else}}'
-				+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			} else { 
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '{{else}}'
+					+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			} else {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{else}}'
-				+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			  }
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{else}}'
+					+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			}
 		}
 		, preparekeywordSuggestionsHTML: function () {
 			return '{{#if data.KEYWORD_SUGGESTION}}'
