@@ -4,7 +4,7 @@
  * Copyright 2015, Unbxd
  *
 */
-var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
+var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 	//use unbxd scope and add a version for autosuggest
 	window.Unbxd = window.Unbxd || {};
@@ -373,7 +373,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			this.setDefaultOptions();
 			this.getPopularProductFields();
 			this.$input = $(input).attr('autocomplete', 'off');
-			this.$results = $('<div/>', { 'class': this.options.resultsClass + ' ' + 'overall-autosuggest' })
+			this.$results = $('<div/>', { 'class': this.options.resultsClass + ' ' + 'unbxd-as-overall-autosuggest' })
 				.css('position', this.options.position === 'relative' ? 'absolute' : this.options.position)
 				.hide();
 			if (this.options.zIndex > 0)
@@ -494,6 +494,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, keyevents: function () {
 			var self = this;
+			if (params && params.selfServe) {
+				self.onChange();
+			} else {
 			return function (e) {
 				self.lastKeyPressCode = e.keyCode;
 				self.lastKeyEvent = e;
@@ -538,8 +541,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 						self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
 
 						break;
+					}
 				}
-			};
+			}
 		}
 		, moveSide: function (step) {
 			//step : 1 -> right click
@@ -742,19 +746,39 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			if (this.options.width) {
 				this.options.mainWidth = this.options.width;
 			}
-			var pos = this.$input.offset()
-				// either use the specified width or calculate based on form element
-				, iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
-				, bt = parseInt(this.$input.css("border-top-width"), 10)
-				, bl = parseInt(this.$input.css("border-left-width"), 10)
-				, br = parseInt(this.$input.css("border-right-width"), 10)
-				, pb = parseInt(this.$input.css("padding-bottom"), 10)
-				, fwidth = (parseInt(iWidth) - 2 + bl + br)
-				//isNaN check for border-top-width:medium bug IE8 http://bugs.jquery.com/ticket/7058
-				//for more info http://bugs.jquery.com/ticket/10855
-				, fpos = { top: pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px" };
+			var pos = this.$input.offset();
+			var totalWidth = '';
+			var mwidth = '';
+			
+			if (this.options.platform == 'io') {
+				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + this.$input.outerWidth()) : document.body.clientWidth - pos.left;
+				if (totalWidth > 788 && totalWidth < 2000) {
+					totalWidth = (70 * totalWidth / 100);
+				}
+				else if (totalWidth > 2000) {
+					totalWidth = (45 * totalWidth / 100);
+				}
+
+				if (this.options.template == '1column') {
+					mwidth = (60 * totalWidth/100);
+				} else {
+					mwidth = (30 * totalWidth / 100);
+				}
+			}
+
+			// either use the specified width or calculate based on form element
+			var iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : totalWidth ? mwidth : this.$input.innerWidth()
+			, bt = parseInt(this.$input.css("border-top-width"), 10)
+			, bl = parseInt(this.$input.css("border-left-width"), 10)
+			, br = parseInt(this.$input.css("border-right-width"), 10)
+			, pb = parseInt(this.$input.css("padding-bottom"), 10)
+			, fwidth = (parseInt(iWidth) - 2 + bl + br)
+			//isNaN check for border-top-width:medium bug IE8 http://bugs.jquery.com/ticket/7058
+			//for more info http://bugs.jquery.com/ticket/10855
+			, fpos = { top: pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px" };
 
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth + "px");
+			this.$results.find("ul.unbxd-as-maincontent").css("box-sizing", "border-box");
 
 			if (this.scrollbarWidth == null) {
 				this.setScrollWidth();
@@ -762,11 +786,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 			//set column direction
 			if (this.options.template == "2column") {
-				this.$results.find("ul.unbxd-as-sidecontent").css("width", this.options.sideWidth + "px");
+				var swidth = this.options.sideWidth !== 180 ? this.options.sideWidth : totalWidth ? totalWidth - fwidth : this.options.sideWidth;
+				this.$results.find("ul.unbxd-as-sidecontent").css("width", swidth + "px");
+				this.$results.find("ul.unbxd-as-sidecontent").css("box-sizing", "border-box");
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
-					fpos.left = pos.left - this.options.sideWidth + "px";
+					fpos.left = pos.left + this.$input.outerWidth() - fwidth - swidth;
+					if (fpos.left < 0) {
+						fpos.left = 0;
+					}
+					fpos.left = fpos.left + "px";
 				}
 				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
 					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100/this.options.popularProducts.rowCount) + "%");
@@ -841,8 +871,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 				return this.$results.hide();
 			}
+			var v = '';
+			if (params && params.selfServe) {
+				v = '*';
+			} else {
+				v = this.$input.val();
+			}
 
-			var v = this.$input.val();
 			if (v == this.previous) return;
 
 			this.params.q = v
@@ -960,7 +995,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				this.$input.removeClass(this.options.loadingClass);
 				this.$results.html('');
 				// if the field no longer has focus or if there are no matches, do not display the drop down
-				if (!this.hasFocus || data.response.numberOfProducts == 0 || "error" in data) {
+				if ((!this.hasFocus && (params ? !params.selfServe : true)) || data.response.numberOfProducts == 0 || "error" in data) {
 					if (!this.options.noResultTpl) {
 						return this.hideResultsNow(this)
 					}
@@ -1475,7 +1510,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			return output;
 		}
 		, prepareinFieldsKeyword: function (str) {
-			return '<span class="suggestions-infields">' + str + '</span>';
+			return '<span class="unbxd-as-suggestions-infields">' + str + '</span>';
 		}
 
 		, prepareinFieldsHTML: function () {
@@ -1529,8 +1564,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/if}}';
 		}
 		, preparefilteredPopularProducts: function () {
-			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header popular-header">' + this.compiledPopularProductHeader + '</li>' : '')
-				+ '{{#data}}'
+			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '')				+ '{{#data}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
 				+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
@@ -1539,7 +1573,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, preparepopularProductsHTML: function () {
 			return '{{#if data.POPULAR_PRODUCTS}}'
-				+ (this.compiledPopularProductHeader ? '<li class="unbxd-as-header popular-header">' + this.compiledPopularProductHeader + '</li>' : '')
+				+ (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '')
 				+ '{{#data.POPULAR_PRODUCTS}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
@@ -1549,12 +1583,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/if}}';
 		}
 		, prepareHTML: function () {
-			var html = '<ul class="unbxd-as-maincontent suggestions-overall">',
+			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">',
 				self = this,
 				mainlen = 0,
 				sidelen = 0;
 			if (this.options.suggestionsHeader) {
-				html = html + '<li class="unbxd-as-header suggestions-header">' + this.options.suggestionsHeader + '</li>';
+				html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl) {
@@ -1619,14 +1653,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 							key = 'prepare' + key + 'HTML';
 							html = html + self[key]();
 						});
-						html = html + '</ul><ul class="unbxd-as-maincontent suggestions-overall">';
+						html = html + '</ul><ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+						if (this.options.suggestionsHeader) {
+							html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
+						}
 					}
 				}
 
-			}
-
-			if (this.options.suggestionsHeader) {
-				html = html + '<li class="unbxd-as-header suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
 
 			this.options.mainTpl.forEach(function (key) {
