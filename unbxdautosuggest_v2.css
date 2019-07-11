@@ -261,9 +261,8 @@
     text-decoration: line-through;
 }
 
-.discount {
+.unbxd-as-discount {
     color:#bb2525;
-}
-.unbxd-as-wrapper .unbxd-as-keysuggestion:hover, .unbxd-as-wrapper .unbxd-as-popular-product:hover{
+}.unbxd-as-wrapper .unbxd-as-keysuggestion:hover, .unbxd-as-wrapper .unbxd-as-popular-product:hover{
     background: lightgrey;
 }
