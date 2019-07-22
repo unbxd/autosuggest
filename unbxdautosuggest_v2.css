@@ -256,3 +256,7 @@
 .unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-name {
     width: 100%;
 }
+
+.unbxd-as-wrapper .unbxd-as-keysuggestion:hover, .unbxd-as-wrapper .unbxd-as-popular-product:hover{
+    background: lightgrey;
+}
