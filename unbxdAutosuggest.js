@@ -256,6 +256,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				count: 2
 				, price: true
 				, priceFunctionOrKey: "price"
+				, name: true
+				, nameFunctionOrKey: "title"
 				, salePrice: false
 				, salePriceKey: ''
 				, image: true
@@ -1256,7 +1258,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						, src: query
 					};
 
-					if (this.options.popularProducts.autosuggestName && doc[this.options.popularProducts.autosuggestName]) {
+					if(this.options.popularProducts.name && this.options.popularProducts.nameFunctionOrKey) {
+						o.autosuggest = doc[this.options.popularProducts.nameFunctionOrKey];
+					} else if (this.options.popularProducts.autosuggestName && doc[this.options.popularProducts.autosuggestName]) {
 						o.autosuggest = doc[this.options.popularProducts.autosuggestName];
 					}
 					else if (this.options.popularProducts.title && doc[this.options.popularProducts.title]) {
@@ -1366,13 +1370,18 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, processPopularProducts: function (doc) {
 			o = {
-				autosuggest: doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : ''
-				, type: doc.doctype
+				  type: doc.doctype
 				, pid: doc.uniqueId.replace("popularProduct_", "")
 				, _original: doc
 			};
 
 			o.highlighted = this.highlightStr(o.autosuggest);
+
+			if (this.options.popularProducts.name) {
+				o.autosuggest = doc[this.options.nameFunctionOrKey] ? doc[this.options.nameFunctionOrKey] : doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : '';
+			} else {
+				o.autosuggest = '';
+			}
 
 			if (this.options.popularProducts.price) {
 				if (typeof this.options.popularProducts.priceFunctionOrKey == "function") {
