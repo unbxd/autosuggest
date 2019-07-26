@@ -1375,13 +1375,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, _original: doc
 			};
 
-			o.highlighted = this.highlightStr(o.autosuggest);
+			
 
 			if (this.options.popularProducts.name) {
 				o.autosuggest = doc[this.options.nameFunctionOrKey] ? doc[this.options.nameFunctionOrKey] : doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : '';
 			} else {
 				o.autosuggest = '';
 			}
+
+			o.highlighted = this.highlightStr(o.autosuggest);
 
 			if (this.options.popularProducts.price) {
 				if (typeof this.options.popularProducts.priceFunctionOrKey == "function") {
