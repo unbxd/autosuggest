@@ -191,6 +191,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		};
 	};
 
+	var infieldsCount,o,outLength;
 	window.autoSuggestObj = $.extend(autocomplete.prototype, {
 		default_options: {
 			siteName: 'demosite-u1407617955968'
