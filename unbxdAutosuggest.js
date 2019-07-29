@@ -819,7 +819,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			//set column direction
 			if (this.options.template == "2column") {
-				var swidth = this.options.sideWidth !== 180 ? this.options.sideWidth : totalWidth ? totalWidth - fwidth : this.options.sideWidth;
+				var swidth = this.options.sideWidth ? this.options.sideWidth : totalWidth ? totalWidth - fwidth : this.options.sideWidth;
 				this.$results.find("ul.unbxd-as-sidecontent").css("width", swidth + "px");
 				this.$results.find("ul.unbxd-as-sidecontent").css("box-sizing", "border-box");
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
