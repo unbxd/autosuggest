@@ -5,7 +5,6 @@
  *
 */
 var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
-
 	//use unbxd scope and add a version for autosuggest
 	window.Unbxd = window.Unbxd || {};
 	Unbxd.autosuggestVersion = "1.0.1";
@@ -783,6 +782,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			
 			if (this.options.platform == 'io') {
 				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + this.$input.outerWidth()) : document.body.clientWidth - pos.left;
+				if (totalWidth > document.body.clientWidth) {
+					totalWidth = document.body.clientWidth;
+				}
 				if (totalWidth > 788 && totalWidth < 2000) {
 					totalWidth = (70 * totalWidth / 100);
 				}
@@ -823,7 +825,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
-					fpos.left = pos.left + this.$input.outerWidth() - fwidth - swidth;
+					var lwidth = ( pos.left + this.$input.outerWidth() ) > document.body.clientWidth ? document.body.clientWidth : pos.left + this.$input.outerWidth();
+					fpos.left =  lwidth - fwidth - swidth;
 					if (fpos.left < 0) {
 						fpos.left = 0;
 					}
