@@ -12,7 +12,7 @@
     background-color: #ffffff;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
-    /*box-shadow: 0 5px 7px 0 #DEDEDE;*/
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.5);
     font-size: 13px;
 }
 
@@ -64,9 +64,14 @@
 }
 
 .unbxd-as-wrapper ul li.unbxd-as-header, .unbxd-as-wrapper ul li.unbxd-as-header:hover {
-    background-color: #636363;
-    color: #fff;
+    background-color: white;
+    color: black;
+    text-transform: uppercase;
+    font-size: 1.5em;
     cursor: default;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: Arial;
 }
 
 .unbxd-as-wrapper ul li.unbxd-as-insuggestion {
