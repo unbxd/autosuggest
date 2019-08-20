@@ -12,7 +12,7 @@
     background-color: #ffffff;
     border-bottom-right-radius: 3px;
     border-bottom-left-radius: 3px;
-    /*box-shadow: 0 5px 7px 0 #DEDEDE;*/
+    box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.5);
     font-size: 13px;
 }
 
@@ -64,9 +64,14 @@
 }
 
 .unbxd-as-wrapper ul li.unbxd-as-header, .unbxd-as-wrapper ul li.unbxd-as-header:hover {
-    background-color: #636363;
-    color: #fff;
+    background-color: white;
+    color: black;
+    text-transform: uppercase;
+    font-size: 1.5em;
     cursor: default;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    font-family: Arial;
 }
 
 .unbxd-as-wrapper ul li.unbxd-as-insuggestion {
@@ -243,4 +248,33 @@
     outline: none !important;
     border: 1px solid gray;
     box-shadow: 0 0 5px #999;
+}
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-image-container {
+    margin: 0 auto;
+}
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-image-container img {
+    width: 100%;
+}
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid .unbxd-as-popular-product-name {
+    width: 100%;
+}
+
+.unbxd-as-popular-product-price .regular-price {
+    text-decoration: line-through;
+}
+
+.unbxd-as-discount {
+    color:#bb2525;
+}
+
+.unbxd-as-wrapper .unbxd-as-keysuggestion:hover, .unbxd-as-wrapper .unbxd-as-popular-product:hover{
+    background: lightgrey;
+}
+
+.unbxd-as-wrapper ul li.unbxd-as-popular-product-grid {
+    float: unset;
+    box-sizing: border-box;
 }
