@@ -467,7 +467,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						}
 					}
 					if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
-						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100/self.options.popularProducts.rowCount) + "%");
+						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
 					}
 				}
 
@@ -527,50 +527,50 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (params && params.selfServe) {
 				self.onChange();
 			} else {
-			return function (e) {
-				self.lastKeyPressCode = e.keyCode;
-				self.lastKeyEvent = e;
+				return function (e) {
+					self.lastKeyPressCode = e.keyCode;
+					self.lastKeyEvent = e;
 
-				switch (e.keyCode) {
-					case 38: // up
-						e.preventDefault();
-						self.moveSelect(-1);
-						break;
-					case 40: // down
-						e.preventDefault();
-						self.moveSelect(1);
-						break;
-					case 39: // right
-						if (self.activeRow > -1) {
+					switch (e.keyCode) {
+						case 38: // up
 							e.preventDefault();
-							self.moveSide(1);
-						}
-						break;
-					case 37: // left
-						if (self.activeRow > -1) {
+							self.moveSelect(-1);
+							break;
+						case 40: // down
 							e.preventDefault();
-							self.moveSide(-1);
-						}
-						break;
-					case 9:  // tab
-					case 13: // return
-						if (self.selectCurrent(e)) {
-							e.preventDefault();
-						}
-						else {
-							self.hideResultsNow();
-						}
-						break;
-					default:
-						self.activeRow = -1;
-						self.hasFocus = true;
+							self.moveSelect(1);
+							break;
+						case 39: // right
+							if (self.activeRow > -1) {
+								e.preventDefault();
+								self.moveSide(1);
+							}
+							break;
+						case 37: // left
+							if (self.activeRow > -1) {
+								e.preventDefault();
+								self.moveSide(-1);
+							}
+							break;
+						case 9:  // tab
+						case 13: // return
+							if (self.selectCurrent(e)) {
+								e.preventDefault();
+							}
+							else {
+								self.hideResultsNow();
+							}
+							break;
+						default:
+							self.activeRow = -1;
+							self.hasFocus = true;
 
-						if (self.timeout)
-							clearTimeout(self.timeout);
+							if (self.timeout)
+								clearTimeout(self.timeout);
 
-						self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
+							self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
 
-						break;
+							break;
 					}
 				}
 			}
@@ -779,7 +779,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			var pos = this.$input.offset();
 			var totalWidth = '';
 			var mwidth = '';
-			
+
 			if (this.options.platform == 'io') {
 				// Calculate total width of autosuggest relative to screen width
 				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + this.$input.outerWidth()) : document.body.clientWidth - pos.left;
@@ -796,7 +796,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 				// Calculate mainwidth based on 1 or 2 columns
 				if (this.options.template == '1column') {
-					mwidth = (60 * totalWidth/100);
+					mwidth = (60 * totalWidth / 100);
 				} else {
 					mwidth = (30 * totalWidth / 100);
 				}
@@ -804,14 +804,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			// either use the specified width or calculate based on form element
 			var iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : totalWidth ? mwidth : this.$input.innerWidth()
-			, bt = parseInt(this.$input.css("border-top-width"), 10)
-			, bl = parseInt(this.$input.css("border-left-width"), 10)
-			, br = parseInt(this.$input.css("border-right-width"), 10)
-			, pb = parseInt(this.$input.css("padding-bottom"), 10)
-			, fwidth = (parseInt(iWidth) - 2 + bl + br)
-			//isNaN check for border-top-width:medium bug IE8 http://bugs.jquery.com/ticket/7058
-			//for more info http://bugs.jquery.com/ticket/10855
-			, fpos = { top: pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px" };
+				, bt = parseInt(this.$input.css("border-top-width"), 10)
+				, bl = parseInt(this.$input.css("border-left-width"), 10)
+				, br = parseInt(this.$input.css("border-right-width"), 10)
+				, pb = parseInt(this.$input.css("padding-bottom"), 10)
+				, fwidth = (parseInt(iWidth) - 2 + bl + br)
+				//isNaN check for border-top-width:medium bug IE8 http://bugs.jquery.com/ticket/7058
+				//for more info http://bugs.jquery.com/ticket/10855
+				, fpos = { top: pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px" };
 
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth + "px");
 			this.$results.find("ul.unbxd-as-maincontent").css("box-sizing", "border-box");
@@ -830,15 +830,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
-					var lwidth = ( pos.left + this.$input.outerWidth() ) > document.body.clientWidth ? document.body.clientWidth : pos.left + this.$input.outerWidth();
-					fpos.left =  lwidth - fwidth - swidth;
+					var lwidth = (pos.left + this.$input.outerWidth()) > document.body.clientWidth ? document.body.clientWidth : pos.left + this.$input.outerWidth();
+					fpos.left = lwidth - fwidth - swidth;
 					if (fpos.left < 0) {
 						fpos.left = 0;
 					}
 					fpos.left = fpos.left + "px";
 				}
 				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
-					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100/this.options.popularProducts.rowCount) + "%");
+					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
 				}
 			}
 
@@ -1266,7 +1266,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						, src: query
 					};
 
-					if(this.options.popularProducts.name && this.options.popularProducts.nameFunctionOrKey) {
+					if (this.options.popularProducts.name && this.options.popularProducts.nameFunctionOrKey) {
 						o.autosuggest = doc[this.options.popularProducts.nameFunctionOrKey];
 					} else if (this.options.popularProducts.autosuggestName && doc[this.options.popularProducts.autosuggestName]) {
 						o.autosuggest = doc[this.options.popularProducts.autosuggestName];
@@ -1378,12 +1378,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, processPopularProducts: function (doc) {
 			var o = {
-				  type: doc.doctype
+				type: doc.doctype
 				, pid: doc.uniqueId.replace("popularProduct_", "")
 				, _original: doc
 			};
 
-			
+
 
 			if (this.options.popularProducts.name) {
 				o.autosuggest = doc[this.options.nameFunctionOrKey] ? doc[this.options.nameFunctionOrKey] : doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : '';
@@ -1573,32 +1573,32 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		, prepareinFieldsHTML: function () {
 			if (this.options.inFields.type === "inline") {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '{{else}}'
-				+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			} else { 
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '{{else}}'
+					+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			} else {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{else}}'
-				+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			  }
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{else}}'
+					+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			}
 		}
 		, preparekeywordSuggestionsHTML: function () {
 			return '{{#if data.KEYWORD_SUGGESTION}}'
@@ -1621,7 +1621,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/if}}';
 		}
 		, preparefilteredPopularProducts: function () {
-			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '')				+ '{{#data}}'
+			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '') + '{{#data}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
 				+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
@@ -1644,9 +1644,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				self = this,
 				mainlen = 0,
 				sidelen = 0;
-			if (this.options.suggestionsHeader) {
+			if (this.options.suggestionsHeader && (self.currentResults['IN_FIELD'].length || self.currentResults['KEYWORD_SUGGESTION'].length
+				|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
 				html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
+			
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl) {
 
