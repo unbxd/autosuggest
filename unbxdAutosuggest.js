@@ -1218,8 +1218,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 							o.price = "price" in doc ? doc["price"] : null;
 						}
 
-						if (this.options.popularProducts.currency)
+						if (this.options.popularProducts.currency) {
 							o.currency = this.options.popularProducts.currency;
+						} else if (this.options.platform === 'io') { 
+							o.currency = "$"
+						}
 					}
 
 					if (this.options.popularProducts.image) {
@@ -1319,6 +1322,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 			if (this.options.popularProducts.currency) {
 				o.currency = this.options.popularProducts.currency;
+			} else if (this.options.platform === 'io') { 
+				o.currency = "$"
 			}
 
 			if (this.options.popularProducts.image) {
