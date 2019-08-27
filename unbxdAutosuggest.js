@@ -48,7 +48,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 
 			// 6. Let k be 0
-			k = 0;
+			var k = 0;
 
 			// 7. Repeat, while k < len
 			while (k < len) {
@@ -1148,9 +1148,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				self.processfilteredPopularProducts(query, d);
 			});
 
-			for (i in this.currentResults) {
+			for (var i in this.currentResults) {
 				if (i != 'POPULAR_PRODUCTS' && this.currentResults.hasOwnProperty(i)) {
-					for (j in this.currentResults[i]) {
+					for (var j in this.currentResults[i]) {
 						if (this.currentResults[i].hasOwnProperty(j)) {
 							if (this.currentResults[i][j]['filtername']) {
 								url = urlPath + "?q="
@@ -1186,7 +1186,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				for (var k = 0; k < d.response.products.length; k++) {
 					var doc = d.response.products[k];
 
-					o = {
+					var o = {
 						_original: doc
 						, type: 'POPULAR_PRODUCTS_FILTERED'
 						, src: query
@@ -1236,7 +1236,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 		}
 		, processTopSearchQuery: function (doc) {
-			o = {
+			var o = {
 				autosuggest: doc.autosuggest
 				, highlighted: this.highlightStr(doc.autosuggest)
 				, type: "TOP_SEARCH_QUERIES"
@@ -1245,7 +1245,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			this.currentResults.TOP_SEARCH_QUERIES.push(o);
 		}
 		, processKeywordSuggestion: function (doc) {
-			o = {
+			var o = {
 				autosuggest: doc.autosuggest
 				, highlighted: this.highlightStr(doc.autosuggest)
 				, type: "KEYWORD_SUGGESTION"
@@ -1297,7 +1297,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			this.compiledPopularProductHeader = this.options.popularProducts.header;
 		}
 		, processPopularProducts: function (doc) {
-			o = {
+			var o = {
 				autosuggest: doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : ''
 				, type: doc.doctype
 				, pid: doc.uniqueId.replace("popularProduct_", "")
@@ -1354,7 +1354,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, type: "keyword" //this is kept as keyword but in template it will be used as "IN_FIELD"
 					, source: doc.unbxdAutosuggestSrc
 				});
-				infieldsCount++;
 
 				var that = this;
 				for (var a in ins) {
@@ -1388,13 +1387,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			if (this.options.maxSuggestions) {
 				count = this.max_suggest(data);
 			}
+			
 			this.currentResults = {
 				KEYWORD_SUGGESTION: []
 				, TOP_SEARCH_QUERIES: []
 				, POPULAR_PRODUCTS: []
 				, IN_FIELD: []
 			}
-				, infieldsCount = 0;
+			var infieldsCount = 0;
 			var key_count = 0,
 				uniqueInfields = [],
 				uniqueSuggestions = [];
@@ -1412,6 +1412,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					} else if ("IN_FIELD" == doc.doctype && (count['infields'] + count['key_rem'] + count['top_rem']) > infieldsCount
 						&& this.isUnique(doc.autosuggest, uniqueInfields)) {
 						if (count['infields'] > infieldsCount) {
+							infieldsCount++;
 							this.processInFields(doc);
 						}
 						else if (count['key_rem'] + count['top_rem'] > this.currentResults.KEYWORD_SUGGESTION.length
@@ -1449,7 +1450,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 
 			//lenth of result list
-			outLength = this.currentResults.POPULAR_PRODUCTS.length + this.currentResults.IN_FIELD.length;
+			var outLength = this.currentResults.POPULAR_PRODUCTS.length + this.currentResults.IN_FIELD.length;
 		}
 		, escapeStr: function (str) { return str.replace(/([\\{}()|.?*+\-\^$\[\]])/g, '\\$1'); }
 		, highlightStr: function (str) {
