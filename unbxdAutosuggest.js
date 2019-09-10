@@ -141,6 +141,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		};
 	}
 
+	var topQuery = ''
 	var isMobile = {
 		Android: function () {
 			return navigator.userAgent.match(/Android/i);
@@ -376,6 +377,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, platform: 'com'
 			, resultsContainerSelector: null
 			, processResultsStyles: null
+			, viewMore: {
+				enabled: false,
+				tpl: "",
+				redirect: function () {
+
+				}
+			}
 		}
 		, $input: null
 		, $results: null
@@ -481,6 +489,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				} else if (e.target == self.$results[0]) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
+				} else if ($(e.target).hasClass("unbxd-as-view-more")) {
+					self.options.popularProducts.viewMore.redirect(topQuery)
 				} else if ($.contains(self.$results[0], e.target)) {
 					self.log("clicked on element for selection", e.target.tagName);
 					var $et = $(e.target), p = $et;
@@ -1639,6 +1649,21 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/data.POPULAR_PRODUCTS}}'
 				+ '{{/if}}';
 		}
+		, standardizeKeys: function (key) {
+			if (key === "inFields") {
+				key = "IN_FIELD";
+			}
+			else if (key === "popularProducts") {
+				key = "POPULAR_PRODUCTS";
+			}
+			else if (key === "topQueries") {
+				key = "TOP_SEARCH_QUERIES";
+			}
+			else
+				key = "KEYWORD_SUGGESTION";
+
+			return key
+		}
 		, prepareHTML: function () {
 			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">',
 				self = this,
@@ -1648,7 +1673,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
 				html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
-			
+
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl) {
 
@@ -1659,20 +1684,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					html = html + '<li>' + this.options.noResultTpl + '</li>';
 				}
 			}
+
+
 			this.options.mainTpl.forEach(function (key) {
-				if (key === "inFields") {
-					key = "IN_FIELD";
-				}
-				else if (key === "popularProducts") {
-					key = "POPULAR_PRODUCTS";
-				}
-				else if (key === "topQueries") {
-					key = "TOP_SEARCH_QUERIES";
-				}
-				else
-					key = "KEYWORD_SUGGESTION";
+				key = self.standardizeKeys(key)
 				mainlen = mainlen + self.currentResults[key].length;
 			});
+
 
 			this.options.sideTpl.forEach(function (key) {
 				if (key === "inFields") {
@@ -1697,7 +1715,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			if (this.options.template === '2column') {
-
 				//main zero side not zero
 				if ((mainlen == 0) && (sidelen != 0)) {
 					this.options.sideTpl.forEach(function (key) {
@@ -1712,6 +1729,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							key = 'prepare' + key + 'HTML';
 							html = html + self[key]();
 						});
+						if (this.options.popularProducts.viewMore.enabled) {
+							html = html + this.options.popularProducts.viewMore.tpl
+						}
 						html = html + '</ul><ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
 						if (this.options.suggestionsHeader) {
 							html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
@@ -1722,9 +1742,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			this.options.mainTpl.forEach(function (key) {
+				
+				if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
+					topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
+				}
+
 				key = 'prepare' + key + 'HTML';
 				html = html + self[key]();
 			});
+
 			html = html + '</ul>';
 
 			var cmpld = Handlebars.compile(html);

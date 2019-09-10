@@ -278,3 +278,28 @@
     float: unset;
     box-sizing: border-box;
 }
+
+.view-more-link {
+    text-align: center;
+}
+
+.view-more-link {
+    margin: 0.5em;
+}
+
+.view-more-link a{
+    border-radius: 3px;
+}
+
+.view-more-link a {
+    background-color: #8976c4;
+    color: #fff;
+    display: block;
+    padding: 0.5em;
+    text-decoration: none;
+    background: 0 0;
+}
+
+.view-more-link a, #sli_autocomplete .sli_ac_section, #sli_autocomplete .view-more-link a:hover {
+    background-color: #ec6f34 !important;
+}
