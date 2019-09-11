@@ -1739,6 +1739,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (this.options.template === '2column') {
 				//main zero side not zero
 				if ((mainlen == 0) && (sidelen != 0)) {
+					html = '<ul class="unbxd-as-sidecontent">';
 					this.options.sideTpl.forEach(function (key) {
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
