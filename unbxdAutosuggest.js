@@ -643,8 +643,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '')
 					// updating product header while hovering on suggestions
 					if (this.options.filtered && this.options.popularProducts.header) {
-						var cmpldHeader = Handlebars.compile(self.options.popularProducts.header);
-						self.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
+						var cmpldHeader = Handlebars.compile(this.options.popularProducts.header);
+						this.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 					}
 
 					var cmpld = ""
