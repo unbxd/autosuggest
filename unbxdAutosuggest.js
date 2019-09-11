@@ -460,7 +460,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						}
 
 						var cmpld = ""
-						if (self.options.popularProducts.viewMore.enabled) {
+						if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
 						} else {
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
@@ -1736,7 +1736,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							key = 'prepare' + key + 'HTML';
 							html = html + self[key]();
 						});
-						if (this.options.popularProducts.viewMore.enabled) {
+						if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
 							html = html + this.options.popularProducts.viewMore.tpl
 						}
 						html = html + '</ul><ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
