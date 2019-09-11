@@ -458,7 +458,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							var cmpldHeader = Handlebars.compile(self.options.popularProducts.header);
 							self.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 						}
-						var cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+
+						var cmpld = ""
+						if (self.options.popularProducts.viewMore.enabled) {
+							cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+						} else {
+							cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+						}
+
 						if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
 							$('.unbxd-as-sidecontent').html(cmpld({
 								data: self.currentTopResults[query]
@@ -1488,7 +1495,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (this.options.maxSuggestions) {
 				count = this.max_suggest(data);
 			}
-			
+
 			this.currentResults = {
 				KEYWORD_SUGGESTION: []
 				, TOP_SEARCH_QUERIES: []
@@ -1742,7 +1749,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			this.options.mainTpl.forEach(function (key) {
-				
+
 				if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
 					topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
 				}
