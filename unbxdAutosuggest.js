@@ -371,19 +371,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					, '</div>'
 					, '{{/if}}'
 					, '</div>'
-					, '{{/if}}'].join('')
+					, '{{/if}}'].join(''),
+				viewMore: {
+					enabled: false,
+					tpl: "",
+					redirect: function () {
+
+					}
+				}
+
 			}
 			, filtered: false
 			, platform: 'com'
 			, resultsContainerSelector: null
 			, processResultsStyles: null
-			, viewMore: {
-				enabled: false,
-				tpl: "",
-				redirect: function () {
-
-				}
-			}
 		}
 		, $input: null
 		, $results: null
