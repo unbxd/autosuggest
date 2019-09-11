@@ -646,7 +646,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						var cmpldHeader = Handlebars.compile(self.options.popularProducts.header);
 						self.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 					}
-					var cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+
+					var cmpld = ""
+					if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+					} else {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+					}
+
 					if (this.currentTopResults[query] && this.currentTopResults[query].length > 0) {
 						$('.unbxd-as-sidecontent').html(cmpld({
 							data: this.currentTopResults[query]
@@ -667,7 +674,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			else if (this.activeRow == -1) {
 				this.$input.val(this.previous);
 				if (this.options.filtered) {
-					var cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+
+					var cmpld = ""
+					if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+					} else {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+					}
+
 					if (this.currentTopResults[this.previous] && this.currentTopResults[this.previous].length > 0)
 						$('.unbxd-as-sidecontent').html(cmpld({
 							data: this.currentTopResults[this.previous]
