@@ -819,7 +819,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					totalWidth = document.body.clientWidth;
 				}
 				if (totalWidth > 788 && totalWidth < 2000) {
-					totalWidth = (70 * totalWidth / 100);
+					totalWidth = this.options.totalWidthPercent ? (this.options.totalWidthPercent * totalWidth / 100) : (70 * totalWidth / 100);
 				}
 				else if (totalWidth > 2000) {
 					totalWidth = (45 * totalWidth / 100);
@@ -830,7 +830,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				if (this.options.template == '1column') {
 					mwidth = (60 * totalWidth / 100);
 				} else {
-					mwidth = (30 * totalWidth / 100);
+					if (this.options.preferInputWidthMainContent) {
+						mwidth = this.$input.outerWidth();
+					} else {
+						mwidth = this.options.mainWidthPercent ? (this.options.mainWidthPercent * totalWidth / 100) : (30 * totalWidth / 100)
+					}
+
 				}
 			}
 
