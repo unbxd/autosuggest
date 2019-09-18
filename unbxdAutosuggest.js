@@ -828,7 +828,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 				// Calculate mainwidth based on 1 or 2 columns
 				if (this.options.template == '1column') {
-					mwidth = (60 * totalWidth / 100);
+					mwidth = this.options.preferInputWidthMainContent ? this.$input.outerWidth() : (60 * totalWidth / 100);
 				} else {
 					if (this.options.preferInputWidthMainContent) {
 						mwidth = this.$input.outerWidth();
