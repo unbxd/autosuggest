@@ -1579,6 +1579,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			//lenth of result list
 			var outLength = this.currentResults.POPULAR_PRODUCTS.length + this.currentResults.IN_FIELD.length;
+			if (this.options.sortSuggestionsOnLength) {
+				for (var doc_type in this.currentResults) {
+
+					// Sort for all except infield suggestions
+					if (doc_type.toLowerCase() != "in_field") {
+						this.currentResults[doc_type].sort(function (x, y) {
+
+							// if you want to sort by length
+							return x.autosuggest.length > y.autosuggest.length ? 1 : -1;
+						})
+					}
+				};
+			}
+
 		}
 		, escapeStr: function (str) { return str.replace(/([\\{}()|.?*+\-\^$\[\]])/g, '\\$1'); }
 		, highlightStr: function (str) {
