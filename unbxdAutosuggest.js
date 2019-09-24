@@ -1519,6 +1519,18 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/each}}'
 				+ '{{/if}}';
 		}
+		,preparepromotedSuggestionsHTML: function() {
+            return '{{#if data.PROMOTED_SUGGESTION}}' +
+                '<div class="unbxd-suggestions-container">' +
+                (this.options.promotedSuggestions.header ? '<li class="unbxd-as-header">' + this.options.promotedSuggestions.header + '</li>' : '') +
+                '{{#each data.PROMOTED_SUGGESTION}}' +
+                '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">' +
+                (this.options.promotedSuggestions.tpl ? this.options.promotedSuggestions.tpl : this.default_options.promotedSuggestions.tpl) +
+                '</li>' +
+                '{{/each}}' +
+                '</div>' +
+                '{{/if}}';
+        }
 		, preparetopQueriesHTML: function () {
 			return '{{#if data.TOP_SEARCH_QUERIES}}'
 				+ (this.options.topQueries.header ? '<li class="unbxd-as-header">' + this.options.topQueries.header + '</li>' : '')
