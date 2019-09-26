@@ -3,7 +3,7 @@
 <head>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-    <link rel="stylesheet" href="../unbxdautosuggest_v2.css">
+    <link rel="stylesheet" href="../unbxdAutosuggest.css">
     <script src="../unbxdAutosuggest.js"></script>
 
 </head>
@@ -72,7 +72,15 @@
             imageUrlOrFunction: 'imageUrl',
             currency: '$',
             header: 'Popular Products in {{hoverSuggestion}}',
-            tpl: ''
+            tpl: '',
+            viewMore: {
+                enabled: false,
+                tpl: ['<div class="view-more-link">',
+                    '<a href="" class="view_more unbxd-as-view-more">View More</a>',
+                    '</div>'].join(''),
+                redirect: function (topSuggestion) { }
+
+            },
         },
         filtered: true,
         filtered_name: 'title',

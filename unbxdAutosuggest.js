@@ -4,8 +4,7 @@
  * Copyright 2015, Unbxd
  *
 */
-var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
-
+var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 	//use unbxd scope and add a version for autosuggest
 	window.Unbxd = window.Unbxd || {};
 	Unbxd.autosuggestVersion = "1.0.1";
@@ -142,6 +141,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		};
 	}
 
+	var topQuery = ''
 	var isMobile = {
 		Android: function () {
 			return navigator.userAgent.match(/Android/i);
@@ -216,7 +216,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			, loadingClass: 'unbxd-as-loading'
 			, mainWidth: 0
 			, sideWidth: 180
-			, zIndex: 0
+			, zIndex: 10000
 			, position: 'absolute'
 			, sideContentOn: "right" //"left"
 			, template: "1column" // "2column"
@@ -256,6 +256,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				count: 2
 				, price: true
 				, priceFunctionOrKey: "price"
+				, name: true
+				, nameFunctionOrKey: "title"
+				, salePrice: false
+				, salePriceKey: ''
 				, image: true
 				, imageUrlOrFunction: "imageUrl"
 				, currency: "Rs."
@@ -279,8 +283,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '</div>'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price popular-price">'
+					, '<div class="unbxd-as-popular-product-price">'
+					, '{{#if salePrice}}'
+					, '<span class="regular-price">'
 					, '{{currency}}{{price}}'
+					, '</span>'
+					, '<span class="unbxd-as-discount">'
+					, '{{currency}}{{salePrice}}'
+					, '</span>'
+					, '{{else}}'
+					, '{{currency}}{{price}}'
+					, '{{/if}}'
 					, '</div>'
 					, '{{/if}}'
 					, '<div class="unbxd-as-popular-product-quantity">'
@@ -316,8 +329,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '</div>'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price popular-price">'
+					, '<div class="unbxd-as-popular-product-price">'
+					, '{{#if salePrice}}'
+					, '<span class="regular-price">'
 					, '{{currency}}{{price}}'
+					, '</span>'
+					, '<span class="unbxd-as-discount">'
+					, '{{currency}}{{salePrice}}'
+					, '</span>'
+					, '{{else}}'
+					, '{{currency}}{{price}}'
+					, '{{/if}}'
 					, '</div>'
 					, '{{/if}}'
 					, '</div>'
@@ -335,12 +357,29 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					, '{{{safestring highlighted}}}'
 					, '</div>'
 					, '{{#if price}}'
-					, '<div class="unbxd-as-popular-product-price popular-price">'
+					, '<div class="unbxd-as-popular-product-price">'
+					, '{{#if salePrice}}'
+					, '<span class="regular-price">'
 					, '{{currency}}{{price}}'
+					, '</span>'
+					, '<span class="unbxd-as-discount">'
+					, '{{currency}}{{salePrice}}'
+					, '</span>'
+					, '{{else}}'
+					, '{{currency}}{{price}}'
+					, '{{/if}}'
 					, '</div>'
 					, '{{/if}}'
 					, '</div>'
-					, '{{/if}}'].join('')
+					, '{{/if}}'].join(''),
+				viewMore: {
+					enabled: false,
+					tpl: "",
+					redirect: function () {
+
+					}
+				}
+
 			}
 			, filtered: false
 			, platform: 'com'
@@ -373,7 +412,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			this.setDefaultOptions();
 			this.getPopularProductFields();
 			this.$input = $(input).attr('autocomplete', 'off');
-			this.$results = $('<div/>', { 'class': this.options.resultsClass + ' ' + 'overall-autosuggest' })
+			this.$results = $('<div/>', { 'class': this.options.resultsClass + ' ' + 'unbxd-as-overall-autosuggest' })
 				.css('position', this.options.position === 'relative' ? 'absolute' : this.options.position)
 				.hide();
 			if (this.options.zIndex > 0)
@@ -420,7 +459,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 							var cmpldHeader = Handlebars.compile(self.options.popularProducts.header);
 							self.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 						}
-						var cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+
+						var cmpld = ""
+						if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+							cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+						} else {
+							cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+						}
+
 						if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
 							$('.unbxd-as-sidecontent').html(cmpld({
 								data: self.currentTopResults[query]
@@ -437,7 +483,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 						}
 					}
 					if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
-						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100/self.options.popularProducts.rowCount) + "%");
+						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
 					}
 				}
 
@@ -451,6 +497,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				} else if (e.target == self.$results[0]) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
+				} else if ($(e.target).hasClass("unbxd-as-view-more")) {
+					self.options.popularProducts.viewMore.redirect(topQuery)
 				} else if ($.contains(self.$results[0], e.target)) {
 					self.log("clicked on element for selection", e.target.tagName);
 					var $et = $(e.target), p = $et;
@@ -494,52 +542,56 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, keyevents: function () {
 			var self = this;
-			return function (e) {
-				self.lastKeyPressCode = e.keyCode;
-				self.lastKeyEvent = e;
+			if (params && params.selfServe) {
+				self.onChange();
+			} else {
+				return function (e) {
+					self.lastKeyPressCode = e.keyCode;
+					self.lastKeyEvent = e;
 
-				switch (e.keyCode) {
-					case 38: // up
-						e.preventDefault();
-						self.moveSelect(-1);
-						break;
-					case 40: // down
-						e.preventDefault();
-						self.moveSelect(1);
-						break;
-					case 39: // right
-						if (self.activeRow > -1) {
+					switch (e.keyCode) {
+						case 38: // up
 							e.preventDefault();
-							self.moveSide(1);
-						}
-						break;
-					case 37: // left
-						if (self.activeRow > -1) {
+							self.moveSelect(-1);
+							break;
+						case 40: // down
 							e.preventDefault();
-							self.moveSide(-1);
-						}
-						break;
-					case 9:  // tab
-					case 13: // return
-						if (self.selectCurrent(e)) {
-							e.preventDefault();
-						}
-						else {
-							self.hideResultsNow();
-						}
-						break;
-					default:
-						self.activeRow = -1;
-						self.hasFocus = true;
+							self.moveSelect(1);
+							break;
+						case 39: // right
+							if (self.activeRow > -1) {
+								e.preventDefault();
+								self.moveSide(1);
+							}
+							break;
+						case 37: // left
+							if (self.activeRow > -1) {
+								e.preventDefault();
+								self.moveSide(-1);
+							}
+							break;
+						case 9:  // tab
+						case 13: // return
+							if (self.selectCurrent(e)) {
+								e.preventDefault();
+							}
+							else {
+								self.hideResultsNow();
+							}
+							break;
+						default:
+							self.activeRow = -1;
+							self.hasFocus = true;
 
-						if (self.timeout)
-							clearTimeout(self.timeout);
+							if (self.timeout)
+								clearTimeout(self.timeout);
 
-						self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
+							self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
 
-						break;
+							break;
+					}
 				}
-			};
+			}
 		}
 		, moveSide: function (step) {
 			//step : 1 -> right click
@@ -591,10 +643,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '')
 					// updating product header while hovering on suggestions
 					if (this.options.filtered && this.options.popularProducts.header) {
-						var cmpldHeader = Handlebars.compile(self.options.popularProducts.header);
-						self.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
+						var cmpldHeader = Handlebars.compile(this.options.popularProducts.header);
+						this.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 					}
-					var cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+
+					var cmpld = ""
+					if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+					} else {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+					}
+
 					if (this.currentTopResults[query] && this.currentTopResults[query].length > 0) {
 						$('.unbxd-as-sidecontent').html(cmpld({
 							data: this.currentTopResults[query]
@@ -615,7 +674,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			else if (this.activeRow == -1) {
 				this.$input.val(this.previous);
 				if (this.options.filtered) {
-					var cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+
+					var cmpld = ""
+					if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+					} else {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+					}
+
 					if (this.currentTopResults[this.previous] && this.currentTopResults[this.previous].length > 0)
 						$('.unbxd-as-sidecontent').html(cmpld({
 							data: this.currentTopResults[this.previous]
@@ -742,9 +808,39 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			if (this.options.width) {
 				this.options.mainWidth = this.options.width;
 			}
-			var pos = this.$input.offset()
-				// either use the specified width or calculate based on form element
-				, iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : this.$input.innerWidth()
+			var pos = this.$input.offset();
+			var totalWidth = '';
+			var mwidth = '';
+
+			if (this.options.platform == 'io') {
+				// Calculate total width of autosuggest relative to screen width
+				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + this.$input.outerWidth()) : document.body.clientWidth - pos.left;
+				if (totalWidth > document.body.clientWidth) {
+					totalWidth = document.body.clientWidth;
+				}
+				if (totalWidth > 788 && totalWidth < 2000) {
+					totalWidth = this.options.totalWidthPercent ? (this.options.totalWidthPercent * totalWidth / 100) : (70 * totalWidth / 100);
+				}
+				else if (totalWidth > 2000) {
+					totalWidth = (45 * totalWidth / 100);
+				}
+
+
+				// Calculate mainwidth based on 1 or 2 columns
+				if (this.options.template == '1column') {
+					mwidth = this.options.preferInputWidthMainContent ? this.$input.outerWidth() : (60 * totalWidth / 100);
+				} else {
+					if (this.options.preferInputWidthMainContent) {
+						mwidth = this.$input.outerWidth();
+					} else {
+						mwidth = this.options.mainWidthPercent ? (this.options.mainWidthPercent * totalWidth / 100) : (30 * totalWidth / 100)
+					}
+
+				}
+			}
+
+			// either use the specified width or calculate based on form element
+			var iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : totalWidth ? mwidth : this.$input.innerWidth()
 				, bt = parseInt(this.$input.css("border-top-width"), 10)
 				, bl = parseInt(this.$input.css("border-left-width"), 10)
 				, br = parseInt(this.$input.css("border-right-width"), 10)
@@ -755,6 +851,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				, fpos = { top: pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px" };
 
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth + "px");
+			this.$results.find("ul.unbxd-as-maincontent").css("box-sizing", "border-box");
 
 			if (this.scrollbarWidth == null) {
 				this.setScrollWidth();
@@ -762,14 +859,23 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 			//set column direction
 			if (this.options.template == "2column") {
-				this.$results.find("ul.unbxd-as-sidecontent").css("width", this.options.sideWidth + "px");
+
+				// If sidewidth default overwritten, use that, else sidewidth = totalwidth - mainwidth
+				var swidth = this.options.sideWidth !== this.default_options.sideWidth ? this.options.sideWidth : totalWidth ? totalWidth - fwidth : this.options.sideWidth;
+				this.$results.find("ul.unbxd-as-sidecontent").css("width", swidth + "px");
+				this.$results.find("ul.unbxd-as-sidecontent").css("box-sizing", "border-box");
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
-					fpos.left = pos.left - this.options.sideWidth + "px";
+					var lwidth = (pos.left + this.$input.outerWidth()) > document.body.clientWidth ? document.body.clientWidth : pos.left + this.$input.outerWidth();
+					fpos.left = lwidth - fwidth - swidth;
+					if (fpos.left < 0) {
+						fpos.left = 0;
+					}
+					fpos.left = fpos.left + "px";
 				}
 				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
-					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100/this.options.popularProducts.rowCount) + "%");
+					this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
 				}
 			}
 
@@ -841,8 +947,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 				return this.$results.hide();
 			}
+			var v = '';
+			if (params && params.selfServe) {
+				v = '*';
+			} else {
+				v = this.$input.val();
+			}
 
-			var v = this.$input.val();
 			if (v == this.previous) return;
 
 			this.params.q = v
@@ -960,7 +1071,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				this.$input.removeClass(this.options.loadingClass);
 				this.$results.html('');
 				// if the field no longer has focus or if there are no matches, do not display the drop down
-				if (!this.hasFocus || data.response.numberOfProducts == 0 || "error" in data) {
+				if ((!this.hasFocus && (params ? !params.selfServe : true)) || data.response.numberOfProducts == 0 || "error" in data) {
 					if (!this.options.noResultTpl) {
 						return this.hideResultsNow(this)
 					}
@@ -1192,7 +1303,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 						, src: query
 					};
 
-					if (this.options.popularProducts.autosuggestName && doc[this.options.popularProducts.autosuggestName]) {
+					if (this.options.popularProducts.name && this.options.popularProducts.nameFunctionOrKey) {
+						o.autosuggest = doc[this.options.popularProducts.nameFunctionOrKey];
+					} else if (this.options.popularProducts.autosuggestName && doc[this.options.popularProducts.autosuggestName]) {
 						o.autosuggest = doc[this.options.popularProducts.autosuggestName];
 					}
 					else if (this.options.popularProducts.title && doc[this.options.popularProducts.title]) {
@@ -1220,6 +1333,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 						if (this.options.popularProducts.currency)
 							o.currency = this.options.popularProducts.currency;
+					}
+
+					if (this.options.popularProducts.salePrice && this.options.popularProducts.salePriceKey) {
+						o.salePrice = this.options.popularProducts.salePriceKey in doc ? doc[this.options.popularProducts.salePriceKey] : null;
 					}
 
 					if (this.options.popularProducts.image) {
@@ -1298,11 +1415,18 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, processPopularProducts: function (doc) {
 			var o = {
-				autosuggest: doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : ''
-				, type: doc.doctype
+				type: doc.doctype
 				, pid: doc.uniqueId.replace("popularProduct_", "")
 				, _original: doc
 			};
+
+
+
+			if (this.options.popularProducts.name) {
+				o.autosuggest = doc[this.options.nameFunctionOrKey] ? doc[this.options.nameFunctionOrKey] : doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : '';
+			} else {
+				o.autosuggest = '';
+			}
 
 			o.highlighted = this.highlightStr(o.autosuggest);
 
@@ -1315,6 +1439,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				} else {
 					o.price = "price" in doc ? doc["price"] : null;
 				}
+			}
+
+			if (this.options.popularProducts.salePrice && this.options.popularProducts.salePriceKey) {
+				o.salePrice = this.options.popularProducts.salePriceKey in doc ? doc[this.options.popularProducts.salePriceKey] : null;
 			}
 
 			if (this.options.popularProducts.currency) {
@@ -1387,7 +1515,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			if (this.options.maxSuggestions) {
 				count = this.max_suggest(data);
 			}
-			
+
 			this.currentResults = {
 				KEYWORD_SUGGESTION: []
 				, TOP_SEARCH_QUERIES: []
@@ -1451,6 +1579,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 
 			//lenth of result list
 			var outLength = this.currentResults.POPULAR_PRODUCTS.length + this.currentResults.IN_FIELD.length;
+			if (this.options.sortSuggestionsOnLength) {
+				for (var doc_type in this.currentResults) {
+
+					// Sort for all except infield suggestions
+					if (doc_type.toLowerCase() != "in_field") {
+						this.currentResults[doc_type].sort(function (x, y) {
+
+							// if you want to sort by length
+							return x.autosuggest.length > y.autosuggest.length ? 1 : -1;
+						})
+					}
+				};
+			}
+
 		}
 		, escapeStr: function (str) { return str.replace(/([\\{}()|.?*+\-\^$\[\]])/g, '\\$1'); }
 		, highlightStr: function (str) {
@@ -1476,38 +1618,38 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			return output;
 		}
 		, prepareinFieldsKeyword: function (str) {
-			return '<span class="suggestions-infields">' + str + '</span>';
+			return '<span class="unbxd-as-suggestions-infields">' + str + '</span>';
 		}
 
 		, prepareinFieldsHTML: function () {
 			if (this.options.inFields.type === "inline") {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '{{else}}'
-				+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			} else { 
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '{{else}}'
+					+ '<li data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			} else {
 				return '{{#if data.IN_FIELD}}'
-				+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
-				+ '{{#each data.IN_FIELD}}'
-				+ '{{#unbxdIf type "keyword"}}'
-				+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
-				+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{else}}'
-				+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
-				+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-				+ '</li>'
-				+ '{{/unbxdIf}}'
-				+ '{{/each}}'
-				+ '{{/if}}';
-			  }
+					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ '{{#each data.IN_FIELD}}'
+					+ '{{#unbxdIf type "keyword"}}'
+					+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
+					+ (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{else}}'
+					+ '<li class="unbxd-as-insuggestion" style="color:' + this.options.theme + ';" data-index="{{@index}}" data-type="{{type}}" data-value="{{autosuggest}}" data-filtername="{{filtername}}" data-filtervalue="{{filtervalue}}"  data-source="{{source}}">'
+					+ 'in ' + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
+					+ '</li>'
+					+ '{{/unbxdIf}}'
+					+ '{{/each}}'
+					+ '{{/if}}';
+			}
 		}
 		, preparekeywordSuggestionsHTML: function () {
 			return '{{#if data.KEYWORD_SUGGESTION}}'
@@ -1530,8 +1672,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/if}}';
 		}
 		, preparefilteredPopularProducts: function () {
-			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header popular-header">' + this.compiledPopularProductHeader + '</li>' : '')
-				+ '{{#data}}'
+			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '') + '{{#data}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
 				+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
@@ -1540,7 +1681,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 		}
 		, preparepopularProductsHTML: function () {
 			return '{{#if data.POPULAR_PRODUCTS}}'
-				+ (this.compiledPopularProductHeader ? '<li class="unbxd-as-header popular-header">' + this.compiledPopularProductHeader + '</li>' : '')
+				+ (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '')
 				+ '{{#data.POPULAR_PRODUCTS}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
@@ -1549,14 +1690,31 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 				+ '{{/data.POPULAR_PRODUCTS}}'
 				+ '{{/if}}';
 		}
+		, standardizeKeys: function (key) {
+			if (key === "inFields") {
+				key = "IN_FIELD";
+			}
+			else if (key === "popularProducts") {
+				key = "POPULAR_PRODUCTS";
+			}
+			else if (key === "topQueries") {
+				key = "TOP_SEARCH_QUERIES";
+			}
+			else
+				key = "KEYWORD_SUGGESTION";
+
+			return key
+		}
 		, prepareHTML: function () {
-			var html = '<ul class="unbxd-as-maincontent suggestions-overall">',
+			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">',
 				self = this,
 				mainlen = 0,
 				sidelen = 0;
-			if (this.options.suggestionsHeader) {
-				html = html + '<li class="unbxd-as-header suggestions-header">' + this.options.suggestionsHeader + '</li>';
+			if (this.options.suggestionsHeader && (self.currentResults['IN_FIELD'].length || self.currentResults['KEYWORD_SUGGESTION'].length
+				|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
+				html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
+
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl) {
 
@@ -1567,20 +1725,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 					html = html + '<li>' + this.options.noResultTpl + '</li>';
 				}
 			}
+
+
 			this.options.mainTpl.forEach(function (key) {
-				if (key === "inFields") {
-					key = "IN_FIELD";
-				}
-				else if (key === "popularProducts") {
-					key = "POPULAR_PRODUCTS";
-				}
-				else if (key === "topQueries") {
-					key = "TOP_SEARCH_QUERIES";
-				}
-				else
-					key = "KEYWORD_SUGGESTION";
+				key = self.standardizeKeys(key)
 				mainlen = mainlen + self.currentResults[key].length;
 			});
+
 
 			this.options.sideTpl.forEach(function (key) {
 				if (key === "inFields") {
@@ -1605,9 +1756,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 			}
 
 			if (this.options.template === '2column') {
-
 				//main zero side not zero
 				if ((mainlen == 0) && (sidelen != 0)) {
+					html = '<ul class="unbxd-as-sidecontent">';
 					this.options.sideTpl.forEach(function (key) {
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
@@ -1620,20 +1771,28 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, undefined) {
 							key = 'prepare' + key + 'HTML';
 							html = html + self[key]();
 						});
-						html = html + '</ul><ul class="unbxd-as-maincontent suggestions-overall">';
+						if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+							html = html + this.options.popularProducts.viewMore.tpl
+						}
+						html = html + '</ul><ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+						if (this.options.suggestionsHeader) {
+							html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
+						}
 					}
 				}
 
 			}
 
-			if (this.options.suggestionsHeader) {
-				html = html + '<li class="unbxd-as-header suggestions-header">' + this.options.suggestionsHeader + '</li>';
-			}
-
 			this.options.mainTpl.forEach(function (key) {
+
+				if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
+					topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
+				}
+
 				key = 'prepare' + key + 'HTML';
 				html = html + self[key]();
 			});
+
 			html = html + '</ul>';
 
 			var cmpld = Handlebars.compile(html);
