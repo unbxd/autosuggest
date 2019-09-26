@@ -7,7 +7,7 @@
 var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 	//use unbxd scope and add a version for autosuggest
 	window.Unbxd = window.Unbxd || {};
-	Unbxd.autosuggestVersion = "1.0.1"; 
+	Unbxd.autosuggestVersion = "1.0.1";
 
 	// Polyfill for window.location.origin 
 	if (!window.location.origin) {
@@ -167,10 +167,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		return v1 === v2 ? options.fn(this) : options.inverse(this);
 	});
 
-	Handlebars.registerHelper('removeDots', function(id){
-		return id.replace(/\./g,'')
-	});
-
 	Handlebars.registerHelper('safestring', function (value) {
 		return new Handlebars.SafeString(value);
 	});
@@ -259,7 +255,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, popularProducts: {
 				count: 2
 				, price: true
-				, fields:['*']
 				, priceFunctionOrKey: "price"
 				, name: true
 				, nameFunctionOrKey: "title"
@@ -1545,53 +1540,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				uniqueInfields = [],
 				uniqueSuggestions = [];
 
-			var sorted_list = [],
-			 	IN_FIELD_list = [],
-			 	TOP_SEARCH_QUERIES_list = [],
-				PROMOTED_SUGGESTION_list = [],
-				KEYWORD_SUGGESTION_list = [],
-				POPULAR_PRODUCTS_list = [];
-
-				 for (var x = 0; x < data.response.products.length; x++) {
-					if (data.response.products[x].doctype == "IN_FIELD") {
-					  IN_FIELD_list.push(data.response.products[x])
-					}
-					if(data.response.products[x].doctype == "TOP_SEARCH_QUERIES") {
-					  TOP_SEARCH_QUERIES_list.push(data.response.products[x])
-					}  
-					if(data.response.products[x].doctype == "PROMOTED_SUGGESTION") {
-					  PROMOTED_SUGGESTION_list.push(data.response.products[x])
-					} 
-					if(data.response.products[x].doctype == "KEYWORD_SUGGESTION") {
-					  KEYWORD_SUGGESTION_list.push(data.response.products[x])
-					} 
-					if(data.response.products[x].doctype == "POPULAR_PRODUCTS") {
-					  POPULAR_PRODUCTS_list.push(data.response.products[x])
-					}
-				}
- 
-				for(var i=0; i < TOP_SEARCH_QUERIES_list.length ; i++){
-					sorted_list.push(TOP_SEARCH_QUERIES_list[i]);
-				}
-
-				for(var i=0; i < PROMOTED_SUGGESTION_list.length ; i++){
-					sorted_list.push(PROMOTED_SUGGESTION_list[i]);
-				}
-
-				for(var i=0; i < IN_FIELD_list.length ; i++){
-					sorted_list.push(IN_FIELD_list[i]);
-				}
-
-				for(var i=0; i < KEYWORD_SUGGESTION_list.length ; i++){
-					sorted_list.push(KEYWORD_SUGGESTION_list[i]);
-				}
-
-				for(var i=0; i < POPULAR_PRODUCTS_list.length ; i++){
-					sorted_list.push(POPULAR_PRODUCTS_list[i]);
-				}
-				data.response.products = sorted_list;
-
-
 			for (var x = 0; x < data.response.products.length; x++) {
 
 				var doc = data.response.products[x]
@@ -1755,13 +1703,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						+ (this.options.promotedSuggestions.tpl ? this.options.promotedSuggestions.tpl : this.default_options.promotedSuggestions.tpl).toLowerCase()
 					+'</span></li>'
 					+'{{/if}}'
-					
-					// +'{{#if isInField}}'
-					// + (this.options.inFields.header ? '<li class="unbxd-as-header">'+ this.options.inFields.header +'</li>' : '')
-					// +'<li class="unbxd-as-insuggestion" data-type="{{type}}" data-index="{{@index}}" data-value="{{autosuggest}}">'
-					//     + (this.options.inFields.tpl ? this.options.inFields.tpl : this.default_options.inFields.tpl)
-					// +'</li>'
-					// +'{{/if}}'
 					+'{{/each}}'
 				+'{{/if}}';
 		}
@@ -1882,10 +1823,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				else if (typeof this.options.noResultTpl == "string") {
 					html = html + '<li>' + this.options.noResultTpl + '</li>';
 				}
-			}
-
-			if(self.currentResults['POPULAR_PRODUCTS'].length == 0 && !isMobile.any()) {
-				html+='<li class="unbxd-as-header">Browse By</li>'
 			}
 
 			this.options.mainTpl.forEach(function (key) {
