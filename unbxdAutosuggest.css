@@ -204,13 +204,13 @@
 }
 
 .unbxd-as-wrapper ul li:hover {
-    background-color: #fafafa;
+    background-color: #e8e8e8;
     cursor: pointer;
 }
 
 .unbxd-as-wrapper.unbxd-as-overall-autosuggest ul li.unbxd-ac-selected {
     cursor: pointer;
-    background-color: #fafafa;
+    background-color: #e8e8e8;
 }
 
 /*popular-product-grid */
@@ -271,7 +271,7 @@
 }
 
 .unbxd-as-wrapper .unbxd-as-keysuggestion:hover, .unbxd-as-wrapper .unbxd-as-popular-product:hover{
-    background: lightgrey;
+    background: #e8e8e8;
 }
 
 .unbxd-as-wrapper ul li.unbxd-as-popular-product-grid {
