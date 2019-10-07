@@ -385,6 +385,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, platform: 'com'
 			, resultsContainerSelector: null
 			, processResultsStyles: null
+			, inputContainerSelector: ''
 		}
 		, $input: null
 		, $results: null
@@ -808,13 +809,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (this.options.width) {
 				this.options.mainWidth = this.options.width;
 			}
-			var pos = this.$input.offset();
+
+			var posSelector = this.options.inputContainerSelector ? $(this.options.inputContainerSelector) : this.$input;
+			var pos = posSelector.offset();
 			var totalWidth = '';
 			var mwidth = '';
 
 			if (this.options.platform == 'io') {
 				// Calculate total width of autosuggest relative to screen width
-				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + this.$input.outerWidth()) : document.body.clientWidth - pos.left;
+				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + posSelector.outerWidth()) : document.body.clientWidth - pos.left;
 				if (totalWidth > document.body.clientWidth) {
 					totalWidth = document.body.clientWidth;
 				}
@@ -828,10 +831,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 				// Calculate mainwidth based on 1 or 2 columns
 				if (this.options.template == '1column') {
-					mwidth = this.options.preferInputWidthMainContent ? this.$input.outerWidth() : (60 * totalWidth / 100);
+					mwidth = this.options.preferInputWidthMainContent ? posSelector.outerWidth() : (60 * totalWidth / 100);
 				} else {
 					if (this.options.preferInputWidthMainContent) {
-						mwidth = this.$input.outerWidth();
+						mwidth = posSelector.outerWidth();
 					} else {
 						mwidth = this.options.mainWidthPercent ? (this.options.mainWidthPercent * totalWidth / 100) : (30 * totalWidth / 100)
 					}
@@ -840,15 +843,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			// either use the specified width or calculate based on form element
-			var iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : totalWidth ? mwidth : this.$input.innerWidth()
-				, bt = parseInt(this.$input.css("border-top-width"), 10)
-				, bl = parseInt(this.$input.css("border-left-width"), 10)
-				, br = parseInt(this.$input.css("border-right-width"), 10)
-				, pb = parseInt(this.$input.css("padding-bottom"), 10)
+			var iWidth = (this.options.mainWidth > 0) ? this.options.mainWidth : totalWidth ? mwidth : posSelector.innerWidth()
+				, bt = parseInt(posSelector.css("border-top-width"), 10)
+				, bb = parseInt(posSelector.css("border-bottom-width"), 10)
+				, bl = parseInt(posSelector.css("border-left-width"), 10)
+				, br = parseInt(posSelector.css("border-right-width"), 10)
+				, pb = parseInt(posSelector.css("padding-bottom"), 10)
 				, fwidth = (parseInt(iWidth) - 2 + bl + br)
 				//isNaN check for border-top-width:medium bug IE8 http://bugs.jquery.com/ticket/7058
 				//for more info http://bugs.jquery.com/ticket/10855
-				, fpos = { top: pos.top + (isNaN(bt) ? 0 : bt) + this.$input.innerHeight() + 'px', left: pos.left + "px" };
+				, fpos = { top: pos.top + (isNaN(bt) ? 0 : (bt + bb)) + posSelector.innerHeight() + 'px', left: pos.left + "px" };
 
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth + "px");
 			this.$results.find("ul.unbxd-as-maincontent").css("box-sizing", "border-box");
@@ -867,7 +871,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				this.$results.removeClass("unbxd-as-extra-left unbxd-as-extra-right");
 				this.$results.addClass("unbxd-as-extra-" + this.options.sideContentOn);
 				if (this.$results.find("ul.unbxd-as-sidecontent").length > 0 && this.options.sideContentOn == "left") {
-					var lwidth = (pos.left + this.$input.outerWidth()) > document.body.clientWidth ? document.body.clientWidth : pos.left + this.$input.outerWidth();
+					var lwidth = (pos.left + posSelector.outerWidth()) > document.body.clientWidth ? document.body.clientWidth : pos.left + posSelector.outerWidth();
 					fpos.left = lwidth - fwidth - swidth;
 					if (fpos.left < 0) {
 						fpos.left = 0;
