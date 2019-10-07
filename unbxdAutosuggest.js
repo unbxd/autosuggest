@@ -872,6 +872,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					if (fpos.left < 0) {
 						fpos.left = 0;
 					}
+					if (this.$results.find("ul.unbxd-as-maincontent").length == 0) {
+						fpos.left = fpos.left + fwidth;
+					}
 					fpos.left = fpos.left + "px";
 				}
 				if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
