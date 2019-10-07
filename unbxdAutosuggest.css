@@ -208,7 +208,7 @@
     cursor: pointer;
 }
 
-.unbxd-as-wrapper ul li.unbxd-ac-selected {
+.unbxd-as-wrapper.unbxd-as-overall-autosuggest ul li.unbxd-ac-selected {
     cursor: pointer;
     background-color: #fafafa;
 }
