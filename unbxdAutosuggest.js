@@ -379,8 +379,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 					}
 				}
-
 			}
+			, removeDuplicates: false
 			, filtered: false
 			, platform: 'com'
 			, resultsContainerSelector: null
@@ -1050,6 +1050,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				url = url + '&popularProducts.fields=' + popularProductFields
 			}
 
+			if (this.options.removeDuplicates) {
+				url = url + '&variants=true';
+			}
+
 
 			for (var x in this.params.filters) {
 				if (this.params.filters.hasOwnProperty(x)) {
@@ -1253,6 +1257,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (self.options.popularProducts.fields.length > 0) {
 				var popularProductFields = "&fields=" + self.options.popularProducts.fields.join(",");
 				url = url + popularProductFields;
+			}
+
+			if (self.options.removeDuplicates) {
+				url = url + "&variants=true";
 			}
 
 			var params = this.getAjaxParams();
