@@ -648,10 +648,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					}
 
 					var cmpld = ""
-					if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
-						cmpld = Handlebars.compile(this.preparefilteredPopularProducts() + this.options.popularProducts.viewMore.tpl);
+					if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
 					} else {
-						cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+						cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
 					}
 
 					if (this.currentTopResults[query] && this.currentTopResults[query].length > 0) {
