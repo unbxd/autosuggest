@@ -35,68 +35,53 @@ var ractive = new Ractive({
 unbxdAutoSuggestFunction($, Handlebars);
 
 window.auto = $("#input").unbxdautocomplete({
-	siteName: 'prd-amainhobbies-com806591559753334',
-        APIKey: 'd842f10ea4b1291720cb5f0829ab743b',
-        minChars: 1,
-        delay: 100,
-        loadingClass: 'unbxd-as-loading',
-        zIndex: 10000,
-        template: '2column',
-        mainTpl: ['topQueries', 'keywordSuggestions', 'inFields'],
-        sideTpl: ['popularProducts'],
-        mainWidth: 260,
-        sideWidth: 510,
-        sideContentOn: 'right',
-        showCarts: false,
-		cartType: 'separate',
-		platform: 'io',
-        integrations: {
-            'universal': 'ga'
-        },
-        onItemSelect: null,
-        onCartClick: function (data, original) {
-            return true;
-        },
-        noResultTpl: "No results found.",
-        inFields: {
-            count: 3,
-            fields: {
-                'catlevel1Name': 3,
-                'brand': 3,
-                'a_brand_t': 3
-            },
-            header: '',
-            tpl: ''
-        },
-        topQueries: {
-            count: 3,
-            header: '',
-            tpl: ''
-        },
-        keywordSuggestions: {
-            count: 3,
-            header: '',
-            tpl: ''
-        },
-        popularProducts: {
-            count: 6,
-            price: true,
-            priceFunctionOrKey: function (obj) {
-                return obj.price.toFixed(2);
-            },
-            view: 'grid',
-            image: true,
-            imageUrlOrFunction: 'imageUrl',
-            currency: '$',
-            header: '{{{checkInputQuery}}}',
-            tpl: ''
-        },
-        filtered: true,
-        filtered_name: 'title',
-        sortByLength: true
-    });
+	siteName: 'demosite-u1407617955968'
+	, APIKey: '64a4a2592a648ac8415e13c561e44991'
+	, minChars: 2
+	, showCarts: false
+	, integrations: {
+		'universal': true
+	}
+	, template: "1column" // "2column"
+	, cartType: "separate"
+	// ,noResultConfigMsg: 'No Results were Found'
+	, onItemSelect: function () {
+		console.log("onItemSelect", arguments);
+	}
+	, onCartClick: function (obj) {
+		console.log("addtocart", this, arguments);
+		return true;
+	}
+	, inFields: {
+		count: 2,
+		fields: {
+			'brand': 3
+			, 'category': 3
+			, 'color': 3
+		}
+		, header: ''
+	},
+	topQueries: {
+		count: 2
+		, header: ''
+	},
+
+	keywordSuggestions: {
+		count: 2
+		, header: ''
+	}
+	, popularProducts: {
+		count: 2
+		, price: true
+		, priceFunctionOrKey: "price"
+		, image: true
+		, imageUrlOrFunction: "imageUrl"
+		, currency: "Rs."
+		, header: ''
+	}
+});
 ractive.set('inputID', '#input');
-ractive.set('selectedmain', ['inFields', 'keywordSuggestions', 'topQueries']);
+ractive.set('selectedmain', ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']);
 $('#MainTpl').trigger('liszt:updated');
 
 
