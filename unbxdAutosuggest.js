@@ -682,6 +682,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						}));
 					}
 
+					if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
+						this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
+					}
+
 				}
 			}
 			else if (this.activeRow == -1) {
@@ -689,10 +693,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				if (this.options.filtered) {
 
 					var cmpld = ""
-					if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
-						cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+					if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+						cmpld = Handlebars.compile(this.preparefilteredPopularProducts() + this.options.popularProducts.viewMore.tpl);
 					} else {
-						cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+						cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
 					}
 
 					if (this.currentTopResults[this.previous] && this.currentTopResults[this.previous].length > 0)
@@ -707,6 +711,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							, showCarts: this.options.showCarts
 							, cartType: this.options.cartType
 						}));
+
+					if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
+						this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
+					}
 				}
 			}
 		}
