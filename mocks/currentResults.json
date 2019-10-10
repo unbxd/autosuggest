@@ -1,0 +1,771 @@
+{
+    "keywordSuggestions": [
+        {
+            "autosuggest": "BlackShoes",
+            "highlighted": "Black<strong>Sh</strong>oes",
+            "type": "KEYWORD_SUGGESTION",
+            "_original": {
+                "autosuggest": "BlackShoes",
+                "doctype": "KEYWORD_SUGGESTION",
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "1cecbe1d-c0a3-47b6-ba6f-36658dae042b"
+            },
+            "source": ""
+        },
+        {
+            "autosuggest": "GrayShorts",
+            "highlighted": "Gray<strong>Sh</strong>orts",
+            "type": "KEYWORD_SUGGESTION",
+            "_original": {
+                "autosuggest": "GrayShorts",
+                "doctype": "KEYWORD_SUGGESTION",
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "985d9c60-d632-4fef-8450-b067e16c7700"
+            },
+            "source": ""
+        },
+        {
+            "autosuggest": "CasualShirt",
+            "highlighted": "Casual<strong>Sh</strong>irt",
+            "type": "KEYWORD_SUGGESTION",
+            "_original": {
+                "autosuggest": "CasualShirt",
+                "doctype": "KEYWORD_SUGGESTION",
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "58e62d83-a5b1-4b13-90af-651be6af5270"
+            },
+            "source": ""
+        },
+        {
+            "autosuggest": "BlueShirt",
+            "highlighted": "Blue<strong>Sh</strong>irt",
+            "type": "KEYWORD_SUGGESTION",
+            "_original": {
+                "autosuggest": "BlueShirt",
+                "doctype": "KEYWORD_SUGGESTION",
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "ed28e5ee-7ea8-4b4f-9b44-3a3c992a1752"
+            },
+            "source": ""
+        },
+        {
+            "autosuggest": "BrownShirt",
+            "highlighted": "Brown<strong>Sh</strong>irt",
+            "type": "KEYWORD_SUGGESTION",
+            "_original": {
+                "autosuggest": "BrownShirt",
+                "doctype": "KEYWORD_SUGGESTION",
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "681aed99-8040-41c8-b3fe-cba3d4bfe87a"
+            },
+            "source": ""
+        }
+    ],
+    "topQueries": [
+        {
+            "autosuggest": "Shorts",
+            "highlighted": "<strong>Sh</strong>orts",
+            "type": "TOP_SEARCH_QUERIES",
+            "_original": "TOP_SEARCH_QUERIES"
+        },
+        {
+            "autosuggest": "Shoes",
+            "highlighted": "<strong>Sh</strong>oes",
+            "type": "TOP_SEARCH_QUERIES",
+            "_original": "TOP_SEARCH_QUERIES"
+        },
+        {
+            "autosuggest": "off the shoulder",
+            "highlighted": "off the <strong>sh</strong>oulder",
+            "type": "TOP_SEARCH_QUERIES",
+            "_original": "TOP_SEARCH_QUERIES"
+        },
+        {
+            "autosuggest": "off the shoulder top",
+            "highlighted": "off the <strong>sh</strong>oulder top",
+            "type": "TOP_SEARCH_QUERIES",
+            "_original": "TOP_SEARCH_QUERIES"
+        },
+        {
+            "autosuggest": "Shirt",
+            "highlighted": "<strong>Sh</strong>irt",
+            "type": "TOP_SEARCH_QUERIES",
+            "_original": "TOP_SEARCH_QUERIES"
+        }
+    ],
+    "inFields": [
+        {
+            "autosuggest": "Shoes",
+            "highlighted": "<strong>Sh</strong>oes",
+            "type": "keyword",
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shoes",
+            "highlighted": "Black",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Black",
+            "_original": {
+                "autosuggest": "Shoes",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Black",
+                    "Brown",
+                    "Neutral",
+                    "Green",
+                    "White",
+                    "Gray",
+                    "Blue",
+                    "Red"
+                ],
+                "gender_in": [
+                    "men",
+                    "women"
+                ],
+                "infield1_in": [
+                    "Dress Shoes",
+                    "Sneakers",
+                    "Boots",
+                    "Loafer",
+                    "Flip Flop"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "9cb3994c-0739-4b8f-8183-87fc12685fd9"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shoes",
+            "highlighted": "Brown",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Brown",
+            "_original": {
+                "autosuggest": "Shoes",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Black",
+                    "Brown",
+                    "Neutral",
+                    "Green",
+                    "White",
+                    "Gray",
+                    "Blue",
+                    "Red"
+                ],
+                "gender_in": [
+                    "men",
+                    "women"
+                ],
+                "infield1_in": [
+                    "Dress Shoes",
+                    "Sneakers",
+                    "Boots",
+                    "Loafer",
+                    "Flip Flop"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "9cb3994c-0739-4b8f-8183-87fc12685fd9"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shoes",
+            "highlighted": "Neutral",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Neutral",
+            "_original": {
+                "autosuggest": "Shoes",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Black",
+                    "Brown",
+                    "Neutral",
+                    "Green",
+                    "White",
+                    "Gray",
+                    "Blue",
+                    "Red"
+                ],
+                "gender_in": [
+                    "men",
+                    "women"
+                ],
+                "infield1_in": [
+                    "Dress Shoes",
+                    "Sneakers",
+                    "Boots",
+                    "Loafer",
+                    "Flip Flop"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "9cb3994c-0739-4b8f-8183-87fc12685fd9"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shirt",
+            "highlighted": "<strong>Sh</strong>irt",
+            "type": "keyword",
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shirt",
+            "highlighted": "Blue",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Blue",
+            "_original": {
+                "autosuggest": "Shirt",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "infield2_in": [
+                    "Solid",
+                    "Stripe",
+                    "Polka-Dot",
+                    "Novelty",
+                    "Plaid",
+                    "Gingham",
+                    "Camo",
+                    "Floral"
+                ],
+                "infield4_in": [
+                    "Long",
+                    "Sleeveless",
+                    "3/4 Sleeve",
+                    "Short"
+                ],
+                "color_in": [
+                    "Brown",
+                    "White",
+                    "Blue",
+                    "Purple",
+                    "Black",
+                    "Green",
+                    "Red",
+                    "Pink",
+                    "Yellow",
+                    "Orange",
+                    "Multi",
+                    "Gray",
+                    "Gold",
+                    "Neutral"
+                ],
+                "gender_in": [
+                    "women"
+                ],
+                "infield1_in": [
+                    "Slim",
+                    "Original"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "234eb57c-8af1-48ae-853e-7536059e2f43"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shirt",
+            "highlighted": "Brown",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Brown",
+            "_original": {
+                "autosuggest": "Shirt",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "infield2_in": [
+                    "Solid",
+                    "Stripe",
+                    "Polka-Dot",
+                    "Novelty",
+                    "Plaid",
+                    "Gingham",
+                    "Camo",
+                    "Floral"
+                ],
+                "infield4_in": [
+                    "Long",
+                    "Sleeveless",
+                    "3/4 Sleeve",
+                    "Short"
+                ],
+                "color_in": [
+                    "Brown",
+                    "White",
+                    "Blue",
+                    "Purple",
+                    "Black",
+                    "Green",
+                    "Red",
+                    "Pink",
+                    "Yellow",
+                    "Orange",
+                    "Multi",
+                    "Gray",
+                    "Gold",
+                    "Neutral"
+                ],
+                "gender_in": [
+                    "women"
+                ],
+                "infield1_in": [
+                    "Slim",
+                    "Original"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "234eb57c-8af1-48ae-853e-7536059e2f43"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shirt",
+            "highlighted": "White",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "White",
+            "_original": {
+                "autosuggest": "Shirt",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "infield2_in": [
+                    "Solid",
+                    "Stripe",
+                    "Polka-Dot",
+                    "Novelty",
+                    "Plaid",
+                    "Gingham",
+                    "Camo",
+                    "Floral"
+                ],
+                "infield4_in": [
+                    "Long",
+                    "Sleeveless",
+                    "3/4 Sleeve",
+                    "Short"
+                ],
+                "color_in": [
+                    "Brown",
+                    "White",
+                    "Blue",
+                    "Purple",
+                    "Black",
+                    "Green",
+                    "Red",
+                    "Pink",
+                    "Yellow",
+                    "Orange",
+                    "Multi",
+                    "Gray",
+                    "Gold",
+                    "Neutral"
+                ],
+                "gender_in": [
+                    "women"
+                ],
+                "infield1_in": [
+                    "Slim",
+                    "Original"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "234eb57c-8af1-48ae-853e-7536059e2f43"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shorts",
+            "highlighted": "<strong>Sh</strong>orts",
+            "type": "keyword",
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shorts",
+            "highlighted": "Gray",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Gray",
+            "_original": {
+                "autosuggest": "Shorts",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Gray",
+                    "Neutral",
+                    "Green",
+                    "Blue",
+                    "Pink",
+                    "White",
+                    "Black",
+                    "Red",
+                    "Gold",
+                    "Brown",
+                    "Orange",
+                    "Purple",
+                    "Multi",
+                    "Yellow",
+                    "Silver"
+                ],
+                "gender_in": [
+                    "men",
+                    "women"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "aa88343f-0792-4a6c-9a57-ba772f3bdcae"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shorts",
+            "highlighted": "Green",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Green",
+            "_original": {
+                "autosuggest": "Shorts",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Gray",
+                    "Neutral",
+                    "Green",
+                    "Blue",
+                    "Pink",
+                    "White",
+                    "Black",
+                    "Red",
+                    "Gold",
+                    "Brown",
+                    "Orange",
+                    "Purple",
+                    "Multi",
+                    "Yellow",
+                    "Silver"
+                ],
+                "gender_in": [
+                    "men",
+                    "women"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "aa88343f-0792-4a6c-9a57-ba772f3bdcae"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Shorts",
+            "highlighted": "Neutral",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Neutral",
+            "_original": {
+                "autosuggest": "Shorts",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Gray",
+                    "Neutral",
+                    "Green",
+                    "Blue",
+                    "Pink",
+                    "White",
+                    "Black",
+                    "Red",
+                    "Gold",
+                    "Brown",
+                    "Orange",
+                    "Purple",
+                    "Multi",
+                    "Yellow",
+                    "Silver"
+                ],
+                "gender_in": [
+                    "men",
+                    "women"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "aa88343f-0792-4a6c-9a57-ba772f3bdcae"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirt",
+            "highlighted": "Dress <strong>Sh</strong>irt",
+            "type": "keyword",
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirt",
+            "highlighted": "Blue",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Blue",
+            "_original": {
+                "autosuggest": "Dress Shirt",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Blue",
+                    "White",
+                    "Black",
+                    "Gray",
+                    "Pink",
+                    "Purple",
+                    "Orange",
+                    "Red",
+                    "Green",
+                    "Yellow",
+                    "Silver",
+                    "Neutral"
+                ],
+                "gender_in": [
+                    "men"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "69231696-206e-4fe2-b2da-34620e411dba"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirt",
+            "highlighted": "Black",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Black",
+            "_original": {
+                "autosuggest": "Dress Shirt",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Blue",
+                    "White",
+                    "Black",
+                    "Gray",
+                    "Pink",
+                    "Purple",
+                    "Orange",
+                    "Red",
+                    "Green",
+                    "Yellow",
+                    "Silver",
+                    "Neutral"
+                ],
+                "gender_in": [
+                    "men"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "69231696-206e-4fe2-b2da-34620e411dba"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirt",
+            "highlighted": "White",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "White",
+            "_original": {
+                "autosuggest": "Dress Shirt",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "color_in": [
+                    "Blue",
+                    "White",
+                    "Black",
+                    "Gray",
+                    "Pink",
+                    "Purple",
+                    "Orange",
+                    "Red",
+                    "Green",
+                    "Yellow",
+                    "Silver",
+                    "Neutral"
+                ],
+                "gender_in": [
+                    "men"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "uniqueId": "69231696-206e-4fe2-b2da-34620e411dba"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirts",
+            "highlighted": "Dress <strong>Sh</strong>irts",
+            "type": "keyword",
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirts",
+            "highlighted": "Blue",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Blue",
+            "_original": {
+                "autosuggest": "Dress Shirts",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "infield2_in": [
+                    "Plaid",
+                    "Check",
+                    "Dot",
+                    "Geo",
+                    "Solid"
+                ],
+                "color_in": [
+                    "Blue",
+                    "Gray",
+                    "Green",
+                    "Orange",
+                    "White",
+                    "Black",
+                    "Red"
+                ],
+                "gender_in": [
+                    "men"
+                ],
+                "infield1_in": [
+                    "Fitted",
+                    "Slim",
+                    "Classic"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "infield4_in": [
+                    "Long",
+                    "Short"
+                ],
+                "uniqueId": "a846e3ea-7315-4226-a8cd-6fb2a64fadb1"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirts",
+            "highlighted": "Gray",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Gray",
+            "_original": {
+                "autosuggest": "Dress Shirts",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "infield2_in": [
+                    "Plaid",
+                    "Check",
+                    "Dot",
+                    "Geo",
+                    "Solid"
+                ],
+                "color_in": [
+                    "Blue",
+                    "Gray",
+                    "Green",
+                    "Orange",
+                    "White",
+                    "Black",
+                    "Red"
+                ],
+                "gender_in": [
+                    "men"
+                ],
+                "infield1_in": [
+                    "Fitted",
+                    "Slim",
+                    "Classic"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "infield4_in": [
+                    "Long",
+                    "Short"
+                ],
+                "uniqueId": "a846e3ea-7315-4226-a8cd-6fb2a64fadb1"
+            },
+            "source": "type"
+        },
+        {
+            "autosuggest": "Dress Shirts",
+            "highlighted": "Green",
+            "type": "IN_FIELD",
+            "filtername": "color",
+            "filtervalue": "Green",
+            "_original": {
+                "autosuggest": "Dress Shirts",
+                "doctype": "IN_FIELD",
+                "unbxdAutosuggestSrc": "type",
+                "infield2_in": [
+                    "Plaid",
+                    "Check",
+                    "Dot",
+                    "Geo",
+                    "Solid"
+                ],
+                "color_in": [
+                    "Blue",
+                    "Gray",
+                    "Green",
+                    "Orange",
+                    "White",
+                    "Black",
+                    "Red"
+                ],
+                "gender_in": [
+                    "men"
+                ],
+                "infield1_in": [
+                    "Fitted",
+                    "Slim",
+                    "Classic"
+                ],
+                "isActive_filter": [
+                    "true"
+                ],
+                "infield4_in": [
+                    "Long",
+                    "Short"
+                ],
+                "uniqueId": "a846e3ea-7315-4226-a8cd-6fb2a64fadb1"
+            },
+            "source": "type"
+        }
+    ]
+}
