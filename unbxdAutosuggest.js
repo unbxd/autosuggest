@@ -1512,7 +1512,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			for (var a in this.options.inFields.fields) {
 				if ((a + "_in") in doc && doc[a + "_in"].length && asrc.indexOf(" " + a + " ") == -1) {
-					ins[a] = doc[a + "_in"].slice(0, parseInt(this.options.inFields.fields[a]))
+					ins[a] = doc[a + "_in"].slice(0, parseInt(this.options.inFields.fields[a]));
+					if (this.options.inFields.removeDuplicateKeyword) {
+						var ind = ins[a].indexOf(doc.autosuggest.trim());
+						if (ind >= 0) {
+							ins[a].splice(ind,1);
+						}
+					}
 				}
 			}
 
