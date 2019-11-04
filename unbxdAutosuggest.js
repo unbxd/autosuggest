@@ -1809,10 +1809,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/if}}';
 		}
 		, prepareHTML: function () {
-			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">',
-				self = this,
-				mainlen = 0,
-				sidelen = 0;
+			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+			var mobileHtml = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-mobile-view">';
+
+			if (this.options.isMobile) {
+				if (this.options.isMobile()) {
+					html = mobileHtml;
+				}
+			} else if (isMobile.any()) {
+				html = mobileHtml;
+			}
+			
+			var self = this,
+			mainlen = 0,
+			sidelen = 0;
 			if (this.options.suggestionsHeader && (self.currentResults['IN_FIELD'].length || self.currentResults['KEYWORD_SUGGESTION'].length
 				|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
 				html = html + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
@@ -1851,7 +1861,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				sidelen = sidelen + self.currentResults[key].length;
 			});
 
-			if (isMobile.any()) this.options.template = '1column';
+			if (this.options.isMobile) {
+				if (this.options.isMobile()) {
+					this.options.template = '1column';
+				}
+			} else if (isMobile.any()) {
+				this.options.template = '1column';
+			}
 
 			if (this.options.template === '2column' && !this.options.sideTpl.length && !this.options.mainTpl) {
 				this.options.sideTpl = ['keywordSuggestions', 'topQueries'];
