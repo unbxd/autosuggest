@@ -475,6 +475,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 						var cmpld = ""
 						if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+							$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
 						} else {
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
