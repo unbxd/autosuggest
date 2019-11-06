@@ -663,6 +663,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 					var cmpld = ""
 					if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+						$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
 						cmpld = Handlebars.compile(this.preparefilteredPopularProducts() + this.options.popularProducts.viewMore.tpl);
 					} else {
 						cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
