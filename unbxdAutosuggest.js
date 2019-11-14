@@ -1059,7 +1059,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, autosuggestUrl: function () {
 			var host_path = this.getHostNPath();
-			var url = "q=" + encodeURIComponent(this.params.q);
+			var query = this.params.q;
+			if (this.options.customQueryParse && typeof this.options.customQueryParse === "function") {
+				query = this.options.customQueryParse(this.params.q);
+			}
+			var url = "q=" + encodeURIComponent(query);
 
 			if (this.options.maxSuggestions) {
 				url += '&inFields.count=' + this.options.maxSuggestions
@@ -1277,11 +1281,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			return arr.indexOf(autosuggest) === -1 ? arr.push(autosuggest) : false;
 		}
 		, getfilteredPopularProducts: function () {
+			var query = this.params.q;
+			if (this.options.customQueryParse && typeof this.options.customQueryParse === "function") {
+				query = this.options.customQueryParse(this.params.q);
+			}
 			var self = this,
 				urlPath = this.getHostDomainName() + this.options.APIKey + "/"
 					+ this.options.siteName + "/search",
 				defaultSearchParams = "indent=off&facet=off&analytics=false&redirect=false",
-				url = urlPath + "?q=" + encodeURIComponent(this.params.q)
+				url = urlPath + "?q=" + encodeURIComponent(query)
 					+ "&rows=" + this.options.popularProducts.count + "&"
 					+ defaultSearchParams;
 
