@@ -1723,6 +1723,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			return output;
 		}
 		, prepareinFieldsKeyword: function (str) {
+			if (this.options.customInfieldsFilter && typeof this.options.customInfieldsFilter === "function") {
+				str = this.options.customInfieldsFilter(str);
+			}
 			return '<span class="unbxd-as-suggestions-infields">' + str + '</span>';
 		}
 
