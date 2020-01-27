@@ -1540,7 +1540,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					for (var j = 0; j < ins[i].length; j++) {
 						sortedInfields[k] = {
 							filterName: i,
-							filterValue: ins[i][j]
+							filterValue: (this.options.customInfieldsFilter && typeof this.options.customInfieldsFilter === 'function') ? this.options.customInfieldsFilter(ins[i][j]) : ins[i][j]
 						}
 						k++;
 					}
@@ -1567,7 +1567,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 								, highlighted: this.options.inFields.type === 'separate' ? that.prepareinFieldsKeyword(sortedInfields[i].filterValue) : that.highlightStr(doc.autosuggest) + ' in ' + that.prepareinFieldsKeyword(sortedInfields[i].filterValue)
 								, type: doc.doctype
 								, filtername: sortedInfields[i].filterName
-								, filtervalue: sortedInfields[i].filterValue
+								, filtervalue: (this.options.customInfieldsFilter && typeof this.options.customInfieldsFilter === "function") ? this.options.customInfieldsFilter(sortedInfields[i].filterValue) : sortedInfields[i].filterValue
 								, _original: doc
 								, source: doc.unbxdAutosuggestSrc
 							})
@@ -1583,7 +1583,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 									, highlighted: this.options.inFields.type === 'separate' ? that.prepareinFieldsKeyword(ins[a][b]) : that.highlightStr(doc.autosuggest) + ' in ' + that.prepareinFieldsKeyword(ins[a][b])
 									, type: doc.doctype
 									, filtername: a
-									, filtervalue: ins[a][b]
+									, filtervalue: (this.options.customInfieldsFilter && typeof this.options.customInfieldsFilter === "function") ? this.options.customInfieldsFilter(ins[a][b]) : ins[a][b]
 									, _original: doc
 									, source: doc.unbxdAutosuggestSrc
 								})
