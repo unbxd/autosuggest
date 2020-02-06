@@ -230,7 +230,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, sideContentOn: "right" //"left"
 			, template: "1column" // "2column"
 			, theme: "#ff8400"
-			, mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']
+			, mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts', 'promotedSuggestions']
 			, sideTpl: []
 			, showCarts: true // will be used in default template of popular products
 			, cartType: "inline" // "separate" will be used in default template popular products
@@ -259,6 +259,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				count: 2
 				, header: ""
 				, tpl: "{{{safestring highlighted}}}"
+			}
+			, promotedSuggestions: {
+				count: 3,
+				tpl: "{{{safestring highlighted}}}"
 			}
 			, suggestionsHeader: ''
 			, popularProducts: {
@@ -791,7 +795,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				'POPULAR_PRODUCTS': 'Pop_Click',
 				'KEYWORD_SUGGESTION': 'TQ_Click',
 				'TOP_SEARCH_QUERIES': 'TQ_Click',
-				'POPULAR_PRODUCTS_FILTERED': 'Filtered_Pop_Click'
+				'POPULAR_PRODUCTS_FILTERED': 'Filtered_Pop_Click',
+				'PROMOTED_SUGGESTION': 'TQ_Click',
 			}
 			return types[autosuggestType];
 		}
@@ -806,7 +811,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				'POPULAR_PRODUCTS': value + '-' + index,
 				'KEYWORD_SUGGESTION': value + '-' + index,
 				'TOP_SEARCH_QUERIES': value + '-' + index,
-				'POPULAR_PRODUCTS_FILTERED': value + '-' + index
+				'POPULAR_PRODUCTS_FILTERED': value + '-' + index,
+				'PROMOTED_SUGGESTION': value + '-' + index
 			};
 			return types[params.autosuggest_type];
 		}
@@ -1071,6 +1077,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					+ '&topQueries.count=' + this.options.maxSuggestions
 					+ '&keywordSuggestions.count=' + this.options.maxSuggestions
 					+ '&popularProducts.count=' + this.options.popularProducts.count
+					+ '&promotedSuggestion.count=' + this.options.promotedSuggestions.count
 					+ '&indent=off';
 			}
 			else {
@@ -1078,6 +1085,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					+ '&topQueries.count=' + this.options.topQueries.count
 					+ '&keywordSuggestions.count=' + this.options.keywordSuggestions.count
 					+ '&popularProducts.count=' + this.options.popularProducts.count
+					+ '&promotedSuggestion.count=' + this.options.promotedSuggestions.count
 					+ '&indent=off';
 			}
 
@@ -1131,12 +1139,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 		}
 		, max_suggest: function (data) {
-			var infield_result = 0, topquery_result = 0, keyword_result = 0;
+			var infield_result = 0, topquery_result = 0, keyword_result = 0, promoted_result = 0;
 			var infield_sugg = Math.floor(this.options.maxSuggestions * 0.2);
-			var keyword_sugg = Math.floor(this.options.maxSuggestions * 0.4);
-			var topquery_sugg = Math.ceil(this.options.maxSuggestions * 0.4);
+			var keyword_sugg = Math.floor(this.options.maxSuggestions * 0.3);
+			var topquery_sugg = Math.ceil(this.options.maxSuggestions * 0.3);
+			var promoted_sugg = Math.floor(this.options.maxSuggestions * 0.2);
+
 			var keyword_rem = 0,
-				topquery_rem = 0;
+				topquery_rem = 0,
+				promoted_rem = 0;
 			for (var x = 0; x < data.response.products.length; x++) {
 				if (data.response.products[x].doctype == "IN_FIELD") {
 					infield_result++;
@@ -1146,7 +1157,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 				else if (data.response.products[x].doctype == "TOP_SEARCH_QUERIES") {
 					topquery_result++;
-				}
+				} 
+				else if (data.response.products[x].doctype == "PROMOTED_SUGGESTION") {
+                    promoted_result++;
+                }
 			}
 
 
@@ -1174,6 +1188,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							topquery_sugg = topquery_result;
 						}
 					}
+					else if (promoted_result > promoted_sugg) {
+                        if ((promoted_result - promoted_sugg) >= infield_rem) {
+                            promoted_sugg = promoted_sugg + infield_rem;
+                            infield_rem = 0;
+                        } else {
+                            infield_rem = infield_rem - promoted_result + promoted_sugg;
+                            promoted_sugg = promoted_result;
+                        }
+                    } 
 					else
 						infield_rem = 0;
 
@@ -1193,7 +1216,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							topquery_rem = topquery_rem - keyword_result + keyword_sugg;
 							keyword_sugg = keyword_result;
 						}
-					}
+					} else if (promoted_result > promoted_sugg) {
+                        if ((promoted_result - promoted_sugg) >= topquery_rem) {
+                            promoted_sugg = promoted_sugg + topquery_rem;
+                            topquery_rem = 0;
+                        } else {
+                            topquery_rem = topquery_rem - promoted_result + promoted_sugg;
+                            promoted_sugg = promoted_result;
+                        }
+                    }
 					// else if(infield_result > infield_sugg){
 					// 	if((infield_result - infield_sugg) >= topquery_rem){
 					// 		infield_sugg = infield_sugg + topquery_rem;
@@ -1226,7 +1257,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							keyword_rem = keyword_rem - topquery_result + topquery_sugg;
 							topquery_sugg = topquery_result;
 						}
-					}
+					} else if (promoted_result > promoted_sugg) {
+                        if ((promoted_result - promoted_sugg) >= keyword_rem) {
+                            promoted_sugg = promoted_sugg + keyword_rem;
+                            keyword_rem = 0;
+                        } else {
+                            keyword_rem = keyword_rem - promoted_result + promoted_sugg;
+                            promoted_sugg = promoted_result;
+                        }
+                    }
 					// else if(infield_result > infield_sugg){
 					// 	if((infield_result - infield_sugg) >= keyword_rem){
 					// 		infield_sugg = infield_sugg + keyword_rem;
@@ -1247,12 +1286,39 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			// 	keyword_rem = 0;
 			// 	keyword_sugg = keyword_result;
 			// }
+
+			if (promoted_result < promoted_sugg) {
+                promoted_rem = promoted_sugg - promoted_result;
+                while (promoted_rem > 0) {
+                    if (topquery_result > topquery_sugg) {
+                        if ((topquery_result - topquery_sugg) >= promoted_rem) {
+                            topquery_sugg = topquery_sugg + promoted_rem;
+                            promoted_rem = 0;
+                        } else {
+                            promoted_rem = promoted_rem - topquery_result + topquery_sugg;
+                            topquery_sugg = topquery_result;
+                        }
+                    } else if (keyword_result > keyword_sugg) {
+                        if ((keyword_result - keyword_sugg) >= promoted_rem) {
+                            keyword_sugg = keyword_sugg + promoted_rem;
+                            promoted_rem = 0;
+                        } else {
+                            promoted_rem = promoted_rem - keyword_result + keyword_sugg;
+                            keyword_sugg = keyword_result;
+                        }
+                    } else promoted_rem = 0;
+                }
+                promoted_sugg = promoted_result;
+			}
+
 			var count = {};
 			count['infields'] = infield_sugg;
 			count['topquery'] = topquery_sugg;
+			count['promoted'] = promoted_sugg;
 			count['keyword'] = keyword_sugg;
 			count['key_rem'] = keyword_rem;
 			count['top_rem'] = topquery_rem;
+			count['promo_rem'] = promoted_rem;
 			return count;
 
 		}
@@ -1421,6 +1487,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, source: doc.unbxdAutosuggestSrc || ""
 			};
 			this.currentResults.KEYWORD_SUGGESTION.push(o);
+		}
+		, processPromotedSuggestion: function (doc) {
+			var o = {
+				autosuggest: doc.autosuggest,
+				highlighted: this.highlightStr(doc.autosuggest),
+				type: "PROMOTED_SUGGESTION",
+				_original: doc,
+				source: doc.unbxdAutosuggestSrc || ""
+			};
+			this.currentResults.PROMOTED_SUGGESTION.push(o);
 		}
 		, setDefaultPopularProductsOptions: function () {
 			if (!this.options.popularProducts.autosuggestName) {
@@ -1603,7 +1679,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 		}
 		, sortSuggestionsBylength: function () {
-			this.currentResults.SORTED_SUGGESTIONS = this.currentResults.KEYWORD_SUGGESTION.concat(this.currentResults.TOP_SEARCH_QUERIES);
+			this.currentResults.SORTED_SUGGESTIONS = this.currentResults.KEYWORD_SUGGESTION.concat(this.currentResults.TOP_SEARCH_QUERIES, this.currentResults.PROMOTED_SUGGESTION);
 			this.currentResults.SORTED_SUGGESTIONS.sort(function (a, b) {
 				return customSort(a.autosuggest, b.autosuggest);
 			});
@@ -1623,6 +1699,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, POPULAR_PRODUCTS: []
 				, IN_FIELD: []
 				, SORTED_SUGGESTIONS: []
+				, PROMOTED_SUGGESTION: []
 			}
 			var infieldsCount = 0;
 			var key_count = 0,
@@ -1656,6 +1733,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					} else if ("POPULAR_PRODUCTS" == doc.doctype
 						&& this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length) {
 						this.processPopularProducts(doc);
+					} else if ("PROMOTED_SUGGESTION" == doc.doctype && count['promoted'] > this.currentResults.PROMOTED_SUGGESTION.length &&
+						this.isUnique(doc.autosuggest, uniqueSuggestions)) {
+						this.processPromotedSuggestion(doc);
 					}
 				} else {
 					if ("TOP_SEARCH_QUERIES" == doc.doctype && this.options.topQueries.count > this.currentResults.TOP_SEARCH_QUERIES.length
@@ -1671,6 +1751,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					} else if ("POPULAR_PRODUCTS" == doc.doctype
 						&& this.options.popularProducts.count > this.currentResults.POPULAR_PRODUCTS.length) {
 						this.processPopularProducts(doc);
+					} else if ("PROMOTED_SUGGESTION" == doc.doctype &&
+						(this.options.promotedSuggestions.count > this.currentResults.PROMOTED_SUGGESTION.length) &&
+						this.isUnique(doc.autosuggest, uniqueSuggestions)) {
+						this.processPromotedSuggestion(doc);
 					}
 				}
 
@@ -1769,6 +1853,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/each}}'
 				+ '{{/if}}';
 		}
+		, preparepromotedSuggestionsHTML: function() {
+            return '{{#if data.PROMOTED_SUGGESTION}}' +
+                (this.options.promotedSuggestions.header ? '<li class="unbxd-as-header">' + this.options.promotedSuggestions.header + '</li>' : '') +
+                '{{#each data.PROMOTED_SUGGESTION}}' +
+                '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">' +
+                (this.options.promotedSuggestions.tpl ? this.options.promotedSuggestions.tpl : this.default_options.promotedSuggestions.tpl) +
+                '</li>' +
+                '{{/each}}' +
+                '{{/if}}';
+        }
 		, preparetopQueriesHTML: function () {
 			return '{{#if data.TOP_SEARCH_QUERIES}}'
 				+ (this.options.topQueries.header ? '<li class="unbxd-as-header">' + this.options.topQueries.header + '</li>' : '')
@@ -1807,6 +1901,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 			else if (key === "topQueries") {
 				key = "TOP_SEARCH_QUERIES";
+			} else if (key === "promotedSuggestions") {
+				key = "PROMOTED_SUGGESTION";
 			}
 			else
 				key = "KEYWORD_SUGGESTION";
@@ -1843,7 +1939,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
-				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && this.options.noResultTpl) {
+				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && !self.currentResults['PROMOTED_SUGGESTION'].length && this.options.noResultTpl) {
 
 				if (typeof this.options.noResultTpl === "function") {
 					html = html + '<li>' + this.options.noResultTpl.call(self, encodeURIComponent(self.params.q)) + '</li>';
@@ -1870,6 +1966,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				else if (key === "topQueries") {
 					key = "TOP_SEARCH_QUERIES";
 				}
+				else if (key === "promotedSuggestions") {
+                    key = "PROMOTED_SUGGESTION"
+                }
 				else
 					key = "KEYWORD_SUGGESTION";
 				sidelen = sidelen + self.currentResults[key].length;
