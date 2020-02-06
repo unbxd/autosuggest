@@ -143,8 +143,10 @@ describe('Autosuggest', function () {
 		window.autoSuggestObj.currentResults.KEYWORD_SUGGESTION = this.mockCurrentResults.keywordSuggestions;
 		window.autoSuggestObj.currentResults.TOP_SEARCH_QUERIES = this.mockCurrentResults.topQueries;
 		window.autoSuggestObj.currentResults.IN_FIELD = this.mockCurrentResults.inFields;
+		window.autoSuggestObj.currentResults.PROMOTED_SUGGESTION = this.mockCurrentResults.promotedSuggestions;
 		window.autoSuggestObj.sortSuggestionsBylength();
 		var sortedSuggestions = window.autoSuggestObj.currentResults.SORTED_SUGGESTIONS;
+		
 		var inFields = window.autoSuggestObj.currentResults.IN_FIELD;
 		var sorted = false;
 		var sortedInfields = false;

@@ -767,5 +767,20 @@
             },
             "source": "type"
         }
+    ],
+    "promotedSuggestions": [
+        {
+            "doctype": "PROMOTED_SUGGESTION",
+            "end_unbxdDate": 1893426360000,
+            "start_unbxdDate": 1577461560000,
+            "timeStamp_unbxd": 1580979109956,
+            "autosuggest": "tail boom t-rex 500 pro",
+            "autosuggest_unstemmed": "tail boom t-rex 500 pro",
+            "uniqueId": "PROMOTED_SUGGESTION `~|@` tail boom t-rex 500 pro",
+            "promoted_suggestion_priority_unbxd_double": 0,
+            "unbxdFeedId": "prd-amainhobbies-com806591559753334_-1144818779",
+            "_version_": 1657776755843268600,
+            "parent_unbxd": true
+        }
     ]
 }
