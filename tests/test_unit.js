@@ -42,6 +42,9 @@ describe('Autosuggest', function () {
 			popularProducts: {
 				count: 5,
 				fields: []
+			},
+			promotedSuggestions: {
+				count: 2
 			}
 		}
 
@@ -56,11 +59,14 @@ describe('Autosuggest', function () {
 		// With Max Suggestions
 		window.autoSuggestObj.options = mockOptionsWithoutMaxSuggestions;
 		var autoSuggestUrl = window.autoSuggestObj.autosuggestUrl();
+		console.log(autoSuggestUrl);
 		var searchParams = new URLSearchParams(autoSuggestUrl);
 		expect(searchParams.get('inFields.count')).to.equal(mockOptionsWithoutMaxSuggestions.inFields.count.toString());
 		expect(searchParams.get('topQueries.count')).to.equal(mockOptionsWithoutMaxSuggestions.topQueries.count.toString());
 		expect(searchParams.get('keywordSuggestions.count')).to.equal(mockOptionsWithoutMaxSuggestions.keywordSuggestions.count.toString());
 		expect(searchParams.get('popularProducts.count')).to.equal(mockOptionsWithoutMaxSuggestions.popularProducts.count.toString());
+		expect(searchParams.get('promotedSuggestion.count')).to.equal(mockOptionsWithoutMaxSuggestions.promotedSuggestions.count.toString());
+
 
 		// Without Max Suggestions
 		window.autoSuggestObj.options = mockOptionsWithMaxSuggestions;
@@ -70,6 +76,8 @@ describe('Autosuggest', function () {
 		expect(searchParams.get('topQueries.count')).to.equal(mockOptionsWithMaxSuggestions.maxSuggestions.toString());
 		expect(searchParams.get('keywordSuggestions.count')).to.equal(mockOptionsWithMaxSuggestions.maxSuggestions.toString());
 		expect(searchParams.get('popularProducts.count')).to.equal(mockOptionsWithMaxSuggestions.maxSuggestions.toString());
+		expect(searchParams.get('promotedSuggestion.count')).to.equal(mockOptionsWithMaxSuggestions.maxSuggestions.toString());
+
 	});
 
 	it('Should have called Universal/Classical analytics', function () {

@@ -1077,7 +1077,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					+ '&topQueries.count=' + this.options.maxSuggestions
 					+ '&keywordSuggestions.count=' + this.options.maxSuggestions
 					+ '&popularProducts.count=' + this.options.popularProducts.count
-					+ '&promotedSuggestion.count=' + this.options.promotedSuggestions.count
+					+ '&promotedSuggestion.count=' + this.options.maxSuggestions
 					+ '&indent=off';
 			}
 			else {
@@ -1157,10 +1157,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 				else if (data.response.products[x].doctype == "TOP_SEARCH_QUERIES") {
 					topquery_result++;
-				} 
+				}
 				else if (data.response.products[x].doctype == "PROMOTED_SUGGESTION") {
-                    promoted_result++;
-                }
+					promoted_result++;
+				}
 			}
 
 
@@ -1189,14 +1189,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						}
 					}
 					else if (promoted_result > promoted_sugg) {
-                        if ((promoted_result - promoted_sugg) >= infield_rem) {
-                            promoted_sugg = promoted_sugg + infield_rem;
-                            infield_rem = 0;
-                        } else {
-                            infield_rem = infield_rem - promoted_result + promoted_sugg;
-                            promoted_sugg = promoted_result;
-                        }
-                    } 
+						if ((promoted_result - promoted_sugg) >= infield_rem) {
+							promoted_sugg = promoted_sugg + infield_rem;
+							infield_rem = 0;
+						} else {
+							infield_rem = infield_rem - promoted_result + promoted_sugg;
+							promoted_sugg = promoted_result;
+						}
+					}
 					else
 						infield_rem = 0;
 
@@ -1217,14 +1217,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							keyword_sugg = keyword_result;
 						}
 					} else if (promoted_result > promoted_sugg) {
-                        if ((promoted_result - promoted_sugg) >= topquery_rem) {
-                            promoted_sugg = promoted_sugg + topquery_rem;
-                            topquery_rem = 0;
-                        } else {
-                            topquery_rem = topquery_rem - promoted_result + promoted_sugg;
-                            promoted_sugg = promoted_result;
-                        }
-                    }
+						if ((promoted_result - promoted_sugg) >= topquery_rem) {
+							promoted_sugg = promoted_sugg + topquery_rem;
+							topquery_rem = 0;
+						} else {
+							topquery_rem = topquery_rem - promoted_result + promoted_sugg;
+							promoted_sugg = promoted_result;
+						}
+					}
 					// else if(infield_result > infield_sugg){
 					// 	if((infield_result - infield_sugg) >= topquery_rem){
 					// 		infield_sugg = infield_sugg + topquery_rem;
@@ -1258,14 +1258,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							topquery_sugg = topquery_result;
 						}
 					} else if (promoted_result > promoted_sugg) {
-                        if ((promoted_result - promoted_sugg) >= keyword_rem) {
-                            promoted_sugg = promoted_sugg + keyword_rem;
-                            keyword_rem = 0;
-                        } else {
-                            keyword_rem = keyword_rem - promoted_result + promoted_sugg;
-                            promoted_sugg = promoted_result;
-                        }
-                    }
+						if ((promoted_result - promoted_sugg) >= keyword_rem) {
+							promoted_sugg = promoted_sugg + keyword_rem;
+							keyword_rem = 0;
+						} else {
+							keyword_rem = keyword_rem - promoted_result + promoted_sugg;
+							promoted_sugg = promoted_result;
+						}
+					}
 					// else if(infield_result > infield_sugg){
 					// 	if((infield_result - infield_sugg) >= keyword_rem){
 					// 		infield_sugg = infield_sugg + keyword_rem;
@@ -1288,27 +1288,27 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			// }
 
 			if (promoted_result < promoted_sugg) {
-                promoted_rem = promoted_sugg - promoted_result;
-                while (promoted_rem > 0) {
-                    if (topquery_result > topquery_sugg) {
-                        if ((topquery_result - topquery_sugg) >= promoted_rem) {
-                            topquery_sugg = topquery_sugg + promoted_rem;
-                            promoted_rem = 0;
-                        } else {
-                            promoted_rem = promoted_rem - topquery_result + topquery_sugg;
-                            topquery_sugg = topquery_result;
-                        }
-                    } else if (keyword_result > keyword_sugg) {
-                        if ((keyword_result - keyword_sugg) >= promoted_rem) {
-                            keyword_sugg = keyword_sugg + promoted_rem;
-                            promoted_rem = 0;
-                        } else {
-                            promoted_rem = promoted_rem - keyword_result + keyword_sugg;
-                            keyword_sugg = keyword_result;
-                        }
-                    } else promoted_rem = 0;
-                }
-                promoted_sugg = promoted_result;
+				promoted_rem = promoted_sugg - promoted_result;
+				while (promoted_rem > 0) {
+					if (topquery_result > topquery_sugg) {
+						if ((topquery_result - topquery_sugg) >= promoted_rem) {
+							topquery_sugg = topquery_sugg + promoted_rem;
+							promoted_rem = 0;
+						} else {
+							promoted_rem = promoted_rem - topquery_result + topquery_sugg;
+							topquery_sugg = topquery_result;
+						}
+					} else if (keyword_result > keyword_sugg) {
+						if ((keyword_result - keyword_sugg) >= promoted_rem) {
+							keyword_sugg = keyword_sugg + promoted_rem;
+							promoted_rem = 0;
+						} else {
+							promoted_rem = promoted_rem - keyword_result + keyword_sugg;
+							keyword_sugg = keyword_result;
+						}
+					} else promoted_rem = 0;
+				}
+				promoted_sugg = promoted_result;
 			}
 
 			var count = {};
@@ -1853,16 +1853,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/each}}'
 				+ '{{/if}}';
 		}
-		, preparepromotedSuggestionsHTML: function() {
-            return '{{#if data.PROMOTED_SUGGESTION}}' +
-                (this.options.promotedSuggestions.header ? '<li class="unbxd-as-header">' + this.options.promotedSuggestions.header + '</li>' : '') +
-                '{{#each data.PROMOTED_SUGGESTION}}' +
-                '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">' +
-                (this.options.promotedSuggestions.tpl ? this.options.promotedSuggestions.tpl : this.default_options.promotedSuggestions.tpl) +
-                '</li>' +
-                '{{/each}}' +
-                '{{/if}}';
-        }
+		, preparepromotedSuggestionsHTML: function () {
+			return '{{#if data.PROMOTED_SUGGESTION}}' +
+				(this.options.promotedSuggestions.header ? '<li class="unbxd-as-header">' + this.options.promotedSuggestions.header + '</li>' : '') +
+				'{{#each data.PROMOTED_SUGGESTION}}' +
+				'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">' +
+				(this.options.promotedSuggestions.tpl ? this.options.promotedSuggestions.tpl : this.default_options.promotedSuggestions.tpl) +
+				'</li>' +
+				'{{/each}}' +
+				'{{/if}}';
+		}
 		, preparetopQueriesHTML: function () {
 			return '{{#if data.TOP_SEARCH_QUERIES}}'
 				+ (this.options.topQueries.header ? '<li class="unbxd-as-header">' + this.options.topQueries.header + '</li>' : '')
@@ -1967,8 +1967,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					key = "TOP_SEARCH_QUERIES";
 				}
 				else if (key === "promotedSuggestions") {
-                    key = "PROMOTED_SUGGESTION"
-                }
+					key = "PROMOTED_SUGGESTION"
+				}
 				else
 					key = "KEYWORD_SUGGESTION";
 				sidelen = sidelen + self.currentResults[key].length;
