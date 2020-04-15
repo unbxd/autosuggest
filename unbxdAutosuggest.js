@@ -447,7 +447,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			if (typeof this.options.hbsHelpers === 'function')
 				this.options.hbsHelpers.call(this)
-			
+
 			// Render trending Search
 			if (this.options.trendingSearches.enabled) {
 				this.trendingQueries = [];
@@ -457,23 +457,23 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					url: trendingUrl,
 					method: "GET"
 				})
-				.done(function(data) {
-					if(data && data.response.products && data.response.products.length >0){
-						var products = data.response.products.splice(0,that.options.trendingSearches.maxCount);
-						for ( var i =0; i< products.length; i++) {
-							var doc = products[i];
-							that.processTrendingQueries(doc);
+					.done(function (data) {
+						if (data && data.response.products && data.response.products.length > 0) {
+							var products = data.response.products.splice(0, that.options.trendingSearches.maxCount);
+							for (var i = 0; i < products.length; i++) {
+								var doc = products[i];
+								that.processTrendingQueries(doc);
+							}
+							that.$results.html('');
+							var cmpld = Handlebars.compile(that.prepareTrendingQueriesHTML());
+							that.$results.html(cmpld({
+								data1: that.trendingQueries
+							}));
 						}
-						that.$results.html('');
-						var cmpld = Handlebars.compile(that.prepareTrendingQueriesHTML());
-						that.$results.html(cmpld({
-							data1: that.trendingQueries
-						}));
-					}
-				})
-				.fail(function(xhr) {
-					console.log('error', xhr);
-				});
+					})
+					.fail(function (xhr) {
+						console.log('error', xhr);
+					});
 			}
 
 			this.wire();
@@ -543,9 +543,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.log("clicked on input : focused");
 					self.hasFocus = true;
 					if (self.previous === self.$input.val())
-						
-							self.showResults();
-						
+
+						self.showResults();
+
 				} else if (e.target == self.$results[0]) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
@@ -592,12 +592,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			});
 			if (self.options.trendingSearches.enabled) {
 				$(document).bind("keyup.auto", function (e) {
-					if(e.target.value === "") {
+					if (e.target.value === "") {
 						self.$results.html('');
-							var cmpld = Handlebars.compile(self.prepareTrendingQueriesHTML());
-							self.$results.html(cmpld({
-								data1: self.trendingQueries
-							}));
+						var cmpld = Handlebars.compile(self.prepareTrendingQueriesHTML());
+						self.$results.html(cmpld({
+							data1: self.trendingQueries
+						}));
 						self.showResults();
 					}
 				});
@@ -1069,7 +1069,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					if (!(this.options.trendingSearches.enabled && v === "")) {
 						this.$results.hide();
 					}
-					
+
 				}
 			}
 		}
@@ -1913,14 +1913,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, prepareTrendingQueriesHTML: function () {
 			return '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">'
-				+  (this.options.trendingSearches.header ? '<li class="unbxd-as-header">' + this.options.trendingSearches.header + '</li>' : '')
+				+ (this.options.trendingSearches.header ? '<li class="unbxd-as-header">' + this.options.trendingSearches.header + '</li>' : '')
 				+ '{{#each data1}}'
 				+ '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">'
 				+ (this.options.trendingSearches.tpl ? this.options.trendingSearches.tpl : this.default_options.trendingSearches.tpl)
 				+ '</li>'
 				+ '{{/each}}'
 				+ '</ul>';
-				
+
 		}
 		, preparepromotedSuggestionsHTML: function () {
 			return '{{#if data.PROMOTED_SUGGESTION}}' +
