@@ -239,6 +239,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, onSimpleEnter: null
 			, onItemSelect: null
 			, noResultTpl: null
+			, trendingSearches: {
+				enabled: false,
+				tpl: "{{{safestring highlighted}}}",
+				maxCount: 6
+			}
 			, inFields: {
 				count: 2
 				, fields: {
@@ -443,6 +448,33 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (typeof this.options.hbsHelpers === 'function')
 				this.options.hbsHelpers.call(this)
 
+			// Render trending Search
+			if (this.options.trendingSearches.enabled) {
+				this.trendingQueries = [];
+				var trendingUrl = "https://search.unbxd.io/" + this.options.APIKey + "/" + this.options.siteName + "/autosuggest?trending-queries=true&q=*";
+				var that = this;
+				$.ajax({
+					url: trendingUrl,
+					method: "GET"
+				})
+					.done(function (data) {
+						if (data && data.response.products && data.response.products.length > 0) {
+							var products = data.response.products.splice(0, that.options.trendingSearches.maxCount);
+							for (var i = 0; i < products.length; i++) {
+								var doc = products[i];
+								that.processTrendingQueries(doc);
+							}
+							that.$results.html('');
+							var cmpld = Handlebars.compile(that.prepareTrendingQueriesHTML());
+							that.$results.html(cmpld({
+								data1: that.trendingQueries
+							}));
+						}
+					})
+					.fail(function (xhr) {
+						console.log('error', xhr);
+					});
+			}
 
 			this.wire();
 		}
@@ -511,7 +543,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.log("clicked on input : focused");
 					self.hasFocus = true;
 					if (self.previous === self.$input.val())
+
 						self.showResults();
+
 				} else if (e.target == self.$results[0]) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
@@ -556,7 +590,18 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.hideResults();
 				}
 			});
-
+			if (self.options.trendingSearches.enabled) {
+				$(document).bind("keyup.auto", function (e) {
+					if (e.target.value === "") {
+						self.$results.html('');
+						var cmpld = Handlebars.compile(self.prepareTrendingQueriesHTML());
+						self.$results.html(cmpld({
+							data1: self.trendingQueries
+						}));
+						self.showResults();
+					}
+				});
+			}
 		}
 		, keyevents: function () {
 			var self = this;
@@ -1021,7 +1066,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 				else {
 					this.$input.removeClass(this.options.loadingClass);
-					this.$results.hide();
+					if (!(this.options.trendingSearches.enabled && v === "")) {
+						this.$results.hide();
+					}
+
 				}
 			}
 		}
@@ -1478,6 +1526,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			};
 			this.currentResults.TOP_SEARCH_QUERIES.push(o);
 		}
+		, processTrendingQueries: function (doc) {
+			var o = {
+				autosuggest: doc.autosuggest
+				, highlighted: this.highlightStr(doc.autosuggest)
+				, type: "TRENDING_QUERIES"
+				, _original: doc
+				, source: doc.unbxdAutosuggestSrc || ""
+			};
+			this.trendingQueries.push(o);
+		}
 		, processKeywordSuggestion: function (doc) {
 			var o = {
 				autosuggest: doc.autosuggest
@@ -1852,6 +1910,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '</li>'
 				+ '{{/each}}'
 				+ '{{/if}}';
+		}
+		, prepareTrendingQueriesHTML: function () {
+			return '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">'
+				+ (this.options.trendingSearches.header ? '<li class="unbxd-as-header">' + this.options.trendingSearches.header + '</li>' : '')
+				+ '{{#each data1}}'
+				+ '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">'
+				+ (this.options.trendingSearches.tpl ? this.options.trendingSearches.tpl : this.default_options.trendingSearches.tpl)
+				+ '</li>'
+				+ '{{/each}}'
+				+ '</ul>';
+
 		}
 		, preparepromotedSuggestionsHTML: function () {
 			return '{{#if data.PROMOTED_SUGGESTION}}' +
