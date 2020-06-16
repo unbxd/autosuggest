@@ -78,7 +78,9 @@ window.auto = $("#input").unbxdautocomplete({
 		, imageUrlOrFunction: "imageUrl"
 		, currency: "Rs."
 		, header: ''
-	}
+	},
+	filtered: true,
+	platform: 'io'
 });
 ractive.set('inputID', '#input');
 ractive.set('selectedmain', ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts']);
