@@ -1079,6 +1079,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.log("requestData", url);
 			var params = this.getAjaxParams();
 			params.url = url;
+			params.cache = true;
 			this.ajaxCall = $.ajax(params)
 				.done(function (d) {
 					self.receiveData(d);
@@ -1419,6 +1420,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			var params = this.getAjaxParams();
 			params.url = url;
+			params.cache = true;
 			$.ajax(params).done(function (d) {
 				var query = self.params.q;
 				self.processfilteredPopularProducts(query, d);
@@ -1444,6 +1446,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							}
 							var params = this.getAjaxParams();
 							params.url = url;
+							params.cache = true;
 							$.ajax(params).done(function (d) {
 								var query = d.searchMetaData.queryParams.q
 									+ (d.searchMetaData.queryParams.filter ? ':'
