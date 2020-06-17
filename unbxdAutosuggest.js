@@ -516,7 +516,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
 				} else if ($(e.target).hasClass("unbxd-as-view-more")) {
-					self.options.popularProducts.viewMore.redirect(topQuery)
+					self.options.popularProducts.viewMore.redirect(self.$input.val())
 				} else if ($.contains(self.$results[0], e.target)) {
 					self.log("clicked on element for selection", e.target.tagName);
 					var $et = $(e.target), p = $et;
