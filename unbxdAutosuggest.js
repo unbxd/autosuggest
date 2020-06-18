@@ -1469,6 +1469,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						_original: doc
 						, type: 'POPULAR_PRODUCTS_FILTERED'
 						, src: query
+						, pid: doc.uniqueId || ""
 					};
 
 					if (this.options.popularProducts.name && this.options.popularProducts.nameFunctionOrKey) {
