@@ -531,6 +531,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 								, cartType: self.options.cartType
 							}));
 						}
+						self.hoveredQuery = dataValue;
 					}
 					if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
 						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
@@ -550,7 +551,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
 				} else if ($(e.target).hasClass("unbxd-as-view-more")) {
-					self.options.popularProducts.viewMore.redirect(self.$input.val())
+					self.options.popularProducts.viewMore.redirect(self.hoveredQuery||self.$input.val())
 				} else if ($.contains(self.$results[0], e.target)) {
 					self.log("clicked on element for selection", e.target.tagName);
 					var $et = $(e.target), p = $et;
