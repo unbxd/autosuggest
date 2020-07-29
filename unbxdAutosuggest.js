@@ -400,6 +400,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 			, removeDuplicates: false
 			, filtered: false
+			, preferInputWidthTotalContent: false
 			, platform: 'com'
 			, sortedSuggestions: {
 				tpl: "{{{safestring highlighted}}}"
@@ -897,7 +898,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			if (this.options.platform == 'io') {
 				// Calculate total width of autosuggest relative to screen width
-				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + posSelector.outerWidth()) : document.body.clientWidth - pos.left;
+				totalWidth = this.options.preferInputWidthTotalContent ? posSelector.outerWidth() : (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + posSelector.outerWidth()) : document.body.clientWidth - pos.left;
 				if (totalWidth > document.body.clientWidth) {
 					totalWidth = document.body.clientWidth;
 				}
