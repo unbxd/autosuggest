@@ -406,7 +406,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 			, resultsContainerSelector: null
 			, processResultsStyles: null
-			, inputContainerSelector: ''
+			, inputContainerSelector: '',
+			searchEndPoint:'//search.unbxd.io/'
 		}
 		, $input: null
 		, $results: null
@@ -1095,7 +1096,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				return "//search.unbxdapi.com/";
 			}
 			else {
-				return "//search.unbxd.io/";
+				return this.options.searchEndPoint;
 			}
 		}
 		, getAjaxParams: function () {
