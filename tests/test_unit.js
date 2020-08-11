@@ -122,7 +122,13 @@ describe('Autosuggest', function () {
 		}
 
 		var mockOptionsIo = {
-			platform: 'io'
+			platform: 'io',
+			searchEndPoint:'//search.unbxd.io/'
+		}
+
+		var devMockOptionsIo = {
+			platform: 'io',
+			searchEndPoint:'//dev-search.unbxd.io/'
 		}
 
 		window.autoSuggestObj.options = mockOptionsCom;
@@ -132,6 +138,10 @@ describe('Autosuggest', function () {
 		window.autoSuggestObj.options = mockOptionsIo;
 		var url = window.autoSuggestObj.getHostDomainName();
 		expect(url).to.equal("//search.unbxd.io/");
+
+		window.autoSuggestObj.options = devMockOptionsIo;
+		var url = window.autoSuggestObj.getHostDomainName();
+		expect(url).to.equal("//dev-search.unbxd.io/");
 	});
 
 	it('Should have suggestions sorted by length if enabled', function () {
