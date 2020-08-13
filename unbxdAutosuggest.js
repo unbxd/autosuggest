@@ -1667,7 +1667,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, asrc = " " + doc.unbxdAutosuggestSrc + " "
 				, highlightedtext = this.highlightStr(doc.autosuggest);
 
-			if (!this.options.inFields.showDefault) {
+			if (this.options.inFields.showDefault) {
+				var that = this;
+				Object.keys(doc).forEach(function(item) {
+					if (item.length >=3 && item.substring(item.length - 3) === "_in") {
+						var a = item.split("_in")[0];
+						ins[a] = doc[a + "_in"].slice(0, parseInt(that.options.inFields.noOfInfields));
+					}
+				})
+			} else {
 				for (var a in this.options.inFields.fields) {
 					if ((a + "_in") in doc && doc[a + "_in"].length && asrc.indexOf(" " + a + " ") == -1) {
 						ins[a] = doc[a + "_in"].slice(0, parseInt(this.options.inFields.fields[a]));
@@ -1679,14 +1687,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						}
 					}
 				}
-			} else {
-				var that = this;
-				Object.keys(doc).forEach(function(item) {
-					if (item.length >=3 && item.substring(item.length - 3) === "_in") {
-						var a = item.split("_in")[0];
-						ins[a] = doc[a + "_in"].slice(0, parseInt(that.options.inFields.noOfInfields));
-					}
-				})
 			}
 
 			var sortedInfields = [];
