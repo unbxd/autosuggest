@@ -1580,6 +1580,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (!this.options.inFields.type) {
 				this.options.inFields.type = 'separate';
 			}
+			if (!this.options.inFields.noOfInfields) {
+				this.options.inFields.noOfInfields = 3;
+			}
+			if (!this.options.inFields.showDefault) {
+				this.options.inFields.showDefault = false;
+			}
 		}
 		, getPopularProductFields: function () {
 			var popularProductsFields = ['doctype'];
@@ -1661,13 +1667,23 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, asrc = " " + doc.unbxdAutosuggestSrc + " "
 				, highlightedtext = this.highlightStr(doc.autosuggest);
 
-			for (var a in this.options.inFields.fields) {
-				if ((a + "_in") in doc && doc[a + "_in"].length && asrc.indexOf(" " + a + " ") == -1) {
-					ins[a] = doc[a + "_in"].slice(0, parseInt(this.options.inFields.fields[a]));
-					if (this.options.inFields.removeDuplicateKeyword) {
-						var ind = ins[a].indexOf(doc.autosuggest.trim());
-						if (ind >= 0) {
-							ins[a].splice(ind, 1);
+			if (this.options.inFields.showDefault) {
+				var that = this;
+				Object.keys(doc).forEach(function(item) {
+					if (item.length >=3 && item.substring(item.length - 3) === "_in") {
+						var a = item.split("_in")[0];
+						ins[a] = doc[a + "_in"].slice(0, parseInt(that.options.inFields.noOfInfields));
+					}
+				})
+			} else {
+				for (var a in this.options.inFields.fields) {
+					if ((a + "_in") in doc && doc[a + "_in"].length && asrc.indexOf(" " + a + " ") == -1) {
+						ins[a] = doc[a + "_in"].slice(0, parseInt(this.options.inFields.fields[a]));
+						if (this.options.inFields.removeDuplicateKeyword) {
+							var ind = ins[a].indexOf(doc.autosuggest.trim());
+							if (ind >= 0) {
+								ins[a].splice(ind, 1);
+							}
 						}
 					}
 				}
