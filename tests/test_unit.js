@@ -123,12 +123,12 @@ describe('Autosuggest', function () {
 
 		var mockOptionsIo = {
 			platform: 'io',
-			searchEndPoint:'//search.unbxd.io/'
+			searchEndPoint:'//search.unbxd.io'
 		}
 
 		var devMockOptionsIo = {
 			platform: 'io',
-			searchEndPoint:'//dev-search.unbxd.io/'
+			searchEndPoint:'//dev-search.unbxd.io'
 		}
 
 		window.autoSuggestObj.options = mockOptionsCom;
