@@ -898,7 +898,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			if (this.options.platform == 'io') {
 				// Calculate total width of autosuggest relative to screen width
-				totalWidth = (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + posSelector.outerWidth()) : document.body.clientWidth - pos.left;
+				totalWidth = this.options.preferInputWidthTotalContent ? posSelector.outerWidth() : (this.options.sideContentOn && this.options.sideContentOn === 'left') ? (pos.left + posSelector.outerWidth()) : document.body.clientWidth - pos.left;
 				if (totalWidth > document.body.clientWidth) {
 					totalWidth = document.body.clientWidth;
 				}
@@ -2109,7 +2109,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						}
 						sideHtml = sideHtml + '</ul>';
 						
-						var mainHtml = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+						mainHtml = mainHtml + '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
 						if (this.options.suggestionsHeader) {
 							mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
 						}
