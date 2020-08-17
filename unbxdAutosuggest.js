@@ -2012,6 +2012,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			var mobileHtml = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-mobile-view">';
 			var sideHtml = '';
 			var mainHtml = '';
+			var noResults = false;
 			if (this.options.isMobile) {
 				if (this.options.isMobile()) {
 					html = mobileHtml;
@@ -2030,12 +2031,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
 				&& !self.currentResults['POPULAR_PRODUCTS'].length && !self.currentResults['TOP_SEARCH_QUERIES'].length && !self.currentResults['PROMOTED_SUGGESTION'].length && this.options.noResultTpl) {
-
+				noResults = true;
 				if (typeof this.options.noResultTpl === "function") {
-					html = html + '<li>' + this.options.noResultTpl.call(self, encodeURIComponent(self.params.q)) + '</li>';
+					html = html + '<li>' + this.options.noResultTpl.call(self, encodeURIComponent(self.params.q)) + '</li></ul>';
 				}
 				else if (typeof this.options.noResultTpl == "string") {
-					html = html + '<li>' + this.options.noResultTpl + '</li>';
+					html = html + '<li>' + this.options.noResultTpl + '</li></ul>';
 				}
 			}
 
@@ -2088,9 +2089,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						key = 'prepare' + key + 'HTML';
 						html = html + self[key]();
 					});
+
+					html = html + '</ul>';
 				}
 				else {
-					if (sidelen != 0) {
+					if (mainlen > 0 && sidelen != 0) {
 						
 						if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
 							sideHtml = '<ul class="unbxd-as-sidecontent unbxd-as-view-more">';
@@ -2118,31 +2121,33 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			}
 
-			this.options.mainTpl.forEach(function (key) {
+			if (!noResults && mainlen > 0) {
+				this.options.mainTpl.forEach(function (key) {
 
-				if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
-					topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
+					if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
+						topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
+					}
+	
+					if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+						return;
+					}
+					key = 'prepare' + key + 'HTML';
+					mainHtml = mainHtml + self[key]();
+				});
+	
+				if (this.options.sortByLength) {
+					mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
 				}
+	
+				mainHtml = mainHtml + '</ul>';
 
-				if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
-					return;
+				if (this.options.sideContentOn === "right") {
+					html = mainHtml + sideHtml;
+				} else {
+					html = sideHtml + mainHtml;
 				}
-				key = 'prepare' + key + 'HTML';
-				mainHtml = mainHtml + self[key]();
-			});
-
-			if (this.options.sortByLength) {
-				mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
 			}
 
-			mainHtml = mainHtml + '</ul>';
-			
-			if (this.options.sideContentOn === "right") {
-				html = mainHtml + sideHtml;
-			} else {
-				html = sideHtml + mainHtml;
-			}
-			
 			var cmpld = Handlebars.compile(html);
 			this.log("prepraing html :-> template : " + this.options.template + " ,carts : " + this.options.showCarts + " ,cartType : " + this.options.cartType);
 			this.log("html data : ", this.currentResults);
