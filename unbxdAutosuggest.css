@@ -14,6 +14,7 @@
     border-bottom-left-radius: 3px;
     box-shadow: 0 0.5rem 1.5rem rgba(0,0,0,0.5);
     font-size: 13px;
+    display: table;
 }
 
 .unbxd-as-wrapper ul {
@@ -33,21 +34,25 @@
 }
 
 .unbxd-as-extra-left .unbxd-as-maincontent {
-    float: right;
+    /* float: right; */
+    display: table-cell;
 }
 
 .unbxd-as-extra-right .unbxd-as-maincontent {
-    float: left;
+    /* float: left; */
+    display: table-cell;
 }
 
 .unbxd-as-extra-left .unbxd-as-sidecontent {
-    float: left;
+    /* float: left; */
     border-right: 1px solid #dedede;
+    display: table-cell;
 }
 
 .unbxd-as-extra-right .unbxd-as-sidecontent {
-    float: right;
+    /* float: right; */
     border-left: 1px solid #dedede;
+    display: table-cell;
 }
 
 .unbxd-as-sidecontent+.unbxd-as-maincontent {
