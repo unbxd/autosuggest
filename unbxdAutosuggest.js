@@ -241,9 +241,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, onItemSelect: null
 			, noResultTpl: null
 			, trendingSearches: {
-				enabled: false,
+				enabled: true,
 				tpl: "{{{safestring highlighted}}}",
-				maxCount: 6
+				maxCount: 6,
+				preferInputWidthTrending: true
 			}
 			, inFields: {
 				count: 2
@@ -945,8 +946,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				//for more info http://bugs.jquery.com/ticket/10855
 				, fpos = { top: pos.top + (isNaN(bt) ? 0 : (bt + bb)) + posSelector.innerHeight() + 'px', left: pos.left + "px" };
 
+			var trendingWidth = this.options.trendingSearches.preferInputWidthTrending ? posSelector.outerWidth() : fwidth;
 			this.$results.find("ul.unbxd-as-maincontent").css("width", fwidth + "px");
 			this.$results.find("ul.unbxd-as-maincontent").css("box-sizing", "border-box");
+			this.$results.find("ul.unbxd-as-maincontent.unbxd-as-trending").css("width", trendingWidth + "px");
 
 			if (this.scrollbarWidth == null) {
 				this.setScrollWidth();
@@ -1942,7 +1945,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/if}}';
 		}
 		, prepareTrendingQueriesHTML: function () {
-			return '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">'
+			return '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-trending">'
 				+ (this.options.trendingSearches.header ? '<li class="unbxd-as-header">' + this.options.trendingSearches.header + '</li>' : '')
 				+ '{{#each data1}}'
 				+ '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">'
@@ -2140,6 +2143,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					html = mobileHtml + mainHtml;
 				} else if (isMobile.any()) {
 					html = mobileHtml + mainHtml;
+				} else if (this.options.template === "1column") {
+					html = html + mainHtml + '</ul>';
 				} else if (this.options.sideContentOn === "right") {
 					html = mainHtml + sideHtml;
 				} else {
