@@ -454,7 +454,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			// Render trending Search
 			if (this.options.trendingSearches.enabled) {
 				this.trendingQueries = [];
-				var trendingUrl = "https://search.unbxd.io/" + this.options.APIKey + "/" + this.options.siteName + "/autosuggest?trending-queries=true&q=*";
+				var trendingUrl = (this.options.searchEndPoint ? this.options.searchEndPoint + "/" : "https://search.unbxd.io/") + this.options.APIKey + "/" + this.options.siteName + "/autosuggest?trending-queries=true&q=*";
 				var that = this;
 				$.ajax({
 					url: trendingUrl,
@@ -554,9 +554,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.log("clicked on input : focused");
 					self.hasFocus = true;
 					if (self.previous === self.$input.val())
-
-						self.showResults();
-
+						if (self.$results.find(".unbxd-as-trending").length) {
+							self.showResults();
+						} else if (self.$results.find(".unbxd-as-maincontent").length || self.$results.find(".unbxd-as-sidecontent").length) {
+							self.$results.html(self.prepareHTML());
+							self.showResults();
+						} else {
+							self.showResults();
+						}
 				} else if (e.target == self.$results[0]) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
