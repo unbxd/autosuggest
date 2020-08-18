@@ -230,6 +230,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, sideContentOn: "right" //"left"
 			, template: "1column" // "2column"
 			, theme: "#ff8400"
+			, hideOnResize: false
 			, mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts', 'promotedSuggestions']
 			, sideTpl: []
 			, showCarts: true // will be used in default template of popular products
@@ -540,6 +541,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 
 			});
+
+			$(window).bind('resize', function() {
+				if (self.options.hideOnResize) {
+					self.hideResults();
+				}
+			});
+
 			$(document).bind("click.auto", function (e) {
 				if (e.target == self.input) {
 					self.log("clicked on input : focused");
@@ -909,24 +917,19 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					totalWidth = (45 * totalWidth / 100);
 				}
 
-				if (this.options.isMobile) {
-					if (this.options.isMobile()) {
-						this.options.template = '1column';
-					}
-				} else if (isMobile.any()) {
-					this.options.template = '1column';
-				}
+				// if (this.options.isMobile && this.options.isMobile()) {
+				// 	this.options.template = '1column';
+				// } else if (isMobile.any()) {
+				// 	this.options.template = '1column';
+				// } 
 
 				// Calculate mainwidth based on 1 or 2 columns
-				if (this.options.template == '1column') {
+				if (this.options.template == '1column' || (this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
 					mwidth = this.options.preferInputWidthMainContent ? posSelector.outerWidth() : (60 * totalWidth / 100);
 				} else {
-					if (this.options.preferInputWidthMainContent) {
-						mwidth = posSelector.outerWidth();
-					} else {
-						mwidth = this.options.mainWidthPercent ? (this.options.mainWidthPercent * totalWidth / 100) : (30 * totalWidth / 100)
-					}
-
+					/* Removing this as this breaks when template is 2 column but preferinputwidthmaincotnent is true for mobile, popular products won't appear ever.
+					To solve this, there is another config, preferInputWidthTotalContent, which includes mainwidth and sidewidth = width of input selector */
+					mwidth = this.options.mainWidthPercent ? (this.options.mainWidthPercent * totalWidth / 100) : (30 * totalWidth / 100);
 				}
 			}
 
@@ -2133,10 +2136,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 	
 				mainHtml = mainHtml + '</ul>';
 
-				if (this.options.isMobile) {
-					if (this.options.isMobile()) {
-						html = mobileHtml + mainHtml;
-					}
+				if (this.options.isMobile && this.options.isMobile()) {
+					html = mobileHtml + mainHtml;
 				} else if (isMobile.any()) {
 					html = mobileHtml + mainHtml;
 				} else if (this.options.sideContentOn === "right") {
