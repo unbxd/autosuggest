@@ -909,6 +909,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					totalWidth = (45 * totalWidth / 100);
 				}
 
+				if (this.options.isMobile) {
+					if (this.options.isMobile()) {
+						this.options.template = '1column';
+					}
+				} else if (isMobile.any()) {
+					this.options.template = '1column';
+				}
 
 				// Calculate mainwidth based on 1 or 2 columns
 				if (this.options.template == '1column') {
@@ -2013,13 +2020,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			var sideHtml = '';
 			var mainHtml = '';
 			var noResults = false;
-			if (this.options.isMobile) {
-				if (this.options.isMobile()) {
-					html = mobileHtml;
-				}
-			} else if (isMobile.any()) {
-				html = mobileHtml;
-			}
 
 			var self = this,
 				mainlen = 0,
@@ -2064,14 +2064,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					key = "KEYWORD_SUGGESTION";
 				sidelen = sidelen + self.currentResults[key].length;
 			});
-
-			if (this.options.isMobile) {
-				if (this.options.isMobile()) {
-					this.options.template = '1column';
-				}
-			} else if (isMobile.any()) {
-				this.options.template = '1column';
-			}
 
 			if (this.options.template === '2column' && !this.options.sideTpl.length && !this.options.mainTpl) {
 				this.options.sideTpl = ['keywordSuggestions', 'topQueries'];
@@ -2141,7 +2133,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 	
 				mainHtml = mainHtml + '</ul>';
 
-				if (this.options.sideContentOn === "right") {
+				if (this.options.isMobile) {
+					if (this.options.isMobile()) {
+						html = mobileHtml + mainHtml;
+					}
+				} else if (isMobile.any()) {
+					html = mobileHtml + mainHtml;
+				} else if (this.options.sideContentOn === "right") {
 					html = mainHtml + sideHtml;
 				} else {
 					html = sideHtml + mainHtml;
