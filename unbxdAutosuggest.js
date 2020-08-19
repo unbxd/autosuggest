@@ -923,12 +923,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					totalWidth = (45 * totalWidth / 100);
 				}
 
-				// if (this.options.isMobile && this.options.isMobile()) {
-				// 	this.options.template = '1column';
-				// } else if (isMobile.any()) {
-				// 	this.options.template = '1column';
-				// } 
-
 				// Calculate mainwidth based on 1 or 2 columns
 				if (this.options.template == '1column' || (this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
 					mwidth = this.options.preferInputWidthMainContent ? posSelector.outerWidth() : (60 * totalWidth / 100);
