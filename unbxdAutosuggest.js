@@ -402,6 +402,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 			, removeDuplicates: false
 			, filtered: false
+			, preferInputWidthTotalContent: false
 			, platform: 'com'
 			, sortedSuggestions: {
 				tpl: "{{{safestring highlighted}}}"
