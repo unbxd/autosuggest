@@ -240,6 +240,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, onSimpleEnter: null
 			, onItemSelect: null
 			, noResultTpl: null
+			, mobile: {
+				template: "1column",
+				mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'promotedSuggestions', 'popularProducts'],
+				popularProducts: {
+					count: 2
+				}
+			}
 			, trendingSearches: {
 				enabled: true,
 				tpl: "{{{safestring highlighted}}}",
@@ -924,8 +931,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					totalWidth = (45 * totalWidth / 100);
 				}
 
+
+				// Important to support screen resize for mobile and desktop.
+				if ((this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
+					this.options.template = this.options.mobile.template;
+					this.options.mainTpl = this.options.mobile.mainTpl;
+					this.options.popularProducts.count = this.options.mobile.popularProducts.count;
+				} else {
+					this.options.template = this.options.desktop.template;
+					this.options.mainTpl = this.options.desktop.mainTpl;
+					this.options.popularProducts.count = this.options.desktop.popularProducts.count;
+				}
+
 				// Calculate mainwidth based on 1 or 2 columns
-				if (this.options.template == '1column' || (this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
+				if (this.options.template == '1column') {
 					mwidth = this.options.preferInputWidthMainContent ? posSelector.outerWidth() : (60 * totalWidth / 100);
 				} else {
 					/* Removing this as this breaks when template is 2 column but preferinputwidthmaincotnent is true for mobile, popular products won't appear ever.
@@ -1060,7 +1079,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.params.q = v
 			this.previous = v;
 			this.currentResults = {};
-
+			/**
+			 * Due to caching check of query alone, on screen resize, 
+			 * the url fired remains the same, even though params are different for mobile and desktop.
+			 * Need to improve this check to include params too
+			 */
 			if (this.inCache(v)) {
 				this.log("picked from cache : " + v);
 				// updating product header while hovering on suggestions
@@ -1599,6 +1622,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (!this.options.inFields.showDefault) {
 				this.options.inFields.showDefault = false;
 			}
+
+			// Save current template and config to desktop object in case of switching between mobile and desktop
+			if (!this.options.desktop) {
+				this.options.desktop = {
+					template: this.options.template,
+					mainTpl: this.options.mainTpl,
+					popularProducts: {
+						count: this.options.popularProducts.count
+					}
+				}
+			}
 		}
 		, getPopularProductFields: function () {
 			var popularProductsFields = ['doctype'];
@@ -2120,6 +2154,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			if (!noResults && mainlen > 0) {
+
+				if (this.options.sortByLength) {
+					mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
+				}
+		
 				this.options.mainTpl.forEach(function (key) {
 
 					if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
@@ -2133,9 +2172,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					mainHtml = mainHtml + self[key]();
 				});
 	
-				if (this.options.sortByLength) {
-					mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
-				}
+
 	
 				mainHtml = mainHtml + '</ul>';
 
@@ -2146,7 +2183,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				} else if (this.options.template === "1column") {
 					html = html + mainHtml + '</ul>';
 				} else if (this.options.sideContentOn === "right") {
-					html = mainHtml + sideHtml;
+					if (mainlen > 0 && sidelen === 0) {
+						html = html + mainHtml + '</ul>';
+					} else {
+						html = mainHtml + sideHtml;
+					}
 				} else {
 					html = sideHtml + mainHtml;
 				}
