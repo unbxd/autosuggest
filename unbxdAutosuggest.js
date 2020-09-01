@@ -242,9 +242,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, noResultTpl: null
 			, mobile: {
 				template: "1column",
-				mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts', 'promotedSuggestions'],
+				mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'promotedSuggestions', 'popularProducts'],
 				popularProducts: {
-					view: "list"
+					count: 2
 				}
 			}
 			, trendingSearches: {
@@ -936,11 +936,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				if ((this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
 					this.options.template = this.options.mobile.template;
 					this.options.mainTpl = this.options.mobile.mainTpl;
-					// this.options.popularProducts.view = this.options.mobile.popularProducts.view;
+					this.options.popularProducts.count = this.options.mobile.popularProducts.count;
 				} else {
 					this.options.template = this.options.desktop.template;
 					this.options.mainTpl = this.options.desktop.mainTpl;
-					// this.options.popularProducts.view = this.options.desktop.popularProducts.view;
+					this.options.popularProducts.count = this.options.desktop.popularProducts.count;
 				}
 
 				// Calculate mainwidth based on 1 or 2 columns
@@ -1619,13 +1619,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				this.options.inFields.showDefault = false;
 			}
 
-			// Backward compatibility for switching between mobile and desktop view
+			// Save current template and config to desktop object in case of switching between mobile and desktop
 			if (!this.options.desktop) {
 				this.options.desktop = {
 					template: this.options.template,
 					mainTpl: this.options.mainTpl,
 					popularProducts: {
-						view: this.options.popularProducts.view
+						count: this.options.popularProducts.count
 					}
 				}
 			}
@@ -2150,6 +2150,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			if (!noResults && mainlen > 0) {
+
+				if (this.options.sortByLength) {
+					mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
+				}
+		
 				this.options.mainTpl.forEach(function (key) {
 
 					if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
@@ -2163,9 +2168,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					mainHtml = mainHtml + self[key]();
 				});
 	
-				if (this.options.sortByLength) {
-					mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
-				}
+
 	
 				mainHtml = mainHtml + '</ul>';
 
