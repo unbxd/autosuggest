@@ -1079,7 +1079,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.params.q = v
 			this.previous = v;
 			this.currentResults = {};
-
+			/**
+			 * Due to caching check of query alone, on screen resize, 
+			 * the url fired remains the same, even though params are different for mobile and desktop.
+			 * Need to improve this check to include params too
+			 */
 			if (this.inCache(v)) {
 				this.log("picked from cache : " + v);
 				// updating product header while hovering on suggestions
@@ -2179,7 +2183,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				} else if (this.options.template === "1column") {
 					html = html + mainHtml + '</ul>';
 				} else if (this.options.sideContentOn === "right") {
-					html = mainHtml + sideHtml;
+					if (mainlen > 0 && sidelen === 0) {
+						html = html + mainHtml + '</ul>';
+					} else {
+						html = mainHtml + sideHtml;
+					}
 				} else {
 					html = sideHtml + mainHtml;
 				}
