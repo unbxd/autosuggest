@@ -240,6 +240,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, onSimpleEnter: null
 			, onItemSelect: null
 			, noResultTpl: null
+			, mobile: {
+				template: "1column",
+				mainTpl: ['inFields', 'keywordSuggestions', 'topQueries', 'popularProducts', 'promotedSuggestions'],
+				popularProducts: {
+					view: "list"
+				}
+			}
 			, trendingSearches: {
 				enabled: true,
 				tpl: "{{{safestring highlighted}}}",
@@ -924,8 +931,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					totalWidth = (45 * totalWidth / 100);
 				}
 
+
+				// Important to support screen resize for mobile and desktop.
+				if ((this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
+					this.options.template = this.options.mobile.template;
+					this.options.mainTpl = this.options.mobile.mainTpl;
+					// this.options.popularProducts.view = this.options.mobile.popularProducts.view;
+				} else {
+					this.options.template = this.options.desktop.template;
+					this.options.mainTpl = this.options.desktop.mainTpl;
+					// this.options.popularProducts.view = this.options.desktop.popularProducts.view;
+				}
+
 				// Calculate mainwidth based on 1 or 2 columns
-				if (this.options.template == '1column' || (this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
+				if (this.options.template == '1column') {
 					mwidth = this.options.preferInputWidthMainContent ? posSelector.outerWidth() : (60 * totalWidth / 100);
 				} else {
 					/* Removing this as this breaks when template is 2 column but preferinputwidthmaincotnent is true for mobile, popular products won't appear ever.
@@ -1598,6 +1617,17 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 			if (!this.options.inFields.showDefault) {
 				this.options.inFields.showDefault = false;
+			}
+
+			// Backward compatibility for switching between mobile and desktop view
+			if (!this.options.desktop) {
+				this.options.desktop = {
+					template: this.options.template,
+					mainTpl: this.options.mainTpl,
+					popularProducts: {
+						view: this.options.popularProducts.view
+					}
+				}
 			}
 		}
 		, getPopularProductFields: function () {
