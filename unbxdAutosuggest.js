@@ -2123,7 +2123,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				if ((mainlen == 0) && (sidelen != 0)) {
 					html = '<ul class="unbxd-as-sidecontent">';
 					this.options.sideTpl.forEach(function (key) {
-						if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+						if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions' || key == 'promotedSuggestions')) {
 							return;
 						}
 						key = 'prepare' + key + 'HTML';
@@ -2141,7 +2141,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							sideHtml = '<ul class="unbxd-as-sidecontent">';
 						}
 						this.options.sideTpl.forEach(function (key) {
-							if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+							if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions' || key == 'promotedSuggestions')) {
 								return;
 							}
 							key = 'prepare' + key + 'HTML';
@@ -2173,7 +2173,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
 					}
 	
-					if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+					if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions' || key == 'promotedSuggestions')) {
 						return;
 					}
 					key = 'prepare' + key + 'HTML';
