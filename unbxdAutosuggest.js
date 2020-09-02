@@ -414,6 +414,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, sortedSuggestions: {
 				tpl: "{{{safestring highlighted}}}"
 			}
+			, removeOnBackButton: false
 			, resultsContainerSelector: null
 			, processResultsStyles: null
 			, inputContainerSelector: '',
@@ -554,6 +555,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			$(window).bind('resize', function() {
 				if (self.options.hideOnResize) {
 					self.hideResults();
+				}
+			});
+
+			/** For single page applications, on browser back, the autosuggest doesn't remove */
+			window.addEventListener('popstate', function (event) {
+				if (self.options.removeOnBackButton) {
+					$('.unbxd-as-wrapper').remove();
 				}
 			});
 
