@@ -414,6 +414,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, sortedSuggestions: {
 				tpl: "{{{safestring highlighted}}}"
 			}
+			, removeOnBackButton: false
 			, resultsContainerSelector: null
 			, processResultsStyles: null
 			, inputContainerSelector: '',
@@ -554,6 +555,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			$(window).bind('resize', function() {
 				if (self.options.hideOnResize) {
 					self.hideResults();
+				}
+			});
+
+			/** For single page applications, on browser back, the autosuggest doesn't remove */
+			window.addEventListener('popstate', function (event) {
+				if (self.options.removeOnBackButton) {
+					$('.unbxd-as-wrapper').remove();
 				}
 			});
 
@@ -2115,7 +2123,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				if ((mainlen == 0) && (sidelen != 0)) {
 					html = '<ul class="unbxd-as-sidecontent">';
 					this.options.sideTpl.forEach(function (key) {
-						if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+						if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions' || key == 'promotedSuggestions')) {
 							return;
 						}
 						key = 'prepare' + key + 'HTML';
@@ -2133,7 +2141,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							sideHtml = '<ul class="unbxd-as-sidecontent">';
 						}
 						this.options.sideTpl.forEach(function (key) {
-							if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+							if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions' || key == 'promotedSuggestions')) {
 								return;
 							}
 							key = 'prepare' + key + 'HTML';
@@ -2165,7 +2173,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
 					}
 	
-					if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions')) {
+					if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions' || key == 'promotedSuggestions')) {
 						return;
 					}
 					key = 'prepare' + key + 'HTML';
