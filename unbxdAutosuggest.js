@@ -163,6 +163,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 	};
 
+	var isDesktop = function() {
+		return !((this.options.isMobile && this.options.isMobile()) || isMobile.any());
+	}
+
 	var customSort = function (a, b) {
 		if (a.length - b.length === 0) {
 			return a.localeCompare(b);
@@ -946,14 +950,19 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					this.options.mainTpl = this.options.mobile.mainTpl;
 					this.options.popularProducts.count = this.options.mobile.popularProducts.count;
 				} else {
-					this.options.template = this.options.desktop.template;
+					this.options.template = this.options.desktop.template.column;
 					this.options.mainTpl = this.options.desktop.mainTpl;
 					this.options.popularProducts.count = this.options.desktop.popularProducts.count;
 				}
 
 				// Calculate mainwidth based on 1 or 2 columns
 				if (this.options.template == '1column') {
-					mwidth = this.options.preferInputWidthMainContent ? posSelector.outerWidth() : (60 * totalWidth / 100);
+					var preferInputWidthMainContent = this.options.preferInputWidthMainContent;
+					if (isDesktop) {
+						preferInputWidthMainContent = this.options.desktop.template[this.options.desktop.template.column].preferInputWidthMainContent;
+						$('.unbxd-as-popular-product-info').addClass('unbxd-1column-popular-product-desktop');
+					}
+					mwidth = preferInputWidthMainContent ? posSelector.outerWidth() : (60 * totalWidth / 100);
 				} else {
 					/* Removing this as this breaks when template is 2 column but preferinputwidthmaincotnent is true for mobile, popular products won't appear ever.
 					To solve this, there is another config, preferInputWidthTotalContent, which includes mainwidth and sidewidth = width of input selector */
@@ -1634,7 +1643,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			// Save current template and config to desktop object in case of switching between mobile and desktop
 			if (!this.options.desktop) {
 				this.options.desktop = {
-					template: this.options.template,
+					template: {
+						column: this.options.template,
+						"1column": {
+							preferInputWidthMainContent: false
+						},
+						"2column": {
+							preferInputWidthMainContent: this.options.preferInputWidthMainContent
+						}
+					},
 					mainTpl: this.options.mainTpl,
 					popularProducts: {
 						count: this.options.popularProducts.count
