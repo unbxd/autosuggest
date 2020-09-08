@@ -164,7 +164,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 	};
 
 	var isDesktop = function() {
-		return !((this.options.isMobile && this.options.isMobile()) || isMobile.any());
+		return !(typeof(this.options.isMobile) === "function" ? this.options.isMobile() : isMobile.any());
 	}
 
 	var customSort = function (a, b) {
