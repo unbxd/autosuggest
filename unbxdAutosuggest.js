@@ -1861,7 +1861,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, PROMOTED_SUGGESTION: []
 			}
 
-			// Should add recent searches on click in future.
+			// recent searches will also be added on click in future.
 			this.clickResults = {
 				TRENDING_QUERIES: []
 			}
