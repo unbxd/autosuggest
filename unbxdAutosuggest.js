@@ -476,6 +476,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					.done(function (data) {
 						if (data && data.response.products && data.response.products.length > 0) {
 							var products = data.response.products.splice(0, that.options.trendingSearches.maxCount);
+							that.clickResults.TRENDING_QUERIES = products;
 							for (var i = 0; i < products.length; i++) {
 								var doc = products[i];
 								that.processTrendingQueries(doc);
@@ -626,7 +627,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.hideResults();
 				}
 			});
-			if (self.options.trendingSearches.enabled) {
+			if (self.options.trendingSearches.enabled && self.clickResults.TRENDING_QUERIES.length) {
 				$(document).bind("keyup.auto", function (e) {
 					if (e.target.value === "") {
 						self.$results.html('');
@@ -1095,7 +1096,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			this.params.q = v
 			this.previous = v;
-			this.currentResults = {};
+
+			/** Correct way to empty current results */
+			this.currentResults = {
+				KEYWORD_SUGGESTION: []
+				, TOP_SEARCH_QUERIES: []
+				, POPULAR_PRODUCTS: []
+				, IN_FIELD: []
+				, SORTED_SUGGESTIONS: []
+				, PROMOTED_SUGGESTION: []
+			}
 			/**
 			 * Due to caching check of query alone, on screen resize, 
 			 * the url fired remains the same, even though params are different for mobile and desktop.
@@ -1121,10 +1131,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 				else {
 					this.$input.removeClass(this.options.loadingClass);
-					if (!(this.options.trendingSearches.enabled && v === "")) {
+					if (!(this.options.trendingSearches.enabled && this.clickResults.TRENDING_QUERIES.length > 0 && v === "")) {
 						this.$results.hide();
 					}
-
 				}
 			}
 		}
@@ -1851,6 +1860,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, SORTED_SUGGESTIONS: []
 				, PROMOTED_SUGGESTION: []
 			}
+
+			// Should add recent searches on click in future.
+			this.clickResults = {
+				TRENDING_QUERIES: []
+			}
+
 			var infieldsCount = 0;
 			var key_count = 0,
 				uniqueInfields = [],
