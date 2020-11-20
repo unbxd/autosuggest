@@ -163,8 +163,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 	};
 
-	var isDesktop = function() {
-		return !(typeof(this.options.isMobile) === "function" ? this.options.isMobile() : isMobile.any());
+	var isDesktop = function () {
+		return !(typeof (this.options.isMobile) === "function" ? this.options.isMobile() : isMobile.any());
 	}
 
 	var customSort = function (a, b) {
@@ -422,7 +422,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, resultsContainerSelector: null
 			, processResultsStyles: null
 			, inputContainerSelector: '',
-			searchEndPoint:'//search.unbxd.io'
+			searchEndPoint: '//search.unbxd.io'
 		}
 		, $input: null
 		, $results: null
@@ -557,7 +557,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			});
 
-			$(window).bind('resize', function() {
+			$(window).bind('resize', function () {
 				if (self.options.hideOnResize) {
 					self.hideResults();
 				}
@@ -587,7 +587,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
 				} else if ($(e.target).hasClass("unbxd-as-view-more")) {
-					self.options.popularProducts.viewMore.redirect(self.hoveredQuery||self.$input.val())
+					self.options.popularProducts.viewMore.redirect(self.hoveredQuery || self.$input.val())
 				} else if ($.contains(self.$results[0], e.target)) {
 					self.log("clicked on element for selection", e.target.tagName);
 					var $et = $(e.target), p = $et;
@@ -722,10 +722,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.activeRow += step;
 
 			if (this.activeRow < -1)
-				this.activeRow = (typeof(lis.size) === "function" ? lis.size() : lis.length) - 1;
+				this.activeRow = (typeof (lis.size) === "function" ? lis.size() : lis.length) - 1;
 			else if (this.activeRow == -1)
 				this.$input.focus();
-			else if (this.activeRow >= (typeof(lis.size) === "function" ? lis.size() : lis.length)) {
+			else if (this.activeRow >= (typeof (lis.size) === "function" ? lis.size() : lis.length)) {
 				this.activeRow = -1;
 				this.$input.focus();
 			}
@@ -734,7 +734,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			$(lis[this.activeRow]).addClass(this.selectedClass);
 
-			if (this.activeRow >= 0 && this.activeRow < (typeof(lis.size) === "function" ? lis.size() : lis.length)) {
+			if (this.activeRow >= 0 && this.activeRow < (typeof (lis.size) === "function" ? lis.size() : lis.length)) {
 				this.$input.val($(lis[this.activeRow]).data('value'));
 				if (this.options.filtered && this.activeColumn === 0) {
 					var dataValue = $(lis[this.activeRow]).attr('data-value') ? $(lis[this.activeRow]).attr('data-value') : '';
@@ -1748,8 +1748,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			if (this.options.inFields.showDefault) {
 				var that = this;
-				Object.keys(doc).forEach(function(item) {
-					if (item.length >=3 && item.substring(item.length - 3) === "_in") {
+				Object.keys(doc).forEach(function (item) {
+					if (item.length >= 3 && item.substring(item.length - 3) === "_in") {
 						var a = item.split("_in")[0];
 						ins[a] = doc[a + "_in"].slice(0, parseInt(that.options.inFields.noOfInfields));
 					}
@@ -2094,11 +2094,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/each}}'
 				+ '{{/if}}';
 		}
-		, preprocessHTML: function() {
-		    if ((this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
-                this.options.template = this.options.mobile.template;
-                this.options.mainTpl = this.options.mobile.mainTpl;
-                this.options.popularProducts.count = this.options.mobile.popularProducts.count;
+		, preprocessHTML: function () {
+			if ((this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
+				this.options.template = this.options.mobile.template;
+				this.options.mainTpl = this.options.mobile.mainTpl;
+				this.options.popularProducts.count = this.options.mobile.popularProducts.count;
 			}
 		}
 		, prepareHTML: function () {
@@ -2114,7 +2114,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				sidelen = 0;
 			if (this.options.suggestionsHeader && (self.currentResults['IN_FIELD'].length || self.currentResults['KEYWORD_SUGGESTION'].length
 				|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
-					mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
+				mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
 			}
 
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
@@ -2174,7 +2174,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 				else {
 					if (mainlen > 0 && sidelen != 0) {
-						
+
 						if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
 							sideHtml = '<ul class="unbxd-as-sidecontent unbxd-as-view-more">';
 						} else {
@@ -2191,7 +2191,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							sideHtml = sideHtml + this.options.popularProducts.viewMore.tpl
 						}
 						sideHtml = sideHtml + '</ul>';
-						
+
 						mainHtml = mainHtml + '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
 						if (this.options.suggestionsHeader) {
 							mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
@@ -2206,22 +2206,22 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				if (this.options.sortByLength) {
 					mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
 				}
-		
+
 				this.options.mainTpl.forEach(function (key) {
 
 					if (self.currentResults[self.standardizeKeys(key)].length && topQuery === "") {
 						topQuery = self.currentResults[self.standardizeKeys(key)][0]["autosuggest"]
 					}
-	
+
 					if (self.options.sortByLength && (key == 'topQueries' || key == 'keywordSuggestions' || key == 'promotedSuggestions')) {
 						return;
 					}
 					key = 'prepare' + key + 'HTML';
 					mainHtml = mainHtml + self[key]();
 				});
-	
 
-	
+
+
 				mainHtml = mainHtml + '</ul>';
 
 				if (this.options.isMobile && this.options.isMobile()) {
