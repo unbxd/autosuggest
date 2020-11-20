@@ -959,7 +959,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				// Calculate mainwidth based on 1 or 2 columns
 				if (this.options.template == '1column') {
 					var preferInputWidthMainContent = this.options.preferInputWidthMainContent;
-					if (isDesktop) {
+					if (isDesktop.call(this)) {
 						preferInputWidthMainContent = this.options.desktop.template[this.options.desktop.template.column].preferInputWidthMainContent;
 						$('.unbxd-as-popular-product-info').addClass('unbxd-1column-popular-product-desktop');
 					}
@@ -2094,7 +2094,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/each}}'
 				+ '{{/if}}';
 		}
+		, preprocessHTML: function() {
+		    if ((this.options.isMobile && this.options.isMobile()) || isMobile.any()) {
+                this.options.template = this.options.mobile.template;
+                this.options.mainTpl = this.options.mobile.mainTpl;
+                this.options.popularProducts.count = this.options.mobile.popularProducts.count;
+			}
+		}
 		, prepareHTML: function () {
+			this.preprocessHTML();
 			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
 			var mobileHtml = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-mobile-view">';
 			var sideHtml = '';
