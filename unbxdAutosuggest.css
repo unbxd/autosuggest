@@ -338,6 +338,7 @@
     flex-direction: row;
     align-items: flex-start;
     border: unset;
+    padding-left: 5px;
 }
 
 .unbxd-as-wrapper ul.unbxd-as-mobile-view li.unbxd-as-popular-product-grid .unbxd-as-popular-product-info .unbxd-as-popular-product-image-container {
