@@ -1225,6 +1225,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 			}
 
+			var extraParams = this.options.extraParams || {};
+			var extraParamsKeys = Object.keys(extraParams);
+			if (extraParamsKeys.length) {
+				extraParamsKeys.forEach((key) => {
+					url = url + "&" + key + "=" + extraParams[key];
+				});
+			}
+
 			return host_path + "?" + url;
 		}
 		, getHostNPath: function () {
@@ -1480,6 +1488,14 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			if (self.options.removeDuplicates) {
 				url = url + "&variants=true";
+			}
+
+			var extraParams = self.options.extraParams || {};
+			var extraParamsKeys = Object.keys(extraParams);
+			if (extraParamsKeys.length) {
+				extraParamsKeys.forEach((key) => {
+					url = url + "&" + key + "=" + extraParams[key];
+				});
 			}
 
 			var params = this.getAjaxParams();
