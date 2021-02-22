@@ -442,6 +442,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			query: '*'
 			, filters: {}
 		}
+		, preferOneColumnFullWidth: false
 		, selectedClass: "unbxd-ac-selected"
 		, scrollbarWidth: null
 		, init: function (input, options) {
@@ -1671,7 +1672,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					template: {
 						column: this.options.template,
 						"1column": {
-							preferInputWidthMainContent: false
+							preferInputWidthMainContent: this.options.preferOneColumnFullWidth
 						},
 						"2column": {
 							preferInputWidthMainContent: this.options.preferInputWidthMainContent
