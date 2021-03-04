@@ -677,6 +677,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 								e.preventDefault();
 							}
 							else {
+								/** Done button click should not hide the autosuggest in iphone */
+								if (navigator.platform === "iPhone") {
+									return;
+								}
 								self.hideResultsNow();
 							}
 							break;
