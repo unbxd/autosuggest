@@ -1899,7 +1899,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						&& this.isUnique(doc.autosuggest, uniqueSuggestions)) {
 						this.processTopSearchQuery(doc);
 					} else if ("IN_FIELD" == doc.doctype && (count['infields'] + count['key_rem'] + count['top_rem']) > infieldsCount
-						&& this.isUnique(doc.autosuggest, uniqueInfields)) {
+						&& this.isUnique(doc.autosuggest, uniqueInfields)
+						&& this.isUnique(doc.autosuggest, uniqueSuggestions)) {
 						if (count['infields'] > infieldsCount) {
 							infieldsCount++;
 							this.processInFields(doc);
@@ -1924,7 +1925,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						&& this.isUnique(doc.autosuggest, uniqueSuggestions)) {
 						this.processTopSearchQuery(doc);
 					} else if ("IN_FIELD" == doc.doctype && this.options.inFields.count > infieldsCount
-						&& this.isTempUnique(doc.autosuggest, uniqueInfields)) {
+						&& this.isTempUnique(doc.autosuggest, uniqueInfields)
+						&& this.isUnique(doc.autosuggest, uniqueSuggestions)) {
 						this.processInFields(doc);
 					} else if ("KEYWORD_SUGGESTION" == doc.doctype
 						&& (this.options.keywordSuggestions.count > this.currentResults.KEYWORD_SUGGESTION.length)
