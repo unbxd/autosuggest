@@ -544,7 +544,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 						var cmpld = ""
 						if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
-							$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+                            if (self.options.template === "1column") {
+                                $('.unbxd-as-maincontent').addClass("unbxd-as-view-more")
+                            } else {
+                                $('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+                            }
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
 						} else {
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
@@ -1778,7 +1782,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
                 var cmpldHeader = Handlebars.compile(ppHeader);
 				this.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: this.params.q });
 			}
-
 		}
 		, processInFields: function (doc) {
 			var ins = {}
@@ -2144,7 +2147,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, prepareHTML: function () {
 			this.preprocessHTML();
-			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+            var html = '';
+            if (this.options.template === "1column" && this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+                html += '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-view-more">';
+            } else { 
+                html += '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+            }
 			var mobileHtml = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-mobile-view">';
 			var sideHtml = '';
 			var mainHtml = '';
@@ -2261,7 +2269,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					mainHtml = mainHtml + self[key]();
 				});
 
-
+                if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+                    mainHtml = mainHtml + this.options.popularProducts.viewMore.tpl;
+                }
 
 				mainHtml = mainHtml + '</ul>';
 
