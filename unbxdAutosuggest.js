@@ -421,9 +421,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			, removeOnBackButton: false
 			, resultsContainerSelector: null
 			, processResultsStyles: null
-			, inputContainerSelector: '',
-			searchEndPoint: '//search.unbxd.io'
+			, inputContainerSelector: ''
+            , getProductsInfo: function (that) {
+                return that.productInfo;
+            }
+			,searchEndPoint: '//search.unbxd.io'
 		}
+        , productInfo: {}
 		, $input: null
 		, $results: null
 		, timeout: null
@@ -445,6 +449,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		, preferOneColumnFullWidth: false
 		, selectedClass: "unbxd-ac-selected"
 		, scrollbarWidth: null
+        , getPopularProductsHeader: function(ctxt) {
+            var popularProductsHeader = ctxt.options.popularProducts.header;
+            var ppHeader = "";
+            if (typeof popularProductsHeader === "string") {
+                ppHeader = popularProductsHeader;
+            } else if (typeof popularProductsHeader === "function") {
+                ppHeader = popularProductsHeader(ctxt);
+            }
+            return ppHeader;
+        }
 		, init: function (input, options) {
 			this.options = $.extend({}, this.default_options, options);
 			this.setDefaultPopularProductsOptions();
@@ -522,14 +536,19 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					if (dataValue) {
 						var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '')
 						// updating product header while hovering on suggestions
-						if (self.options.filtered && self.options.popularProducts.header) {
-							var cmpldHeader = Handlebars.compile(self.options.popularProducts.header);
+						if (self.options.filtered) {
+                            var ppHeader = self.getPopularProductsHeader(self);
+							var cmpldHeader = Handlebars.compile(ppHeader);
 							self.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 						}
 
 						var cmpld = ""
 						if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
-							$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+                            if (self.options.template === "1column") {
+                                $('.unbxd-as-maincontent').addClass("unbxd-as-view-more")
+                            } else {
+                                $('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+                            }
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
 						} else {
 							cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
@@ -743,8 +762,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					var dataFiltervalue = $(lis[this.activeRow]).attr('data-filtervalue') ? $(lis[this.activeRow]).attr('data-filtervalue') : '';
 					var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '')
 					// updating product header while hovering on suggestions
-					if (this.options.filtered && this.options.popularProducts.header) {
-						var cmpldHeader = Handlebars.compile(this.options.popularProducts.header);
+					if (this.options.filtered) {
+                        var ppHeader = this.getPopularProductsHeader(this);
+						var cmpldHeader = Handlebars.compile(ppHeader);
 						this.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 					}
 
@@ -1115,9 +1135,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (this.inCache(v)) {
 				this.log("picked from cache : " + v);
 				// updating product header while hovering on suggestions
-				if (this.options.filtered && this.options.popularProducts.header) {
+				if (this.options.filtered) {
+                    var ppHeader = this.getPopularProductsHeader(this);                    
 					var cmpldHeader =
-						Handlebars.compile(this.options.popularProducts.header);
+						Handlebars.compile(ppHeader);
 					this.compiledPopularProductHeader = cmpldHeader(({ hoverSuggestion: v }));
 				}
 				this.currentResults = this.getFromCache(v);
@@ -1706,7 +1727,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			// to maintain the backward compatibility with old customers
-			this.compiledPopularProductHeader = this.options.popularProducts.header;
+            var ppHeader = this.getPopularProductsHeader(this);
+			this.compiledPopularProductHeader = ppHeader;
 		}
 		, processPopularProducts: function (doc) {
 			var o = {
@@ -1750,13 +1772,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					o.image = this.options.popularProducts.imageUrlOrFunction in doc ? doc[this.options.popularProducts.imageUrlOrFunction] : null;
 				}
 			}
-			// updating product header while hovering on suggestions
-			if (this.options.filtered && this.options.popularProducts.header) {
-				var cmpldHeader = Handlebars.compile(this.options.popularProducts.header);
+
+			this.currentResults.POPULAR_PRODUCTS.push(o);
+            this.productInfo.popularProductsCount = this.currentResults.POPULAR_PRODUCTS.length;
+
+            // updating product header while hovering on suggestions
+			if (this.options.filtered) {
+                var ppHeader = this.getPopularProductsHeader(this);
+                var cmpldHeader = Handlebars.compile(ppHeader);
 				this.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: this.params.q });
 			}
-			this.currentResults.POPULAR_PRODUCTS.push(o);
-
 		}
 		, processInFields: function (doc) {
 			var ins = {}
@@ -2122,7 +2147,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, prepareHTML: function () {
 			this.preprocessHTML();
-			var html = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+            var html = '';
+            if (this.options.template === "1column" && this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+                html += '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-view-more">';
+            } else { 
+                html += '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
+            }
 			var mobileHtml = '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-mobile-view">';
 			var sideHtml = '';
 			var mainHtml = '';
@@ -2239,7 +2269,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					mainHtml = mainHtml + self[key]();
 				});
 
-
+                if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+                    mainHtml = mainHtml + this.options.popularProducts.viewMore.tpl;
+                }
 
 				mainHtml = mainHtml + '</ul>';
 
