@@ -2,11 +2,11 @@ name: autosuggest
 
 on: 
   # Trigger the workflow on release
-  pull_request:
-    branches:
-      - feature-actions
-  # release:
-    # types: [published, edited]
+  # pull_request:
+  #   branches:
+  #     - feature-actions
+  release:
+    types: [published, edited]
 
 defaults:
   run:
@@ -62,10 +62,10 @@ jobs:
         aws-region: us-east-1
     
     - name: Minify autosuggest js
-        id: minify-autosuggest-file
-        run: |
-          npm install uglify-js -g
-          uglifyjs unbxdAutosuggest.js --output unbxdAutosuggest-min.js
+      id: minify-autosuggest-file
+      run: |
+        npm install uglify-js -g
+        uglifyjs unbxdAutosuggest.js --output unbxdAutosuggest-min.js
                     
     - name: Run aws cp command
       id: aws-upload
