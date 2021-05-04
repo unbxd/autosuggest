@@ -2,9 +2,9 @@ name: autosuggest
 
 on: 
   # Trigger the workflow on release
-  push:
-    branches:
-      - feature-actions
+  # push:
+  #   branches:
+  #     - feature-actions
   release:
     types: [published, edited]
 
@@ -65,7 +65,7 @@ jobs:
       id: minify-autosuggest-file
       run: |
         npm install uglify-js -g
-        uglifyjs unbxdAutosuggest.js --output unbxdAutosuggest-min.js
+        uglifyjs unbxdAutosuggest.js --output unbxdAutosuggest.js
                     
     - name: Run aws cp command
       id: aws-upload
@@ -73,12 +73,12 @@ jobs:
         AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
         DEPLOY_ENV: ${{ steps.infer_env.outputs.DEPLOY_ENV }}
       run: |
-        if [[ $DEPLOY_ENV == "staging1" ]]; then
-          aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
+        if [[ $DEPLOY_ENV == "staging" ]]; then
+          aws s3 cp unbxdAutosuggest.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
           aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
         else 
-          aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
-          aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
+          aws s3 cp unbxdAutosuggest.js s3://unbxd/unbxdAutosuggest_v1.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
+          aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1.js
         fi
 
     # - name: Slack Notification
