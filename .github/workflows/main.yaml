@@ -1,0 +1,66 @@
+name: autosuggest
+
+on: 
+  # Trigger the workflow on release
+  pull_request:
+  # release:
+    # types: [published, edited]
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    
+    steps:
+    - name: Checkout Branch
+      id: checkout-branch
+      uses: actions/checkout@v2
+    
+    - name: Infer Environment & Tag Name
+      id: infer_env
+      env:
+        TAG_NAME: ${{ github.event.release.tag_name }}
+        TARGET_COMMITISH: ${{ github.event.release.target_commitish }}
+      run: |
+        deployEnv="staging"
+        if [[ "$TAG_NAME" =~ "rc" ]]; then
+          deployEnv="staging"
+          tag=$TAG_NAME
+        else 
+          if [ "$TARGET_COMMITISH" == "master" ]; then
+            deployEnv="production"
+            tag=$TAG_NAME
+          fi
+        fi
+        
+        echo "Deploy Env : $deployEnv"
+        echo "Build tag": "$tag"
+        echo ::set-output name=DEPLOY_ENV::$(echo $deployEnv)
+        echo ::set-output name=BUILD_TAG::$(echo $tag)
+   
+    - name: Configure AWS credentials
+      id: configure-aws
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                    
+    - name: Run aws cp command
+      id: aws-upload
+      run: |
+        aws s3 cp unbxdAutosuggest.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
+        aws cloudfront create-invalidation --distribution-id=E1RJ1GENDGDTPG --paths /unbxdAutosuggest_v1_test.js
+
+    # - name: Slack Notification
+    #   uses: rtCamp/action-slack-notify@v2
+    #   if: always()
+    #   env:
+    #     SLACK_WEBHOOK: ${{ secrets.PLATFORM_SLACK_WEBHOOK_URL }}
+    #     SLACK_USERNAME: "AUTOSUGGEST UI Builder" 
+    #     SLACK_MSG_AUTHOR: ${{ github.actor }} 
+    #     SLACK_CHANNEL: '#ss-builds'
+    #     SLACK_COLOR: ${{ job.status }}
+    #     SLACK_ICON: https://github.com/rtCamp.png?size=48
