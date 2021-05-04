@@ -71,14 +71,15 @@ jobs:
       id: aws-upload
       env:
         AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
+        DEPLOY_ENV: ${{ steps.infer_env.outputs.DEPLOY_ENV }}
       run: |
-      if [ DEPLOY_ENV == "staging1" ]; then
-        aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
-        aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
-      else 
-        aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
-        aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
-      fi
+        if [[ $DEPLOY_ENV == "staging1" ]]; then
+          aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
+          aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
+        else 
+          aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
+          aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
+        fi
 
     # - name: Slack Notification
     #   uses: rtCamp/action-slack-notify@v2
