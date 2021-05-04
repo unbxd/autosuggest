@@ -2,9 +2,9 @@ name: autosuggest
 
 on: 
   # Trigger the workflow on release
-  # pull_request:
-  #   branches:
-  #     - feature-actions
+  push:
+    branches:
+      - feature-actions
   release:
     types: [published, edited]
 
@@ -72,16 +72,21 @@ jobs:
       env:
         AWS_DISTRIBUTION_ID: ${{ secrets.AWS_DISTRIBUTION_ID }}
       run: |
+      if [ DEPLOY_ENV == "staging1" ]; then
         aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
         aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
+      else 
+        aws s3 cp unbxdAutosuggest-min.js s3://unbxd/unbxdAutosuggest_v1_test.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
+        aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
+      fi
 
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      if: always()
-      env:
-        SLACK_WEBHOOK: ${{ secrets.PLATFORM_SLACK_WEBHOOK_URL }}
-        SLACK_USERNAME: "AUTOSUGGEST UI Builder" 
-        SLACK_MSG_AUTHOR: ${{ github.actor }} 
-        SLACK_CHANNEL: '#ss-builds'
-        SLACK_COLOR: ${{ job.status }}
-        SLACK_ICON: https://github.com/rtCamp.png?size=48
+    # - name: Slack Notification
+    #   uses: rtCamp/action-slack-notify@v2
+    #   if: always()
+    #   env:
+    #     SLACK_WEBHOOK: ${{ secrets.PLATFORM_SLACK_WEBHOOK_URL }}
+    #     SLACK_USERNAME: "AUTOSUGGEST UI Builder" 
+    #     SLACK_MSG_AUTHOR: ${{ github.actor }} 
+    #     SLACK_CHANNEL: '#ss-builds'
+    #     SLACK_COLOR: ${{ job.status }}
+    #     SLACK_ICON: https://github.com/rtCamp.png?size=48
