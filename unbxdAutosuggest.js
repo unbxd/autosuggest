@@ -2219,6 +2219,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						html = html + self[key]();
 					});
 
+					if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+                        html = html + this.options.popularProducts.viewMore.tpl
+                    }
+
 					html = html + '</ul>';
 				}
 				else {
