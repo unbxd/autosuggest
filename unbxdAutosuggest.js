@@ -1134,6 +1134,8 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			 */
 			if (this.inCache(v)) {
 				this.log("picked from cache : " + v);
+				this.currentResults = this.getFromCache(v);
+				this.productInfo.popularProductsCount = this.currentResults.POPULAR_PRODUCTS.length;
 				// updating product header while hovering on suggestions
 				if (this.options.filtered) {
                     var ppHeader = this.getPopularProductsHeader(this);                    
@@ -1141,7 +1143,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						Handlebars.compile(ppHeader);
 					this.compiledPopularProductHeader = cmpldHeader(({ hoverSuggestion: v }));
 				}
-				this.currentResults = this.getFromCache(v);
+				
 				this.$results.html(this.prepareHTML());
 				this.showResults();
 			} else {
