@@ -586,7 +586,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			/** For single page applications, on browser back, the autosuggest doesn't remove */
 			window.addEventListener('popstate', function (event) {
 				if (self.options.removeOnBackButton) {
-					$('.unbxd-as-wrapper').remove();
+					$('.unbxd-as-wrapper').hide();
 				}
 			});
 
