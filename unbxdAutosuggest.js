@@ -2161,9 +2161,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			var self = this,
 				mainlen = 0,
 				sidelen = 0;
-			if (this.options.suggestionsHeader && (self.currentResults['IN_FIELD'].length || self.currentResults['KEYWORD_SUGGESTION'].length
-				|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
-				mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
+			
+			if (this.options.template === "1column") {
+				if (this.options.suggestionsHeader && (self.currentResults['IN_FIELD'].length || self.currentResults['KEYWORD_SUGGESTION'].length
+					|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
+					mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
+				}
 			}
 
 			if (!self.currentResults['IN_FIELD'].length && !self.currentResults['KEYWORD_SUGGESTION'].length
