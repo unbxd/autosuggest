@@ -1740,7 +1740,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			};
 
 			if (this.options.popularProducts.name) {
-				o.autosuggest = doc[this.options.nameFunctionOrKey] ? doc[this.options.nameFunctionOrKey] : doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : '';
+				o.autosuggest = doc[this.options.popularProducts.nameFunctionOrKey] ? doc[this.options.popularProducts.nameFunctionOrKey] : doc[this.options.popularProducts.title] ? doc[this.options.popularProducts.title] : '';
 			} else {
 				o.autosuggest = '';
 			}
