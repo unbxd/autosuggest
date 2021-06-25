@@ -750,7 +750,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		, moveSelect: function (step) {
 			
 			var mainLength = this.getMainLength();
-			if (mainLength === 0) {
+			if (this.options.template == "2column" && mainLength === 0) {
 				/* Edge case if template has 2 columns but only popular products results exist */
 				this.activeColumn = 1;
 			}
@@ -1146,6 +1146,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, IN_FIELD: []
 				, SORTED_SUGGESTIONS: []
 				, PROMOTED_SUGGESTION: []
+			}
+
+			this.clickResults = {
+				TRENDING_QUERIES: []
 			}
 			/**
 			 * Due to caching check of query alone, on screen resize, 
