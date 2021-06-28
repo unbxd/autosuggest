@@ -2027,7 +2027,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		, prepareinFieldsHTML: function () {
 			if (this.options.inFields.type === "inline") {
 				return '{{#if data.IN_FIELD}}'
-					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ (this.options.inFields.header ? '<lh class="unbxd-as-header">' + this.options.inFields.header + '</lh>' : '')
 					+ '{{#each data.IN_FIELD}}'
 					+ '{{#unbxdIf type "keyword"}}'
 					+ '{{else}}'
@@ -2039,7 +2039,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					+ '{{/if}}';
 			} else {
 				return '{{#if data.IN_FIELD}}'
-					+ (this.options.inFields.header ? '<li class="unbxd-as-header">' + this.options.inFields.header + '</li>' : '')
+					+ (this.options.inFields.header ? '<lh class="unbxd-as-header">' + this.options.inFields.header + '</lh>' : '')
 					+ '{{#each data.IN_FIELD}}'
 					+ '{{#unbxdIf type "keyword"}}'
 					+ '<li class="unbxd-as-keysuggestion" data-index="{{@index}}" data-value="{{autosuggest}}" data-type="IN_FIELD" data-source="{{source}}">'
@@ -2056,7 +2056,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, preparekeywordSuggestionsHTML: function () {
 			return '{{#if data.KEYWORD_SUGGESTION}}'
-				+ (this.options.keywordSuggestions.header ? '<li class="unbxd-as-header">' + this.options.keywordSuggestions.header + '</li>' : '')
+				+ (this.options.keywordSuggestions.header ? '<lh class="unbxd-as-header">' + this.options.keywordSuggestions.header + '</lh>' : '')
 				+ '{{#each data.KEYWORD_SUGGESTION}}'
 				+ '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">'
 				+ (this.options.keywordSuggestions.tpl ? this.options.keywordSuggestions.tpl : this.default_options.keywordSuggestions.tpl)
@@ -2066,7 +2066,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, prepareTrendingQueriesHTML: function () {
 			return '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall unbxd-as-trending">'
-				+ (this.options.trendingSearches.header ? '<li class="unbxd-as-header">' + this.options.trendingSearches.header + '</li>' : '')
+				+ (this.options.trendingSearches.header ? '<lh class="unbxd-as-header">' + this.options.trendingSearches.header + '</lh>' : '')
 				+ '{{#each data1}}'
 				+ '<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">'
 				+ (this.options.trendingSearches.tpl ? this.options.trendingSearches.tpl : this.default_options.trendingSearches.tpl)
@@ -2077,7 +2077,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, preparepromotedSuggestionsHTML: function () {
 			return '{{#if data.PROMOTED_SUGGESTION}}' +
-				(this.options.promotedSuggestions.header ? '<li class="unbxd-as-header">' + this.options.promotedSuggestions.header + '</li>' : '') +
+				(this.options.promotedSuggestions.header ? '<lh class="unbxd-as-header">' + this.options.promotedSuggestions.header + '</lh>' : '') +
 				'{{#each data.PROMOTED_SUGGESTION}}' +
 				'<li class="unbxd-as-keysuggestion" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}"  data-source="{{source}}">' +
 				(this.options.promotedSuggestions.tpl ? this.options.promotedSuggestions.tpl : this.default_options.promotedSuggestions.tpl) +
@@ -2087,7 +2087,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, preparetopQueriesHTML: function () {
 			return '{{#if data.TOP_SEARCH_QUERIES}}'
-				+ (this.options.topQueries.header ? '<li class="unbxd-as-header">' + this.options.topQueries.header + '</li>' : '')
+				+ (this.options.topQueries.header ? '<lh class="unbxd-as-header">' + this.options.topQueries.header + '</lh>' : '')
 				+ '{{#each data.TOP_SEARCH_QUERIES}}'
 				+ '<li class="unbxd-as-keysuggestion" data-type="{{type}}" data-index="{{@index}}" data-value="{{autosuggest}}">'
 				+ (this.options.topQueries.tpl ? this.options.topQueries.tpl : this.default_options.topQueries.tpl)
@@ -2096,7 +2096,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				+ '{{/if}}';
 		}
 		, preparefilteredPopularProducts: function () {
-			return (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '') + '{{#data}}'
+			return (this.compiledPopularProductHeader ? '<lh class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</lh>' : '') + '{{#data}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" data-src="{{src}}">'
 				+ (this.options.popularProducts.tpl ? this.options.popularProducts.tpl : this.default_options.popularProducts.tpl)
@@ -2105,7 +2105,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		}
 		, preparepopularProductsHTML: function () {
 			return '{{#if data.POPULAR_PRODUCTS}}'
-				+ (this.compiledPopularProductHeader ? '<li class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</li>' : '')
+				+ (this.compiledPopularProductHeader ? '<lh class="unbxd-as-header unbxd-as-popular-product-header">' + this.compiledPopularProductHeader + '</lh>' : '')
 				+ '{{#data.POPULAR_PRODUCTS}}'
 				+ '<li class="unbxd-as-popular-product ' + (this.options.popularProducts.view === 'grid' ? 'unbxd-as-popular-product-grid' : '')
 				+ '" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{pid}}" >'
@@ -2167,7 +2167,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (this.options.template === "1column") {
 				if (this.options.suggestionsHeader && (self.currentResults['IN_FIELD'].length || self.currentResults['KEYWORD_SUGGESTION'].length
 					|| self.currentResults['TOP_SEARCH_QUERIES'].length)) {
-					mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
+					mainHtml = mainHtml + '<lh class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</lh>';
 				}
 			}
 
@@ -2252,7 +2252,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 						mainHtml = mainHtml + '<ul class="unbxd-as-maincontent unbxd-as-suggestions-overall">';
 						if (this.options.suggestionsHeader) {
-							mainHtml = mainHtml + '<li class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</li>';
+							mainHtml = mainHtml + '<lh class="unbxd-as-header unbxd-as-suggestions-header">' + this.options.suggestionsHeader + '</lh>';
 						}
 					}
 				}
