@@ -2262,7 +2262,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (!noResults && mainlen > 0) {
 
 				if (this.options.sortByLength) {
-					mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
+					mainHtml = mainHtml + '<ul class="unbxd-as-maincontent">' + self['prepareSortedSuggestionsHTML']();
 				}
 
 				this.options.mainTpl.forEach(function (key) {
