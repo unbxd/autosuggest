@@ -2262,7 +2262,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (!noResults && mainlen > 0) {
 
 				if (this.options.sortByLength) {
-					mainHtml = mainHtml + '<ul class="unbxd-as-maincontent">' + self['prepareSortedSuggestionsHTML']();
+					if (sidelen === 0) {
+						mainHtml = mainHtml + '<ul class="unbxd-as-maincontent">' + self['prepareSortedSuggestionsHTML']();
+					} else {
+						mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
+					}
 				}
 
 				this.options.mainTpl.forEach(function (key) {
@@ -2283,7 +2287,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
                 }
 
 				mainHtml = mainHtml + '</ul>';
-
 				if (this.options.isMobile && this.options.isMobile()) {
 					html = mobileHtml + mainHtml;
 				} else if (isMobile.any()) {
