@@ -2260,12 +2260,16 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			if (!noResults && mainlen > 0) {
-
+				
 				if (this.options.sortByLength) {
 					if (sidelen === 0) {
 						mainHtml = mainHtml + '<ul class="unbxd-as-maincontent">' + self['prepareSortedSuggestionsHTML']();
 					} else {
 						mainHtml = mainHtml + self['prepareSortedSuggestionsHTML']();
+					}
+				}else{
+					if (sidelen === 0) {
+          				mainHtml =	mainHtml + '<ul class="unbxd-as-maincontent">';
 					}
 				}
 
