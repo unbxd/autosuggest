@@ -491,6 +491,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					.done(function (data) {
 						if (data && data.response.products && data.response.products.length > 0) {
 							var products = data.response.products.splice(0, that.options.trendingSearches.maxCount);
+							if(!that.clickResults) {
+								that.clickResults = {};
+							}
 							that.clickResults.TRENDING_QUERIES = products;
 							for (var i = 0; i < products.length; i++) {
 								var doc = products[i];
@@ -647,7 +650,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					self.hideResults();
 				}
 			});
-			if (self.options.trendingSearches.enabled && self.clickResults.TRENDING_QUERIES.length) {
+			if (self.options.trendingSearches.enabled && self.clickResults && self.clickResults.TRENDING_QUERIES.length) {
 				$(document).bind("keyup.auto", function (e) {
 					if (e.target.value === "") {
 						self.$results.html('');
@@ -1155,7 +1158,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 				else {
 					this.$input.removeClass(this.options.loadingClass);
-					if (!(this.options.trendingSearches.enabled && this.clickResults.TRENDING_QUERIES.length > 0 && v === "")) {
+					if (!(this.options.trendingSearches.enabled && this.clickResults && this.clickResults.TRENDING_QUERIES.length > 0 && v === "")) {
 						this.$results.hide();
 					}
 				}
