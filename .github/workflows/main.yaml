@@ -78,7 +78,7 @@ jobs:
           aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1_test.js
         else 
           aws s3 cp unbxdAutosuggest.js s3://unbxd/unbxdAutosuggest_v1.2.js --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers  --cache-control max-age=3600
-          aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1.2.js
+          aws cloudfront create-invalidation --distribution-id=$AWS_DISTRIBUTION_ID --paths /unbxdAutosuggest_v1.3.js
         fi
 
     # - name: Slack Notification
