@@ -870,7 +870,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 			});
 
-			if (typeof this.options.onItemSelect == "function" && data.type !== "POPULAR_PRODUCTS_FILTERED") {
+			if(typeof this.options.onItemSelect === "function" && data.type === "TRENDING_QUERIES") {
+				this.options.onItemSelect.call(this, data, this.clickResults['TRENDING_QUERIES'][parseInt(data['index'])]);
+			}
+
+			else if (typeof this.options.onItemSelect == "function" && data.type !== "POPULAR_PRODUCTS_FILTERED") {
 				if (data.sorted) {
 					this.options.onItemSelect.call(this, data, this.currentResults['SORTED_SUGGESTIONS'][parseInt(data['index'])]._original, e);
 				}
