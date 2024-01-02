@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: minimal
 title: Introduction
 nav_order: 1
 permalink: docs/introduction
