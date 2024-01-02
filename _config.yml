@@ -56,5 +56,4 @@ plugins:
 #   - vendor/gems/
 #   - vendor/ruby/
 
-exclude:
-  - docs/bower_components
+exclude: [bower_components/*/*.md]
