@@ -1500,7 +1500,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			return arr.indexOf(autosuggest) === -1 ? arr.push(autosuggest) : false;
 		}
 		, getfilteredPopularProducts: function () {
+			console.log("entered");
 			var query = this.params.q;
+			console.log(query);
 			if (this.options.customQueryParse && typeof this.options.customQueryParse === "function") {
 				query = this.options.customQueryParse(this.params.q);
 			}
@@ -1529,6 +1531,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				});
 			}
 
+			let filteredExtraParamsString = "";
+			var filteredExtraParams = (self.options.popularProducts && self.options.popularProducts.filteredExtraParams) || {};
+			var filteredExtraParamsKeys = Object.keys(filteredExtraParams);
+			if (filteredExtraParamsKeys.length) {
+				filteredExtraParamsKeys.forEach((key) => {
+					filteredExtraParamsString = filteredExtraParamsString + "&" + key + "=" + filteredExtraParams[key];
+				});
+			}
+
 			var params = this.getAjaxParams();
 			params.url = url;
 			params.cache = true;
@@ -1547,17 +1558,20 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 									+ this.currentResults[i][j]['filtername'] + ":\""
 									+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
 									+ "\"&rows=" + this.options.popularProducts.count + popularProductFields + "&"
-									+ defaultSearchParams;
+									+ defaultSearchParams 
+									+ filteredExtraParamsString;
 							}
 							else {
 								url = urlPath + "?q="
 									+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
 									+ "&rows=" + this.options.popularProducts.count + popularProductFields + "&"
-									+ defaultSearchParams;
+									+ defaultSearchParams 
+									+ filteredExtraParamsString;
 							}
 							var params = this.getAjaxParams();
 							params.url = url;
 							params.cache = true;
+							console.log("more filter calls");
 							$.ajax(params).done(function (d) {
 								var query = d.searchMetaData.queryParams.q
 									+ (d.searchMetaData.queryParams.filter ? ':'
