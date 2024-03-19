@@ -1500,9 +1500,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			return arr.indexOf(autosuggest) === -1 ? arr.push(autosuggest) : false;
 		}
 		, getfilteredPopularProducts: function () {
-			console.log("entered");
 			var query = this.params.q;
-			console.log(query);
 			if (this.options.customQueryParse && typeof this.options.customQueryParse === "function") {
 				query = this.options.customQueryParse(this.params.q);
 			}
@@ -1571,7 +1569,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							var params = this.getAjaxParams();
 							params.url = url;
 							params.cache = true;
-							console.log("more filter calls");
 							$.ajax(params).done(function (d) {
 								var query = d.searchMetaData.queryParams.q
 									+ (d.searchMetaData.queryParams.filter ? ':'
