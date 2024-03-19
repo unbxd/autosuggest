@@ -9,7 +9,8 @@
                 position: relative;
             }
             #unbxdInput {
-                width: 50%;
+                width: 100%;
+                height: 50px;
             }
         </style>
     </head>
@@ -22,8 +23,8 @@
             const renderAutosuggest = function () {
         window.unbxdAutoSuggestFunction($, Handlebars);
         $("#unbxdInput").unbxdautocomplete({
-                siteName: "ss-unbxd-dev-downies7871636539561"
-                , APIKey: "d77847bb19b086453e3ad135ac0e72d1"
+                siteName: "ss-unbxd-stage-biostime47271698914336"
+                , APIKey: "8a71d95e9b78da43ddca107d4b4d36de"
                 , minChars: 1
                 , showCarts: false
                 , position: "relative"
@@ -86,7 +87,10 @@
                 , nameFunctionOrKey: "title"
                 , view: "grid"
                 , rowCount: 3
-                , fields: ['title', 'doctype', 'autosuggest', 'price', 'priceInc', 'imageUrl', 'productUrl', 'priceIncUSD', 'priceIncGBP', 'priceIncNZD', 'priceIncCAD', 'priceIncCNY', 'priceIncEUR', 'priceIncMXN']
+                // , filteredExtraParams: {
+                //     filter: "-content_type:BLOG",
+                // }
+                , fields: ['title', 'doctype', 'content_type', 'autosuggest', 'price', 'priceInc', 'imageUrl', 'productUrl', 'priceIncUSD', 'priceIncGBP', 'priceIncNZD', 'priceIncCAD', 'priceIncCNY', 'priceIncEUR', 'priceIncMXN']
                 },
                 trendingSearches: {
                     enabled: true
@@ -95,6 +99,7 @@
                 preferInputWidthTotalContent: true,
                 preferOneColumnFullWidth: true,
                 filtered: true,
+                
                 platform: 'io',
                 preferInputWidthMainContent: true,
                 hideOnResize: true,
@@ -103,7 +108,8 @@
                 resultsContainerSelector: "#autoSuggestResults",
                 removeDuplicates: true,
                 extraParams: {
-                    __ts: (new Date()).getTime()
+                    __ts: (new Date()).getTime(),
+                    filter: "-content_type:BLOG",
                 }
                 // processResultsStyles: function(pos){
                 //     let counter = 0;
@@ -129,6 +135,12 @@
                 // }
         });
     };
+
+
+
+
+   
+   
     renderAutosuggest();
     </script>
 </html>
