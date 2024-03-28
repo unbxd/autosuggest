@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Unbxd Autocomplete</title>
+	<link rel="shortcut icon" href="favicon.png" type="image/icon">
+	<link rel="icon" href="favicon.png" type="image/icon">
+	<link rel="stylesheet" href="unbxdAutosuggest.css">
+	<link rel="stylesheet" type="text/css" href="node_modules/chosen-js/chosen.min.css">
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/8.6/styles/github.min.css">
+	<style type="text/css">
+		* {
+			font-family: proxima-nova, Arial, sans-serif;
+		}
+
+		.rt {
+			float: right;
+		}
+
+		.lt {
+			float: left;
+		}
+
+		body {
+			padding: 20px;
+		}
+
+		.searchBar {
+			/*position: absolute;
+  	left: 300px;
+  	top: 50px;*/
+		}
+
+		.clip {
+			/*position: absolute;
+  	left: 300px;
+  	top: 200px;*/
+		}
+
+		.pad-5-20 {
+			padding: 5px 20px;
+		}
+
+		.clearfix:after {
+			clear: both;
+			content: ".";
+			display: block;
+			font-size: 0px;
+			height: 0px;
+			visibilty: hidden;
+
+		}
+
+		.chosen-container-multi .chosen-choices {
+			width: 80%;
+		}
+
+		.chzn-container-multi .chzn-choices li.search-field input {
+			height: 100%;
+		}
+
+		#pastebin,
+		#pastebinUrl,
+		#copy-description {
+			margin: 10px;
+		}
+	</style>
+	<script>
+		(function (i, s, o, g, r, a, m) {
+		i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+			(i[r].q = i[r].q || []).push(arguments)
+		}, i[r].l = 1 * new Date(); a = s.createElement(o),
+			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+		ga('create', 'UA-52135874-3', 'auto');
+		ga('send', 'pageview');
+
+	</script>
+
+</head>
+
+<body>
+	<div id="container" style="width: 100%;"></div>
+	<script id='template' type='text/ractive'>
+	<div id="config" style="width: 25%;" class="lt">
+		<div class="clearfix" >
+			<div>
+				<label>Configuration</label>
+				<div class="pad-5-20">
+					
+					Site Name<br>
+					<input class="form-control" type="text" name="siteName" value={{siteName}} >
+				</div>
+				<div class="pad-5-20">
+					
+					API Key<br>
+					<input class="form-control" type="text" name="APIKey" value={{APIKey}} >
+				</div>
+				<div class="pad-5-20">
+					
+					Input ID selector<br>
+					<input class="form-control" type="text" id="inputID" value={{inputID}} >
+				</div>
+				<div class="pad-5-20">
+
+					max suggestions<br>
+					<input class="form-control" type="text" name="keywords" value={{maxSuggestions}} style="width:60px" >
+				</div>
+				<div class="pad-5-20">
+					max no of Keywords<br>
+					<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
+				</div>
+				<div class="pad-5-20">
+					max no of Topqueries<br>
+					<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
+				</div>
+				<div class="pad-5-20">
+					max no of In-fields<br>
+					<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
+				</div>
+				<div class="pad-5-20">
+					max no of Popular-Products<br>
+					<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
+				</div>
+
+				<div class="pad-5-20">
+					Keywords Header<br>
+					<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
+				</div>
+				<div class="pad-5-20">
+					Topqueries Header<br>
+					<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
+				</div>
+				<div class="pad-5-20">
+					In-fields Header<br>
+					<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
+				</div>
+				<div class="pad-5-20">
+					Popular-Products Header<br>
+					<input class="form-control" type="text" name="headerProducts" value={{prodheader}}>
+				</div>
+
+				<div class="pad-5-20">
+					Main Width<br>
+					<input class="form-control" type="text" name="widthMain" style="width:60px" value={{widthMain}}>
+				</div>
+				<div class="pad-5-20">
+					Side Width<br>
+					<input class="form-control" type="text" name="widthSide" style="width:60px" value={{widthSide}} >
+				</div>
+
+				<div class="pad-5-20">
+					<input class="content" type="radio" name={{template}} value="1column"> 1-Column &nbsp;
+					<input class="content" type="radio" name={{template}} value="2column"> 2-Column 
+				</div>
+				<div class="pad-5-20">
+					<input class="content" type="radio" name={{sideContent}} value="left"> Left &nbsp;
+					<input class="content" type="radio" name={{sideContent}} value="right"> Right
+				</div>
+				<div class="pad-5-20">
+					<input class="content" type="checkbox" checked='{{on}}'> Show Add-to-carts
+				</div>
+				<div class="pad-5-20">
+					<input class="content" type="radio" name={{cartType}} value="inline" > Inline &nbsp;
+					<input class="content" type="radio" name={{cartType}} value="separate"> Separate
+				</div>
+			</div>
+		
+				
+			<div class="pad-5-20">Main template
+				<select decorator='chosen' id="MainTpl" value='{{selectedmain}}' multiple style="width:200px;">
+    				{{#mainfields}}
+        				<option value='{{id}}'>{{name}}</option>
+    				{{/mainfields}}
+				</select>
+			</div>
+
+			<div class="pad-5-20">Side template
+				<select decorator='chosen' id="SideTpl" value='{{selectedside}}' multiple style="width:200px;">
+    				{{#sidefields}}
+        				<option value='{{id}}'>{{name}}</option>
+    				{{/sidefields}}
+				</select>	
+			</div>
+			<div class="pad-5-20">Theme
+				<select class="form-control" value='{{selectedTheme}}'>
+    				<option selected disabled>Select a Theme</option>
+    				{{#themes}}
+        				<option value='{{id}}'>{{name}}</option>
+    				{{/themes}}
+				</select>
+  			</div>
+  			<div class="pad-5-20">Config
+  				<select class="form-control" value='{{selectedconfig}}'>
+    				{{#config}}
+        				<option value='{{id}}'>{{name}}</option>
+    				{{/config}}
+				</select>
+  			</div>
+			
+			
+		</div>
+	</div>
+	
+	<div id="play-arena" class="rt" style="width: 75%;">
+		<input id="input" class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text" style="padding:4px; width: 300px;"/>
+		<div class="clip">
+			<label>Usage</label></br>
+			<button id="copy-description">copy to clipboard</button>
+			<button id="pastebin">share with pastebin</button>
+			<span id="pastebinUrl">Your shared pastebin <a href={{pastebinUrl}}>here</a></span> 
+			<pre><code id="description" rows="6" cols="50">{{content}}</code></pre>
+		</div>
+	</div>
+	</script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+	<script type="text/javascript" src="node_modules/handlebars/dist/handlebars.min.js"></script>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="unbxdAutosuggest.js"></script>
+	<!--<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script> -->
+	<script type="text/javascript" src="node_modules/chosen-js/chosen.jquery.min.js"></script>
+	<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="bower_components/jquery-zclip/jquery.zclip.js"></script>
+	<script src='bower_components/ractive/ractive.min.js'></script>
+	
+	<script type="text/javascript" src="app.js"></script>
+	<script type="text/javascript">
+		var UnbxdSiteName = "demosite-u1407617955968", UnbxdAPIKey = "64a4a2592a648ac8415e13c561e44991";
+		var s = document.createElement("script");
+		s.src = "//d21gpk1vhmjuf5.cloudfront.net/unbxdAnalytics.js";
+		s.type = "text/javascript";
+		s.async = true;
+		document.getElementsByTagName('head').item(0).appendChild(s);
+	</script>
+</body>
+
+</html>

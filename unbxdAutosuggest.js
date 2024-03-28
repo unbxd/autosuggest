@@ -867,6 +867,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					, pid: data.pid || null
 					, unbxdprank: parseInt(data.index, 10) + 1 || 0
 					, internal_query: prev
+					, src_query: data.src || null
 				}
 			});
 
@@ -1586,7 +1587,6 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				&& d.response.products.length) {
 				for (var k = 0; k < d.response.products.length; k++) {
 					var doc = d.response.products[k];
-
 					var o = {
 						_original: doc
 						, type: 'POPULAR_PRODUCTS_FILTERED'
