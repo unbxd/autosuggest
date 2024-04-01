@@ -857,18 +857,45 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.$input.val(v);
 			this.hideResultsNow(this);
 
-			this.addToAnalytics("search", {
-				query: data.value, autosuggestParams: {
-					autosuggest_type: data.type
-					, autosuggest_suggestion: data.value
-					, field_value: data.filtervalue || null
-					, field_name: data.filtername || null
-					, src_field: data.source || null
-					, pid: data.pid || null
-					, unbxdprank: parseInt(data.index, 10) + 1 || 0
-					, internal_query: prev
-					, src_query: data.src || null
+			var analyticsObj = {
+				unbxdprank: parseInt(data.index, 10) + 1 || 0,
+				internal_query: prev
+			}
+
+			if(data.type) {
+				analyticsObj.autosuggest_type = data.type;
+			}
+
+			if(data.value) {
+				if(data.type !== "POPULAR_PRODUCTS" && data.type !== "POPULAR_PRODUCTS_FILTERED") {
+					analyticsObj.autosuggest_suggestion = data.value;
 				}
+			}
+
+			if(data.filtervalue) {
+				analyticsObj.field_value = data.filtervalue;
+			}
+
+			if(data.filtername) {
+				analyticsObj.field_name = data.filtername;
+			}
+
+			if(data.source) {
+				analyticsObj.src_field = data.source;
+			}
+
+			if(data.pid) {
+				analyticsObj.pid = data.pid;
+			}
+
+			if(data.src) {
+				analyticsObj.src_query = data.src;
+			}
+
+			debugger;
+
+			this.addToAnalytics("search", {
+				query: data.value, autosuggestParams: analyticsObj
 			});
 
 			if(typeof this.options.onItemSelect === "function" && data.type === "TRENDING_QUERIES") {
