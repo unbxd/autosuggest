@@ -857,46 +857,62 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.$input.val(v);
 			this.hideResultsNow(this);
 
-			var analyticsObj = {
+			var autosuggestParamsObj = {
 				unbxdprank: parseInt(data.index, 10) + 1 || 0,
 				internal_query: prev
 			}
 
 			if(data.type) {
-				analyticsObj.autosuggest_type = data.type;
+				if(data.type === "TRENDING_QUERIES") {
+					autosuggestParamsObj.autosuggest_type = "TOP_SEARCH_QUERIES";
+				} else {
+					autosuggestParamsObj.autosuggest_type = data.type;
+				}
 			}
 
 			if(data.value) {
 				if(data.type !== "POPULAR_PRODUCTS" && data.type !== "POPULAR_PRODUCTS_FILTERED") {
-					analyticsObj.autosuggest_suggestion = data.value;
+					autosuggestParamsObj.autosuggest_suggestion = data.value;
 				}
 			}
 
 			if(data.filtervalue) {
-				analyticsObj.field_value = data.filtervalue;
+				autosuggestParamsObj.field_value = data.filtervalue;
 			}
 
 			if(data.filtername) {
-				analyticsObj.field_name = data.filtername;
+				autosuggestParamsObj.field_name = data.filtername;
 			}
 
 			if(data.source) {
-				analyticsObj.src_field = data.source;
+				autosuggestParamsObj.src_field = data.source;
 			}
 
 			if(data.pid) {
-				analyticsObj.pid = data.pid;
+				autosuggestParamsObj.pid = data.pid;
 			}
 
 			if(data.src) {
-				analyticsObj.src_query = data.src;
+				autosuggestParamsObj.src_query = data.src;
 			}
 
-			debugger;
+			
 
-			this.addToAnalytics("search", {
-				query: data.value, autosuggestParams: analyticsObj
-			});
+			var analyticsObj = {
+				query: data.value, autosuggestParams: autosuggestParamsObj
+			};
+
+			if(data.type === "TRENDING_QUERIES") {
+				if(analyticsObj.misc) {
+					analyticsObj.misc.unxAsType = "TRENDING_QUERIES";
+				} else {
+					analyticsObj.misc = {
+						unxAsType: "TRENDING_QUERIES"
+					}
+				}
+			}
+
+			this.addToAnalytics("search", analyticsObj);
 
 			if(typeof this.options.onItemSelect === "function" && data.type === "TRENDING_QUERIES") {
 				this.options.onItemSelect.call(this, data, this.clickResults['TRENDING_QUERIES'][parseInt(data['index'])]);

@@ -25,8 +25,12 @@
         $("#unbxdInput").unbxdautocomplete({
                 // siteName: "ss-unbxd-prod-taw9eel-eng41461681305976"
                 // , APIKey: "6052267452702bf2373fb05cd1e1fd0a"
+                // (infield suggestions, trending queries from below set)
                 siteName: "sanity-com-au807721559915031"
                 , APIKey: "5c3a4f2cbd061731cf6fa614437bc8eb"
+                // (promoted suggestions from below set)
+                // siteName: "ss-unbxd-prod-ryda-magento45401691393346"
+                // , APIKey: "bbc7050687a61386ec6fdcc0c4a245c9" 
                 , minChars: 1
                 , showCarts: false
                 , position: "relative"
@@ -95,7 +99,8 @@
                 , fields: ["sellingPrice","price","discount","uniqueId","productUrl","title","imageUrl","id","autosuggest","doctype"]
                 },
                 trendingSearches: {
-                    enabled: true
+                    enabled: true,
+                    maxCount: 5
                 },
                 inputContainerSelector: "#unbxdInput",
                 preferInputWidthTotalContent: true,
