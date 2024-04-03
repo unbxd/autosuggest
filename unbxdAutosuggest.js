@@ -629,19 +629,31 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						var data = p.data();
 						data.quantity = parseFloat(p.find("input.unbxd-popular-product-qty-input").val());
 
-						self.addToAnalytics("click", {
-							pr: parseInt(data.index) + 1
-							, pid: data.pid || null
-							, url: window.location.href
-						});
+						let clickAnalyticsObj = {};
+						let cartAnalyticsObj = {};
+
+						if(data.pid) {
+							clickAnalyticsObj.pid = data.pid;
+							cartAnalyticsObj.pid = data.pid;
+						}
+
+						if(Object.keys(clickAnalyticsObj).length) {
+							self.addToAnalytics("click", clickAnalyticsObj);
+						}
 
 						self.options.onCartClick.call(self, data, self.currentResults.POPULAR_PRODUCTS[parseInt(data['index'])]._original) && self.hideResults();
 
-						self.addToAnalytics("addToCart", {
-							pid: data.pid || null
-							, url: window.location.href
-						});
-
+						//let cartAnalyticsObj = {};
+						// if(data.pid) {
+						// 	cartAnalyticsObj.pid = data.pid;
+						// }
+						if(data.quantity) {
+							cartAnalyticsObj.qty = data.quantity;
+						}
+						if(Object.keys(cartAnalyticsObj).length) {
+							self.addToAnalytics("addToCart", cartAnalyticsObj);
+						}
+						
 						return;
 					}
 					self.selectItem(p.data(), e);
@@ -913,6 +925,18 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			this.addToAnalytics("search", analyticsObj);
+
+			if(data.type === "POPULAR_PRODUCTS" || data.type === "POPULAR_PRODUCTS_FILTERED") {
+				let clickAnalyticsObj = {};
+				if(data.pid) {
+					clickAnalyticsObj.pid = data.pid;
+				}
+				if(Object.keys(clickAnalyticsObj).length) { 
+					this.addToAnalytics("click", {
+						pid: data.pid
+					});
+				}
+			}
 
 			if(typeof this.options.onItemSelect === "function" && data.type === "TRENDING_QUERIES") {
 				this.options.onItemSelect.call(this, data, this.clickResults['TRENDING_QUERIES'][parseInt(data['index'])]);
