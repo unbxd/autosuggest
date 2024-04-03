@@ -1,240 +1,162 @@
-<!DOCTYPE html>
 <html>
+    <head>
+        <link rel="stylesheet" href="unbxdAutosuggest.css">
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="unbxdAutosuggest.js"></script>
+        <style>
+            #autoSuggestResults {
+                position: relative;
+            }
+            #unbxdInput {
+                width: 100%;
+                height: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="autoSuggestResults">
+        <input type="text" id="unbxdInput" />
+        </div>
+    </body>
+    <script>
+            const renderAutosuggest = function () {
+        window.unbxdAutoSuggestFunction($, Handlebars);
+        $("#unbxdInput").unbxdautocomplete({
+                // siteName: "ss-unbxd-prod-taw9eel-eng41461681305976"
+                // , APIKey: "6052267452702bf2373fb05cd1e1fd0a"
+                // (infield suggestions, trending queries from below set)
+                siteName: "sanity-com-au807721559915031"
+                , APIKey: "5c3a4f2cbd061731cf6fa614437bc8eb"
+                // (promoted suggestions from below set)
+                // siteName: "ss-unbxd-prod-ryda-magento45401691393346"
+                // , APIKey: "bbc7050687a61386ec6fdcc0c4a245c9" 
+                , minChars: 1
+                , showCarts: false
+                , position: "relative"
+                , integrations: {
+                'universal': true
+                }
+                , template: (window.UNBXD_AUTO_CONFIG && window.UNBXD_AUTO_CONFIG.template) || "2column"
+                , mainTpl: (window.UNBXD_AUTO_CONFIG && window.UNBXD_AUTO_CONFIG.mainTpl) || ['inFields', 'keywordSuggestions', 'topQueries', 'promotedSuggestions']
+                , sideTpl: ['popularProducts']
+                , sideContentOn: (window.UNBXD_AUTO_CONFIG && window.UNBXD_AUTO_CONFIG.sideContentOn) || "right"
+                , cartType: "separate"
+                , noResultTpl: "No results found."
 
-<head>
-	<title>Unbxd Autocomplete</title>
-	<link rel="shortcut icon" href="favicon.png" type="image/icon">
-	<link rel="icon" href="favicon.png" type="image/icon">
-	<link rel="stylesheet" href="unbxdAutosuggest.css">
-	<link rel="stylesheet" type="text/css" href="node_modules/chosen-js/chosen.min.css">
-	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" href="//cdn.jsdelivr.net/highlight.js/8.6/styles/github.min.css">
-	<style type="text/css">
-		* {
-			font-family: proxima-nova, Arial, sans-serif;
-		}
+                , onItemSelect: function (data) {
+                // if (data.type === "IN_FIELD" && data.filtername) {
+                //     if (data.filtername) {
+                //     window.location = window.location.origin + window.location.pathname + "?&q=" + encodeURIComponent(data.value) + "&filter=" + data.filtername + "_uFilter:" + encodeURIComponent('"' + data.filtervalue + '"');
+                //     } else {
+                //     window.location = window.location.origin + window.location.pathname + "?&q=" + encodeURIComponent(data.value);
+                //     }
+                // } else {
+                //     window.location = window.location.origin + window.location.pathname + "?&q=" + encodeURIComponent(data.value);
+                // }
+                }
+                , onCartClick: function (obj) {
+                return true;
+                }
+                , isMobile: function () {
+                if (document.body.clientWidth <= 480) {
+                    return true;
+                } else {
+                    return false;
+                }
+                }
+                , theme: "#666666"
+                , sortByLength: true
+                , inFields: {
+                header: '',
+                count: 6,
+                showDefault: true,
+                noOfInfields: 1
+                },
+                topQueries: {
+                count: 2
+                , header: ''
+                },
+                keywordSuggestions: {
+                count: 6
+                , header: ''
+                }
+                , popularProducts: {
+                count: 6
+                , price: true
+                , priceFunctionOrKey: "price"
+                , image: true
+                , imageUrlOrFunction: "imageUrl"
+                , currency: "$"
+                , header: 'Popular Products'
+                , name: true
+                , nameFunctionOrKey: "title"
+                , view: "grid"
+                , rowCount: 3
+                // , filteredExtraParams: {
+                //     filter: "t9AreaProduct:0",
+                // }
+                , fields: ["sellingPrice","price","discount","uniqueId","productUrl","title","imageUrl","id","autosuggest","doctype"]
+                },
+                trendingSearches: {
+                    enabled: true,
+                    maxCount: 5
+                },
+                inputContainerSelector: "#unbxdInput",
+                preferInputWidthTotalContent: true,
+                preferOneColumnFullWidth: true,
+                filtered: true,
+                
+                platform: 'io',
+                preferInputWidthMainContent: true,
+                hideOnResize: true,
+                removeOnBackButton: true,
+                
+                resultsContainerSelector: "#autoSuggestResults",
+                removeDuplicates: false,
+                extraParams: {
+                    __ts: (new Date()).getTime()
+                    // version: "V2",
+                    // "popularProducts.filter": "t9AreaProduct:0",
+                    // "fallback.method": "fuzzySearch",
+                    // "uid": "uid-1690270152946-67188",
+                    // "fallback": true
+                    // filter: "-content_type:BLOG",
+                }
+                // processResultsStyles: function(pos){
+                //     let counter = 0;
+                //     const resultsObj = this.currentResults;
+                //     const obArr = Object.keys(resultsObj);
+                //     obArr.forEach((item)=> {
+                //         if(resultsObj[item].length > 0) {
+                //             counter = counter + 1
+                //         }
+                //     });
+                //     const auElem = this.$results[0];
+                //     const mainContent = auElem.querySelector(".unbxd-as-maincontent");
+                //     if(counter === 1 ) {
+                //         auElem.querySelector(".unbxd-as-sidecontent").style.width = "100%";
+                //     }
+                //     if(counter === 0 && mainContent ) {
+                //         mainContent.style.width = "100%";
+                //     } 
+                //     return {
+                //         top: "100%",
+                //         left: "0"
+                //     }
+                // }
+        });
+    };
 
-		.rt {
-			float: right;
-		}
+    /** Server Command */
+    /** python3 -m http.server */
 
-		.lt {
-			float: left;
-		}
 
-		body {
-			padding: 20px;
-		}
 
-		.searchBar {
-			/*position: absolute;
-  	left: 300px;
-  	top: 50px;*/
-		}
 
-		.clip {
-			/*position: absolute;
-  	left: 300px;
-  	top: 200px;*/
-		}
-
-		.pad-5-20 {
-			padding: 5px 20px;
-		}
-
-		.clearfix:after {
-			clear: both;
-			content: ".";
-			display: block;
-			font-size: 0px;
-			height: 0px;
-			visibilty: hidden;
-
-		}
-
-		.chosen-container-multi .chosen-choices {
-			width: 80%;
-		}
-
-		.chzn-container-multi .chzn-choices li.search-field input {
-			height: 100%;
-		}
-
-		#pastebin,
-		#pastebinUrl,
-		#copy-description {
-			margin: 10px;
-		}
-	</style>
-	<script>
-		(function (i, s, o, g, r, a, m) {
-		i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-			(i[r].q = i[r].q || []).push(arguments)
-		}, i[r].l = 1 * new Date(); a = s.createElement(o),
-			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-		ga('create', 'UA-52135874-3', 'auto');
-		ga('send', 'pageview');
-
-	</script>
-
-</head>
-
-<body>
-	<div id="container" style="width: 100%;"></div>
-	<script id='template' type='text/ractive'>
-	<div id="config" style="width: 25%;" class="lt">
-		<div class="clearfix" >
-			<div>
-				<label>Configuration</label>
-				<div class="pad-5-20">
-					
-					Site Name<br>
-					<input class="form-control" type="text" name="siteName" value={{siteName}} >
-				</div>
-				<div class="pad-5-20">
-					
-					API Key<br>
-					<input class="form-control" type="text" name="APIKey" value={{APIKey}} >
-				</div>
-				<div class="pad-5-20">
-					
-					Input ID selector<br>
-					<input class="form-control" type="text" id="inputID" value={{inputID}} >
-				</div>
-				<div class="pad-5-20">
-
-					max suggestions<br>
-					<input class="form-control" type="text" name="keywords" value={{maxSuggestions}} style="width:60px" >
-				</div>
-				<div class="pad-5-20">
-					max no of Keywords<br>
-					<input class="form-control" type="text" name="keywords" value={{keycount}} style="width:60px" >
-				</div>
-				<div class="pad-5-20">
-					max no of Topqueries<br>
-					<input class="form-control" type="text" name="topqueries" value={{topcount}} style="width:60px">
-				</div>
-				<div class="pad-5-20">
-					max no of In-fields<br>
-					<input class="form-control" type="text" name="infields" value={{incount}} style="width:60px">
-				</div>
-				<div class="pad-5-20">
-					max no of Popular-Products<br>
-					<input class="form-control" type="text" name="products" value={{prodcount}} style="width:60px">
-				</div>
-
-				<div class="pad-5-20">
-					Keywords Header<br>
-					<input class="form-control" type="text" name="headerKeywords" value={{keyheader}}>
-				</div>
-				<div class="pad-5-20">
-					Topqueries Header<br>
-					<input class="form-control" type="text" name="headerTopqueries" value={{topheader}} >
-				</div>
-				<div class="pad-5-20">
-					In-fields Header<br>
-					<input class="form-control" type="text" name="headerInfields" value={{inheader}}>
-				</div>
-				<div class="pad-5-20">
-					Popular-Products Header<br>
-					<input class="form-control" type="text" name="headerProducts" value={{prodheader}}>
-				</div>
-
-				<div class="pad-5-20">
-					Main Width<br>
-					<input class="form-control" type="text" name="widthMain" style="width:60px" value={{widthMain}}>
-				</div>
-				<div class="pad-5-20">
-					Side Width<br>
-					<input class="form-control" type="text" name="widthSide" style="width:60px" value={{widthSide}} >
-				</div>
-
-				<div class="pad-5-20">
-					<input class="content" type="radio" name={{template}} value="1column"> 1-Column &nbsp;
-					<input class="content" type="radio" name={{template}} value="2column"> 2-Column 
-				</div>
-				<div class="pad-5-20">
-					<input class="content" type="radio" name={{sideContent}} value="left"> Left &nbsp;
-					<input class="content" type="radio" name={{sideContent}} value="right"> Right
-				</div>
-				<div class="pad-5-20">
-					<input class="content" type="checkbox" checked='{{on}}'> Show Add-to-carts
-				</div>
-				<div class="pad-5-20">
-					<input class="content" type="radio" name={{cartType}} value="inline" > Inline &nbsp;
-					<input class="content" type="radio" name={{cartType}} value="separate"> Separate
-				</div>
-			</div>
-		
-				
-			<div class="pad-5-20">Main template
-				<select decorator='chosen' id="MainTpl" value='{{selectedmain}}' multiple style="width:200px;">
-    				{{#mainfields}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/mainfields}}
-				</select>
-			</div>
-
-			<div class="pad-5-20">Side template
-				<select decorator='chosen' id="SideTpl" value='{{selectedside}}' multiple style="width:200px;">
-    				{{#sidefields}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/sidefields}}
-				</select>	
-			</div>
-			<div class="pad-5-20">Theme
-				<select class="form-control" value='{{selectedTheme}}'>
-    				<option selected disabled>Select a Theme</option>
-    				{{#themes}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/themes}}
-				</select>
-  			</div>
-  			<div class="pad-5-20">Config
-  				<select class="form-control" value='{{selectedconfig}}'>
-    				{{#config}}
-        				<option value='{{id}}'>{{name}}</option>
-    				{{/config}}
-				</select>
-  			</div>
-			
-			
-		</div>
-	</div>
-	
-	<div id="play-arena" class="rt" style="width: 75%;">
-		<input id="input" class="autoCmplt-input input-0 searchBar form-control"  placeholder="Please type here to search " type="text" style="padding:4px; width: 300px;"/>
-		<div class="clip">
-			<label>Usage</label></br>
-			<button id="copy-description">copy to clipboard</button>
-			<button id="pastebin">share with pastebin</button>
-			<span id="pastebinUrl">Your shared pastebin <a href={{pastebinUrl}}>here</a></span> 
-			<pre><code id="description" rows="6" cols="50">{{content}}</code></pre>
-		</div>
-	</div>
-	</script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
-	<script type="text/javascript" src="node_modules/handlebars/dist/handlebars.min.js"></script>
-	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-	<script src="unbxdAutosuggest.js"></script>
-	<!--<script src="//d21gpk1vhmjuf5.cloudfront.net/jquery-unbxdautosuggest.js"></script> -->
-	<script type="text/javascript" src="node_modules/chosen-js/chosen.jquery.min.js"></script>
-	<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="bower_components/jquery-zclip/jquery.zclip.js"></script>
-	<script src='bower_components/ractive/ractive.min.js'></script>
-	
-	<script type="text/javascript" src="app.js"></script>
-	<script type="text/javascript">
-		var UnbxdSiteName = "demosite-u1407617955968", UnbxdAPIKey = "64a4a2592a648ac8415e13c561e44991";
-		var s = document.createElement("script");
-		s.src = "//d21gpk1vhmjuf5.cloudfront.net/unbxdAnalytics.js";
-		s.type = "text/javascript";
-		s.async = true;
-		document.getElementsByTagName('head').item(0).appendChild(s);
-	</script>
-</body>
-
+   
+   
+    renderAutosuggest();
+    </script>
 </html>
+
