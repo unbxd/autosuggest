@@ -871,7 +871,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			var autosuggestParamsObj = {
 				unbxdprank: parseInt(data.index, 10) + 1 || 0,
-				internal_query: prev
+				internal_query: prev ? prev : "*"
 			}
 
 			if(data.type) {
