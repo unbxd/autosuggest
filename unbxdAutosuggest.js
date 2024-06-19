@@ -629,19 +629,31 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						var data = p.data();
 						data.quantity = parseFloat(p.find("input.unbxd-popular-product-qty-input").val());
 
-						self.addToAnalytics("click", {
-							pr: parseInt(data.index) + 1
-							, pid: data.pid || null
-							, url: window.location.href
-						});
+						let clickAnalyticsObj = {};
+						let cartAnalyticsObj = {};
+
+						if(data.pid) {
+							clickAnalyticsObj.pid = data.pid;
+							cartAnalyticsObj.pid = data.pid;
+						}
+
+						if(Object.keys(clickAnalyticsObj).length) {
+							self.addToAnalytics("click", clickAnalyticsObj);
+						}
 
 						self.options.onCartClick.call(self, data, self.currentResults.POPULAR_PRODUCTS[parseInt(data['index'])]._original) && self.hideResults();
 
-						self.addToAnalytics("addToCart", {
-							pid: data.pid || null
-							, url: window.location.href
-						});
-
+						//let cartAnalyticsObj = {};
+						// if(data.pid) {
+						// 	cartAnalyticsObj.pid = data.pid;
+						// }
+						if(data.quantity) {
+							cartAnalyticsObj.qty = data.quantity;
+						}
+						if(Object.keys(cartAnalyticsObj).length) {
+							self.addToAnalytics("addToCart", cartAnalyticsObj);
+						}
+						
 						return;
 					}
 					self.selectItem(p.data(), e);
@@ -857,19 +869,74 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.$input.val(v);
 			this.hideResultsNow(this);
 
-			this.addToAnalytics("search", {
-				query: data.value, autosuggestParams: {
-					autosuggest_type: data.type
-					, autosuggest_suggestion: data.value
-					, field_value: data.filtervalue || null
-					, field_name: data.filtername || null
-					, src_field: data.source || null
-					, pid: data.pid || null
-					, unbxdprank: parseInt(data.index, 10) + 1 || 0
-					, internal_query: prev
-					, src_query: data.src || null
+			var autosuggestParamsObj = {
+				unbxdprank: parseInt(data.index, 10) + 1 || 0,
+				internal_query: prev ? prev : "*"
+			}
+
+			if(data.type) {
+				if(data.type === "TRENDING_QUERIES") {
+					autosuggestParamsObj.autosuggest_type = "TOP_SEARCH_QUERIES";
+				} else {
+					autosuggestParamsObj.autosuggest_type = data.type;
 				}
-			});
+			}
+
+			if(data.value) {
+				if(data.type !== "POPULAR_PRODUCTS" && data.type !== "POPULAR_PRODUCTS_FILTERED") {
+					autosuggestParamsObj.autosuggest_suggestion = data.value;
+				}
+			}
+
+			if(data.filtervalue) {
+				autosuggestParamsObj.field_value = data.filtervalue;
+			}
+
+			if(data.filtername) {
+				autosuggestParamsObj.field_name = data.filtername;
+			}
+
+			if(data.source) {
+				autosuggestParamsObj.src_field = data.source;
+			}
+
+			if(data.pid) {
+				autosuggestParamsObj.pid = data.pid;
+			}
+
+			if(data.src) {
+				autosuggestParamsObj.src_query = data.src;
+			}
+
+			
+
+			var analyticsObj = {
+				query: data.value, autosuggestParams: autosuggestParamsObj
+			};
+
+			if(data.type === "TRENDING_QUERIES") {
+				if(analyticsObj.misc) {
+					analyticsObj.misc.unxAsType = "TRENDING_QUERIES";
+				} else {
+					analyticsObj.misc = {
+						unxAsType: "TRENDING_QUERIES"
+					}
+				}
+			}
+
+			this.addToAnalytics("search", analyticsObj);
+
+			if(data.type === "POPULAR_PRODUCTS" || data.type === "POPULAR_PRODUCTS_FILTERED") {
+				let clickAnalyticsObj = {};
+				if(data.pid) {
+					clickAnalyticsObj.pid = data.pid;
+				}
+				if(Object.keys(clickAnalyticsObj).length) { 
+					this.addToAnalytics("click", {
+						pid: data.pid
+					});
+				}
+			}
 
 			if(typeof this.options.onItemSelect === "function" && data.type === "TRENDING_QUERIES") {
 				this.options.onItemSelect.call(this, data, this.clickResults['TRENDING_QUERIES'][parseInt(data['index'])]);

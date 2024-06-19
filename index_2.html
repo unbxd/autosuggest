@@ -63,16 +63,16 @@
                 , sortByLength: true
                 , inFields: {
                 header: '',
-                count: 1,
+                count: 6,
                 showDefault: true,
                 noOfInfields: 1
                 },
                 topQueries: {
-                count: 2
+                count: 6
                 , header: ''
                 },
                 keywordSuggestions: {
-                count: 2
+                count: 6
                 , header: ''
                 }
                 , popularProducts: {
@@ -106,10 +106,10 @@
                 removeOnBackButton: true,
                 
                 resultsContainerSelector: "#autoSuggestResults",
-                removeDuplicates: true,
+                removeDuplicates: false,
                 extraParams: {
                     __ts: (new Date()).getTime(),
-                    filter: "-content_type:BLOG",
+                    // filter: "-content_type:BLOG",
                 }
                 // processResultsStyles: function(pos){
                 //     let counter = 0;
