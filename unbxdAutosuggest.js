@@ -749,7 +749,27 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 			}
 		}
+		, getMainLength: function () {
+			var mainLength = 0;
+			var mainKeys = Object.keys(this.currentResults);
+			var that = this;
+			mainKeys.forEach((key) => {
+				if (key !== "POPULAR_PRODUCTS") {
+					if (that.currentResults[key].length) {
+						mainLength = mainLength + 1;
+					}
+				}
+			});
+			return mainLength;
+		}
 		, moveSelect: function (step) {
+			
+			var mainLength = this.getMainLength();
+			if (this.options.template == "2column" && mainLength === 0) {
+				/* Edge case if template has 2 columns but only popular products results exist */
+				this.activeColumn = 1;
+			}
+
 			var lis = this.$results.find("ul." + (this.activeColumn ? "unbxd-as-sidecontent" : "unbxd-as-maincontent")).find('li:not(.unbxd-as-header)');
 
 			if (!lis) return;
@@ -1201,6 +1221,10 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				, IN_FIELD: []
 				, SORTED_SUGGESTIONS: []
 				, PROMOTED_SUGGESTION: []
+			}
+
+			this.clickResults = {
+				TRENDING_QUERIES: []
 			}
 			/**
 			 * Due to caching check of query alone, on screen resize, 
