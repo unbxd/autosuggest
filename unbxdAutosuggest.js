@@ -1255,6 +1255,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 
 					if ((this.options.trendingSearches.enabled && this.clickResults && this.clickResults.TRENDING_QUERIES.length > 0 && v === "")) {
+						this.$results.html('');
+						var cmpld = Handlebars.compile(this.prepareTrendingQueriesHTML());
+						this.$results.html(cmpld({
+							data1: this.trendingQueries
+						}));
+						
 						this.showResults();
 					} 
 				}
