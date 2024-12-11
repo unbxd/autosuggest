@@ -4,6 +4,7 @@
         <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
         <script src="//code.jquery.com/jquery-1.10.2.js"></script>
         <script src="unbxdAutosuggest.js"></script>
+        <script src="https://libraries.unbxdapi.com/sdk-clients/ss-unbxd-stage-taw9eel-eng41461681305962/ua-staging/ua.js"></script>
         <style>
             #autoSuggestResults {
                 position: relative;
@@ -23,18 +24,16 @@
             const renderAutosuggest = function () {
         window.unbxdAutoSuggestFunction($, Handlebars);
         $("#unbxdInput").unbxdautocomplete({
-                // siteName: "ss-unbxd-prod-taw9eel-eng41461681305976"
-                // , APIKey: "6052267452702bf2373fb05cd1e1fd0a"
+                siteName: "ss-unbxd-prod-taw9eel-eng41461681305976"
+                , APIKey: "6052267452702bf2373fb05cd1e1fd0a"
                 // (infield suggestions, trending queries from below set)
                 // siteName: "sanity-com-au807721559915031"
                 // , APIKey: "5c3a4f2cbd061731cf6fa614437bc8eb"
                 // (promoted suggestions from below set)
                 // siteName: "ss-unbxd-prod-ryda-magento45401691393346"
                 // , APIKey: "bbc7050687a61386ec6fdcc0c4a245c9" 
-                siteName: "ss-unbxd-dev-supertails43231684494776"
-                , APIKey: "6546d9da179ff8cd96416ebb8078e11f"
                 , minChars: 1
-                , showCarts: false
+                , showCarts: true
                 , position: "relative"
                 , integrations: {
                 'universal': true
@@ -82,24 +81,49 @@
                 keywordSuggestions: {
                 count: 6
                 , header: ''
-                }
-                , popularProducts: {
-                count: 6
-                , price: true
-                , priceFunctionOrKey: "price"
-                , image: true
-                , imageUrlOrFunction: "imageUrl"
-                , currency: "$"
-                , header: 'Popular Products'
-                , name: true
-                , nameFunctionOrKey: "title"
-                , view: "grid"
-                , rowCount: 3
-                // , filteredExtraParams: {
-                //     filter: "t9AreaProduct:0",
-                // }
-                , fields: ["sellingPrice","price","discount","uniqueId","productUrl","title","imageUrl","id","autosuggest","doctype"]
                 },
+                // , popularProducts: {
+                // count: 6
+                // , price: true
+                // , priceFunctionOrKey: "price"
+                // , image: true
+                // , imageUrlOrFunction: "imageUrl"
+                // , currency: "$"
+                // , header: 'Popular Products'
+                // , name: true
+                // , nameFunctionOrKey: "title"
+                // , view: "grid"
+                // , rowCount: 3
+                // // , filteredExtraParams: {
+                // //     filter: "t9AreaProduct:0",
+                // // }
+                // , fields: ["sellingPrice","price","discount","uniqueId","productUrl","title","imageUrl","id","autosuggest","doctype"]
+                // },
+                popularProducts: {
+				count: 9,
+				fields: ["title", "uniqueId", "imageUrl", "productUrl", "price", "autosuggest", "doctype"],
+				name: true,
+				nameFunctionOrKey: "title",
+				price: true,
+				priceFunctionOrKey: "price",
+				image: true,
+				imageUrlOrFunction: "imageUrl",
+				autosuggestName: "ItemName",
+				currency: "$",
+				displayHeader: true,
+				header: "Popular products",
+				view: "grid",
+				rowCount: 3,
+				tpl: `<div class="unbxd-as-popular-product unbxd-as-popular-product-grid" data-value="{{autosuggest}}" data-index="{{@index}}" data-type="{{type}}" data-pid="{{_original.uniqueId}}" data-src="{{src}}">
+						<div class="unbxd-as-popular-product-info">
+							<div class="unbxd-as-popular-product-image-container">
+								<img src="{{image}}" />
+							</div>
+							<div class="unbxd-as-popular-product-name">{{autosuggest}}</div>
+							
+						</div>
+					</div>`,
+			},
                 trendingSearches: {
                     enabled: true,
                     maxCount: 5
