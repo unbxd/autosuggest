@@ -603,9 +603,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						} else if (self.$results.find(".unbxd-as-maincontent").length || self.$results.find(".unbxd-as-sidecontent").length) {
 							self.$results.html(self.prepareHTML());
 							self.showResults();
-						} else {
-							self.showResults();
-						}
+						} 
+						// else {
+						// 	if(self.$input.val() !== "") {
+						// 		self.showResults();
+						// 	}
+							
+						// }
 				} else if (e.target == self.$results[0]) {
 					self.log("clicked on results block : selecting")
 					self.hasFocus = false;
@@ -1135,9 +1139,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			document.body.removeChild(scrollDiv);
 		}
 		, hideResults: function () {
-			if(this.options.onHideResults) {
-				this.options.onHideResults();
-			}
+			
 			if (this.timeout)
 				clearTimeout(this.timeout);
 
@@ -1146,6 +1148,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			this.timeout = setTimeout(function () { self.hideResultsNow(); }, 200);
 		}
 		, hideResultsNow: function () {
+			if(this.options.onHideResults) {
+				this.options.onHideResults();
+			}
 			this.log("hideResultsNow");
 			if (this.timeout) clearTimeout(this.timeout);
 
@@ -1194,7 +1199,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				v = this.$input.val();
 			}
 
-			if (v == this.previous) return;
+			if (v == this.previous) {
+				if ((this.options.trendingSearches.enabled && this.clickResults && this.clickResults.TRENDING_QUERIES.length > 0 && v === "")) {
+					this.showResults();
+				} else {
+					return;
+				}
+			} 
 
 			this.params.q = v
 			this.previous = v;
@@ -1237,8 +1248,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				else {
 					this.$input.removeClass(this.options.loadingClass);
 					if (!(this.options.trendingSearches.enabled && this.clickResults && this.clickResults.TRENDING_QUERIES.length > 0 && v === "")) {
-						this.$results.hide();
+						// this.$results.hide();
+						this.$results.html("");
+						this.hideResults();
 					}
+
+
+					if ((this.options.trendingSearches.enabled && this.clickResults && this.clickResults.TRENDING_QUERIES.length > 0 && v === "")) {
+						this.showResults();
+					} 
 				}
 			}
 		}
@@ -1997,9 +2015,15 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			// recent searches will also be added on click in future.
-			this.clickResults = {
-				TRENDING_QUERIES: []
+
+			if(this.clickResults && this.clickResults.TRENDING_QUERIES.length) {
+				/** Do not empty again, as trending queries are fetched only once per sitekey */
+			} else {
+				this.clickResults = {
+					TRENDING_QUERIES: []
+				}
 			}
+			
 
 			var infieldsCount = 0;
 			var key_count = 0,
