@@ -1121,6 +1121,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			}
 
 			this.$results.css(fpos).show();
+			if(this.options.onShowResults) {
+				this.options.onShowResults();
+			}
 		}
 		, setScrollWidth: function () {
 			var scrollDiv = document.createElement("div");
@@ -1132,6 +1135,9 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			document.body.removeChild(scrollDiv);
 		}
 		, hideResults: function () {
+			if(this.options.onHideResults) {
+				this.options.onHideResults();
+			}
 			if (this.timeout)
 				clearTimeout(this.timeout);
 
