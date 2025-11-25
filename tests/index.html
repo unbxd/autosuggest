@@ -5,7 +5,6 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <link rel="stylesheet" href="../unbxdAutosuggest.css">
     <script src="../unbxdAutosuggest.js"></script>
-
 </head>
 
 <body>
@@ -22,7 +21,7 @@
         siteName: 'prod_1000bulbs_com-u1481199259800',
         APIKey: 'a12c446844f37c9c005f9673ceed07c6',
         minChars: 1,
-        delay: 100,
+        delay: 500,
         loadingClass: 'unbxd-as-loading',
         zIndex: 10000,
         template: '2column',
@@ -65,7 +64,7 @@
             count: 6,
             price: true,
             priceFunctionOrKey: function (obj) {
-                return obj.price.toFixed(2);
+                return obj.price ? obj.price.toFixed(2) : '0.00';
             },
             view: 'grid',
             image: true,

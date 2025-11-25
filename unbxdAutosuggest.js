@@ -479,6 +479,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (typeof this.options.hbsHelpers === 'function')
 				this.options.hbsHelpers.call(this)
 
+		const self = this;
+		this.debouncedOnChange = debounce(function () { 
+			self.onChange(); 
+		}, this.options.delay);
+
 			// Render trending Search
 			if (this.options.trendingSearches.enabled) {
 				this.trendingQueries = [];
@@ -718,16 +723,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 								self.hideResultsNow();
 							}
 							break;
-						default:
-							self.activeRow = -1;
-							self.hasFocus = true;
+					default:
+						self.activeRow = -1;
+						self.hasFocus = true;
 
-							if (self.timeout)
-								clearTimeout(self.timeout);
+						self.debouncedOnChange();
 
-							self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
-
-							break;
+						break;
 					}
 				}
 			}
