@@ -80,6 +80,7 @@ window.auto = $("#input").unbxdautocomplete({
 		, header: ''
 	},
 	filtered: true,
+	callAllSearch: false,
 	platform: 'io'
 });
 ractive.set('inputID', '#input');
