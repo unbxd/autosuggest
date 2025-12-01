@@ -208,6 +208,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 		default_options: {
 			siteName: 'demosite-u1407617955968'
 			, APIKey: '64a4a2592a648ac8415e13c561e44991'
+			, callAllSearch: false
 			, integrations: {} // can have an object of integrations
 			/* The value of integrations can be an object with
 			 * key - `classical` or `universal`(2 types of GA integrations)
@@ -479,6 +480,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			if (typeof this.options.hbsHelpers === 'function')
 				this.options.hbsHelpers.call(this)
 
+		const self = this;
+		this.debouncedOnChange = debounce(function () { 
+			self.onChange(); 
+		}, this.options.delay);
+
 			// Render trending Search
 			if (this.options.trendingSearches.enabled) {
 				this.trendingQueries = [];
@@ -545,36 +551,65 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 							self.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 						}
 
-						var cmpld = ""
-						if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
-                            if (self.options.template === "1column") {
-                                $('.unbxd-as-maincontent').addClass("unbxd-as-view-more")
-                            } else {
-                                $('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
-                            }
-							cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+						if (!self.options.callAllSearch) {
+							if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
+								var cmpld = ""
+								if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+									if (self.options.template === "1column") {
+										$('.unbxd-as-maincontent').addClass("unbxd-as-view-more")
+									} else {
+										$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+									}
+									cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+								} else {
+									cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+								}
+								
+								$('.unbxd-as-sidecontent').html(cmpld({
+									data: self.currentTopResults[query]
+									, showCarts: self.options.showCarts
+									, cartType: self.options.cartType
+								}));
+								
+								if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
+									$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
+								}
+							} else {
+								self.fetchFilteredProductsOnHover(dataValue, dataFiltername, dataFiltervalue);
+							}
 						} else {
-							cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
-						}
+							var cmpld = ""
+							if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+								if (self.options.template === "1column") {
+									$('.unbxd-as-maincontent').addClass("unbxd-as-view-more")
+								} else {
+									$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+								}
+								cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+							} else {
+								cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+							}
 
-						if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
-							$('.unbxd-as-sidecontent').html(cmpld({
-								data: self.currentTopResults[query]
-								, showCarts: self.options.showCarts
-								, cartType: self.options.cartType
-							}));
-						}
-						else {
-							$('.unbxd-as-sidecontent').html(cmpld({
-								data: self.currentResults.POPULAR_PRODUCTS
-								, showCarts: self.options.showCarts
-								, cartType: self.options.cartType
-							}));
+							if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
+								$('.unbxd-as-sidecontent').html(cmpld({
+									data: self.currentTopResults[query]
+									, showCarts: self.options.showCarts
+									, cartType: self.options.cartType
+								}));
+							}
+							else {
+								$('.unbxd-as-sidecontent').html(cmpld({
+									data: self.currentResults.POPULAR_PRODUCTS
+									, showCarts: self.options.showCarts
+									, cartType: self.options.cartType
+								}));
+							}
+							
+							if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
+								$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
+							}
 						}
 						self.hoveredQuery = dataValue;
-					}
-					if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
-						$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
 					}
 				}
 
@@ -586,7 +621,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				}
 			});
 
-			/** For single page applications, on browser back, the autosuggest doesn't remove */
+			/** For single page applications, on browser back, the autosuggest doesn't remove its results */
 			window.addEventListener('popstate', function (event) {
 				if (self.options.removeOnBackButton) {
 					$('.unbxd-as-wrapper').hide();
@@ -718,16 +753,13 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 								self.hideResultsNow();
 							}
 							break;
-						default:
-							self.activeRow = -1;
-							self.hasFocus = true;
+					default:
+						self.activeRow = -1;
+						self.hasFocus = true;
 
-							if (self.timeout)
-								clearTimeout(self.timeout);
+						self.debouncedOnChange();
 
-							self.timeout = setTimeout(debounce(function () { self.onChange(); }, 250), self.options.delay);
-
-							break;
+						break;
 					}
 				}
 			}
@@ -787,31 +819,55 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 						this.compiledPopularProductHeader = cmpldHeader({ hoverSuggestion: dataValue });
 					}
 
-					var cmpld = ""
-					if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
-						$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
-						cmpld = Handlebars.compile(this.preparefilteredPopularProducts() + this.options.popularProducts.viewMore.tpl);
+					if (!this.options.callAllSearch) {
+						if (this.currentTopResults[query] && this.currentTopResults[query].length > 0) {
+							var cmpld = ""
+							if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+								$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+								cmpld = Handlebars.compile(this.preparefilteredPopularProducts() + this.options.popularProducts.viewMore.tpl);
+							} else {
+								cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+							}
+
+							$('.unbxd-as-sidecontent').html(cmpld({
+								data: this.currentTopResults[query]
+								, showCarts: this.options.showCarts
+								, cartType: this.options.cartType
+							}));
+
+							if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
+								this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
+							}
+						} else {
+							this.fetchFilteredProductsOnHover(dataValue, dataFiltername, dataFiltervalue);
+						}
 					} else {
-						cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
-					}
+						var cmpld = ""
+						if (this.options.popularProducts.viewMore && this.options.popularProducts.viewMore.enabled) {
+							$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+							cmpld = Handlebars.compile(this.preparefilteredPopularProducts() + this.options.popularProducts.viewMore.tpl);
+						} else {
+							cmpld = Handlebars.compile(this.preparefilteredPopularProducts());
+						}
 
-					if (this.currentTopResults[query] && this.currentTopResults[query].length > 0) {
-						$('.unbxd-as-sidecontent').html(cmpld({
-							data: this.currentTopResults[query]
-							, showCarts: this.options.showCarts
-							, cartType: this.options.cartType
-						}));
-					}
-					else {
-						$('.unbxd-as-sidecontent').html(cmpld({
-							data: this.currentResults.POPULAR_PRODUCTS
-							, showCarts: this.options.showCarts
-							, cartType: this.options.cartType
-						}));
-					}
+						if (this.currentTopResults[query] && this.currentTopResults[query].length > 0) {
+							$('.unbxd-as-sidecontent').html(cmpld({
+								data: this.currentTopResults[query]
+								, showCarts: this.options.showCarts
+								, cartType: this.options.cartType
+							}));
+						}
+						else {
+							$('.unbxd-as-sidecontent').html(cmpld({
+								data: this.currentResults.POPULAR_PRODUCTS
+								, showCarts: this.options.showCarts
+								, cartType: this.options.cartType
+							}));
+						}
 
-					if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
-						this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
+						if (this.options.popularProducts.view === 'grid' && this.options.popularProducts.rowCount) {
+							this.$results.find("ul li.unbxd-as-popular-product-grid").css("width", (100 / this.options.popularProducts.rowCount) + "%");
+						}
 					}
 
 				}
@@ -1597,7 +1653,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			autosuggest = autosuggest.toLowerCase();
 			return arr.indexOf(autosuggest) === -1 ? arr.push(autosuggest) : false;
 		}
-		, getfilteredPopularProducts: function () {
+		, getfilteredPopularProducts: function (callFirstOnly) {
 			var query = this.params.q;
 			if (this.options.customQueryParse && typeof this.options.customQueryParse === "function") {
 				query = this.options.customQueryParse(this.params.q);
@@ -1606,13 +1662,11 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				urlPath = this.getHostDomainName() + this.options.APIKey + "/"
 					+ this.options.siteName + "/search",
 				defaultSearchParams = "indent=off&facet=off&analytics=false&redirect=false",
-				url = urlPath + "?q=" + encodeURIComponent(query)
-					+ "&rows=" + this.options.popularProducts.count + "&"
-					+ defaultSearchParams;
+				url = "";
 
+			var popularProductFields = "";
 			if (self.options.popularProducts.fields.length > 0) {
-				var popularProductFields = "&fields=" + self.options.popularProducts.fields.join(",");
-				url = url + popularProductFields;
+				popularProductFields = "&fields=" + self.options.popularProducts.fields.join(",");
 			}
 
 			if (self.options.removeDuplicates) {
@@ -1621,12 +1675,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			var extraParams = self.options.extraParams || {};
 			var extraParamsKeys = Object.keys(extraParams);
-			if (extraParamsKeys.length) {
-				extraParamsKeys.forEach((key) => {
-					url = url + "&" + key + "=" + extraParams[key];
-				});
-			}
-
+			
 			let filteredExtraParamsString = "";
 			var filteredExtraParams = (self.options.popularProducts && self.options.popularProducts.filteredExtraParams) || {};
 			var filteredExtraParamsKeys = Object.keys(filteredExtraParams);
@@ -1636,43 +1685,51 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				});
 			}
 
-			var params = this.getAjaxParams();
-			params.url = url;
-			params.cache = true;
-			$.ajax(params).done(function (d) {
-				var query = self.params.q;
-				self.processfilteredPopularProducts(query, d);
-			});
+			// Note: When callAllSearch is false, we don't make ANY search? calls here.
+			// All search? calls are made on-demand via hover (fetchFilteredProductsOnHover).
+			// This eliminates unnecessary API calls and improves performance.
 
-			for (var i in this.currentResults) {
-				if (i != 'POPULAR_PRODUCTS' && this.currentResults.hasOwnProperty(i)) {
-					for (var j in this.currentResults[i]) {
-						if (this.currentResults[i].hasOwnProperty(j)) {
-							if (this.currentResults[i][j]['filtername']) {
-								url = urlPath + "?q="
-									+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
-									+ this.currentResults[i][j]['filtername'] + ":\""
-									+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
-									+ "\"&rows=" + this.options.popularProducts.count + popularProductFields + "&"
-									+ defaultSearchParams 
-									+ filteredExtraParamsString;
+			// If callAllSearch is true, make all search? calls as before
+			if (self.options.callAllSearch || callFirstOnly === false) {
+				for (var i in this.currentResults) {
+					if (i != 'POPULAR_PRODUCTS' && this.currentResults.hasOwnProperty(i)) {
+						// Handles: IN_FIELD, KEYWORD_SUGGESTION, TOP_SEARCH_QUERIES, PROMOTED_SUGGESTION
+						for (var j in this.currentResults[i]) {
+							if (this.currentResults[i].hasOwnProperty(j)) {
+								if (this.currentResults[i][j]['filtername']) {
+									url = urlPath + "?q="
+										+ encodeURIComponent(this.currentResults[i][j]['autosuggest']) + "&filter="
+										+ this.currentResults[i][j]['filtername'] + ":\""
+										+ encodeURIComponent(this.currentResults[i][j]['filtervalue'])
+										+ "\"&rows=" + this.options.popularProducts.count + popularProductFields + "&"
+										+ defaultSearchParams 
+										+ filteredExtraParamsString;
+								}
+								else {
+									url = urlPath + "?q="
+										+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
+										+ "&rows=" + this.options.popularProducts.count + popularProductFields + "&"
+										+ defaultSearchParams 
+										+ filteredExtraParamsString;
+								}
+								
+								// Add extra params
+								if (extraParamsKeys.length) {
+									extraParamsKeys.forEach((key) => {
+										url = url + "&" + key + "=" + extraParams[key];
+									});
+								}
+								
+								var params = this.getAjaxParams();
+								params.url = url;
+								params.cache = true;
+								$.ajax(params).done(function (d) {
+									var query = d.searchMetaData.queryParams.q
+										+ (d.searchMetaData.queryParams.filter ? ':'
+											+ d.searchMetaData.queryParams.filter.replace(/"/g, '') : '');
+									self.processfilteredPopularProducts(query, d);
+								});
 							}
-							else {
-								url = urlPath + "?q="
-									+ encodeURIComponent(this.currentResults[i][j]['autosuggest'])
-									+ "&rows=" + this.options.popularProducts.count + popularProductFields + "&"
-									+ defaultSearchParams 
-									+ filteredExtraParamsString;
-							}
-							var params = this.getAjaxParams();
-							params.url = url;
-							params.cache = true;
-							$.ajax(params).done(function (d) {
-								var query = d.searchMetaData.queryParams.q
-									+ (d.searchMetaData.queryParams.filter ? ':'
-										+ d.searchMetaData.queryParams.filter.replace(/"/g, '') : '');
-								self.processfilteredPopularProducts(query, d);
-							});
 						}
 					}
 				}
@@ -1739,6 +1796,84 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 					this.currentTopResults[query].push(o);
 				}
 			}
+		}
+		, fetchFilteredProductsOnHover: function (dataValue, dataFiltername, dataFiltervalue) {
+			var self = this;
+			var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '');
+
+			if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
+				return;
+			}
+			
+			var urlPath = self.getHostDomainName() + self.options.APIKey + "/"
+				+ self.options.siteName + "/search";
+			var defaultSearchParams = "indent=off&facet=off&analytics=false&redirect=false";
+			var url = "";
+			
+			var popularProductFields = "";
+			if (self.options.popularProducts.fields.length > 0) {
+				popularProductFields = "&fields=" + self.options.popularProducts.fields.join(",");
+			}
+			
+			let filteredExtraParamsString = "";
+			var filteredExtraParams = (self.options.popularProducts && self.options.popularProducts.filteredExtraParams) || {};
+			var filteredExtraParamsKeys = Object.keys(filteredExtraParams);
+			if (filteredExtraParamsKeys.length) {
+				filteredExtraParamsKeys.forEach((key) => {
+					filteredExtraParamsString = filteredExtraParamsString + "&" + key + "=" + filteredExtraParams[key];
+				});
+			}
+			
+			if (dataFiltername) {
+				url = urlPath + "?q="
+					+ encodeURIComponent(dataValue) + "&filter="
+					+ dataFiltername + ":\""
+					+ encodeURIComponent(dataFiltervalue)
+					+ "\"&rows=" + self.options.popularProducts.count + popularProductFields + "&"
+					+ defaultSearchParams 
+					+ filteredExtraParamsString;
+			}
+			else {
+				url = urlPath + "?q="
+					+ encodeURIComponent(dataValue)
+					+ "&rows=" + self.options.popularProducts.count + popularProductFields + "&"
+					+ defaultSearchParams 
+					+ filteredExtraParamsString;
+			}
+			
+			var params = self.getAjaxParams();
+			params.url = url;
+			params.cache = true;
+			$.ajax(params).done(function (d) {
+				var query = d.searchMetaData.queryParams.q
+					+ (d.searchMetaData.queryParams.filter ? ':'
+						+ d.searchMetaData.queryParams.filter.replace(/"/g, '') : '');
+				self.processfilteredPopularProducts(query, d);
+				
+				var cmpld = ""
+				if (self.options.popularProducts.viewMore && self.options.popularProducts.viewMore.enabled) {
+					if (self.options.template === "1column") {
+						$('.unbxd-as-maincontent').addClass("unbxd-as-view-more")
+					} else {
+						$('.unbxd-as-sidecontent').addClass("unbxd-as-view-more")
+					}
+					cmpld = Handlebars.compile(self.preparefilteredPopularProducts() + self.options.popularProducts.viewMore.tpl);
+				} else {
+					cmpld = Handlebars.compile(self.preparefilteredPopularProducts());
+				}
+
+				if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
+					$('.unbxd-as-sidecontent').html(cmpld({
+						data: self.currentTopResults[query]
+						, showCarts: self.options.showCarts
+						, cartType: self.options.cartType
+					}));
+				}
+				
+				if (self.options.popularProducts.view === 'grid' && self.options.popularProducts.rowCount) {
+					$('.unbxd-as-sidecontent').find("li.unbxd-as-popular-product-grid").css("width", (100 / self.options.popularProducts.rowCount) + "%");
+				}
+			});
 		}
 		, processTopSearchQuery: function (doc) {
 			var o = {
