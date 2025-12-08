@@ -191,7 +191,9 @@ $(function(){
 	,view:'grid'
 }
 ```
-- **filtered** : either **true** or **false**. If **true** filtered PopularProducts will be displayed.
+- **filtered** : either **true** or **false**. Controls when filtered products are fetched:
+  - **false** (default, recommended): Products are fetched **on-demand** when user hovers over a suggestion. Better performance, fewer API calls.
+  - **true**: Products are **pre-fetched** for all suggestions upfront when autosuggest results arrive. Use if you want instant product display with no loading delay on hover.
 - **onSimpleEnter** : This function will be called if user presses *enter* key without selecting any result.
 - **onItemSelect** : This function will be called when a user selects one of the suggestions. It will be passed 2 arguments. The first argument is an object shown below and second value will be the original value from Unbxd.
 

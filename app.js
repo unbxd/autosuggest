@@ -79,8 +79,7 @@ window.auto = $("#input").unbxdautocomplete({
 		, currency: "Rs."
 		, header: ''
 	},
-	filtered: true,
-	callAllSearch: false,
+	filtered: false,
 	platform: 'io'
 });
 ractive.set('inputID', '#input');
