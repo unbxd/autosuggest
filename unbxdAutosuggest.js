@@ -527,19 +527,19 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				self.log("select : setting focus");
 				self.hasFocus = true;
 			});
-			$(".unbxd-as-wrapper").on("mouseover", "ul.unbxd-as-maincontent", function (e) {
-				if ($.contains(self.$results[0], e.target)) {
+			$(".unbxd-as-wrapper").on("mouseenter", "ul.unbxd-as-maincontent li:not(.unbxd-as-header)", function (e) {
+				var $li = $(this);
+				if ($.contains(self.$results[0], this)) {
 					$("." + self.selectedClass).removeClass(self.selectedClass);
-					$(e.target).addClass(self.selectedClass);
-					var $et = $(e.target), p = $et;
+					$li.addClass(self.selectedClass);
 					self.hasFocus = false;
-					if (e.target.tagName !== "LI") {
-						p = $et.parents("li")
-					}
-					var dataValue = $(p).attr('data-value') ? $(p).attr('data-value') : '';
-					var dataFiltername = $(p).attr('data-filtername') ? $(p).attr('data-filtername') : '';
-					var dataFiltervalue = $(p).attr('data-filtervalue') ? $(p).attr('data-filtervalue') : '';
-					if (!p || p.hasClass("unbxd-as-header") || p.hasClass("unbxd-as-popular-product") || p.hasClass("topproducts") || e.target.tagName === "INPUT")
+					
+					var dataValue = $li.attr('data-value') || '';
+					var dataFiltername = $li.attr('data-filtername') || '';
+					var dataFiltervalue = $li.attr('data-filtervalue') || '';
+					
+					// Skip popular products and input elements
+					if ($li.hasClass("unbxd-as-popular-product") || $li.hasClass("topproducts"))
 						return;
 					if (dataValue) {
 						var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '')
@@ -1221,7 +1221,7 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 
 			return this;
 		}
-		, removeFilter: function (field, value) {
+		, addFilter: function (field, value) {
 			if (value in this.params.filters[field])
 				delete this.params.filters[field][value];
 
@@ -1793,9 +1793,19 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 			var self = this;
 			var query = dataValue + (dataFiltername != '' ? ':' + dataFiltername + ':' + dataFiltervalue : '');
 
+			// Prevent duplicate calls - check if already cached
 			if (self.currentTopResults[query] && self.currentTopResults[query].length > 0) {
 				return;
 			}
+			
+			// Prevent duplicate in-flight requests for the same query
+			if (self.pendingFilteredRequests && self.pendingFilteredRequests[query]) {
+				return;
+			}
+			if (!self.pendingFilteredRequests) {
+				self.pendingFilteredRequests = {};
+			}
+			self.pendingFilteredRequests[query] = true;
 			
 			var urlPath = self.getHostDomainName() + self.options.APIKey + "/"
 				+ self.options.siteName + "/search";
@@ -1840,6 +1850,12 @@ var unbxdAutoSuggestFunction = function ($, Handlebars, params) {
 				var query = d.searchMetaData.queryParams.q
 					+ (d.searchMetaData.queryParams.filter ? ':'
 						+ d.searchMetaData.queryParams.filter.replace(/"/g, '') : '');
+				
+				// Clear pending request flag
+				if (self.pendingFilteredRequests) {
+					delete self.pendingFilteredRequests[query];
+				}
+				
 				self.processfilteredPopularProducts(query, d);
 				
 				var cmpld = ""
