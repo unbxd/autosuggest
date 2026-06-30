@@ -7,6 +7,10 @@ on:
   #     - feature-actions
   release:
     types: [published, edited]
+    
+permissions:
+  id-token: write
+  contents: read
 
 defaults:
   run:
@@ -53,13 +57,13 @@ jobs:
         echo ::set-output name=DEPLOY_ENV::$(echo $deployEnv)
         echo ::set-output name=BUILD_TAG::$(echo $tag)
    
-    - name: Configure AWS credentials
-      id: configure-aws
-      uses: aws-actions/configure-aws-credentials@v1
+    - name: Configure AWS Credentials via OIDC
+      uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: us-east-1
+        role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE_ARN }}
+        aws-region: ${{ secrets.AWS_DEFAULT_REGION}}
+        audience: sts.amazonaws.com
+        role-session-name: github-${{ github.run_id }}
     
     - name: Minify autosuggest js
       id: minify-autosuggest-file
