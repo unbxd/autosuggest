@@ -87,8 +87,7 @@ Local test env: `CHROME_BIN` set automatically in `karma.conf.js` from Puppeteer
 - Do not run `npm run e2e_test` without a server on port 7000 — tests hit `http://localhost:7000/tests/index.html`
 - Do not assume `setOption` preserves cache — it clears cache and re-renders
 - Do not minify locally and commit the minified output unless matching the release workflow
-
-[FILL: whether minifying in-place during CI (overwriting unbxdAutosuggest.js) is intentional long-term]
+- **CI in-place minify is intentional:** `.github/workflows/main.yaml` runs `uglifyjs unbxdAutosuggest.js --output unbxdAutosuggest.js` on the ephemeral Actions checkout only (not committed back to git). Readable source stays in the repo; the minified bytes are uploaded to S3/CloudFront. This replaced maintaining a separate `unbxdAutosuggest-min.js` in the repo (removed May 2021).
 
 ## Rules and Skills to create (owner checklist)
 <!-- For YOU, the repo owner. Delete this section once Rules and Skills are in place. -->
@@ -98,7 +97,9 @@ Local test env: `CHROME_BIN` set automatically in `karma.conf.js` from Puppeteer
 - [ ] jQuery plugin and Handlebars template patterns (Auto Attached: glob `unbxdAutosuggest.js`)
 - [ ] Security rules: no hardcoded secrets, input validation, auth patterns (Always Apply)
 - [ ] Performance rules: debounce/caching conventions in autosuggest (Always Apply)
-- [ ] [FILL: any other rule areas specific to this repo, e.g. browser support matrix]
+- [ ] Browser support and legacy compatibility (Auto Attached: glob `unbxdAutosuggest.js`): jQuery 1.7+, ES5 polyfills (`location.origin`, `Array.forEach`), mobile layout via UA detection or overridable `options.isMobile` — no formal browserslist; treat README + existing polyfills as the contract
+- [ ] Merchant-facing contracts: `unbxd-as-*` CSS classes, `data-type` values (`IN_FIELD`, `TOP_SEARCH_QUERIES`, `KEYWORD_SUGGESTION`, `POPULAR_PRODUCTS`, `TRENDING_QUERIES`), and callback payloads (Auto Attached: glob `unbxdAutosuggest.js`, `unbxdAutosuggest.css`)
+- [ ] Autosuggest API URL construction: `searchEndPoint`, `getHostDomainName`, `autosuggestUrl` — update `tests/test_unit.js` when changing URL logic (Auto Attached: glob `unbxdAutosuggest.js`, `tests/test_unit.js`)
 
 ### Skills — create in .claude/skills/ or .cursor/skills/ as .md files
 - [ ] Add or modify an autosuggest feature section (inFields, topQueries, keywordSuggestions, popularProducts)
